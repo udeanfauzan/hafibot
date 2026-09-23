@@ -57,13 +57,7 @@ try:
 except ImportError:
     HAS_FLASK = False
 
-MODULE_PATH = (
-    Path(__file__).parents[1]
-    / 'ros_packages'
-    / 'fall_detection_ros'
-    / 'scripts'
-    / 'flask_stream_node.py'
-)
+MODULE_PATH = Path(__file__).parents[1] / 'src' / 'server_app.py'
 if HAS_FLASK:
     SPEC = importlib.util.spec_from_file_location('hafibot_flask_stream', str(MODULE_PATH))
     monitor = importlib.util.module_from_spec(SPEC)

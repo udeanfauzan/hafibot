@@ -48,7 +48,6 @@ hafibot/
 |   |-- processed_yolo*/             # Ekstraksi fitur koordinat YOLO (train-ready)
 |   |-- monitoring/                  # Log insiden, snapshot, dan kalibrasi jarak
 |   `-- fall_annotations*.json       # Anotasi temporal frame awal-akhir jatuh
-|-- docker/                          # Konfigurasi Docker Jetson Nano (fallback mode)
 |-- env_falldetect/                  # Virtual environment Python terisolasi
 |-- img/                             # Aset visual & logo monitoring web
 |-- models/
@@ -62,7 +61,6 @@ hafibot/
 |   |-- figures/                     # Grafik evaluasi, confusion matrix, loss curves
 |   `-- yolo11m_pose_*.json          # Contoh ekstraksi koordinat pose
 |-- robotchatbot/                    # Layanan dan pipeline Voice Chatbot AI
-|-- ros_packages/                    # ROS package (Jetson ROS Melodic deployment)
 |-- scripts/
 |   |-- jetson_edge_agent.py         # Agent utama edge Jetson Nano (Stream & Gateway)
 |   |-- test_arduino_motor.py        # Diagnostik mandiri komunikasi serial & motor
