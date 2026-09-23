@@ -52,12 +52,15 @@ NewPing sonarRight(TRIG_RIGHT, ECHO_RIGHT, MAX_SONAR_DISTANCE);
 // ---------------------------------------------------------------------------
 // Tunable motion and safety parameters.
 // ---------------------------------------------------------------------------
-const int SPEED_FORWARD_MIN = 100;
-const int SPEED_FORWARD_MAX = 175;
-const int SPEED_TURN_MIN = 45;      // Smooth minimum turn power (slow & steady)
-const int SPEED_TURN_MAX = 90;      // Hard cap to prevent overshoot / spinning out
-const int SPEED_AVOID = 135;
-const int PWM_RAMP_STEP = 10;       // Gentle acceleration and deceleration
+// Tunable motion parameters calibrated for 3S LiPo (~11.1V - 12.6V) + dual L298N (star topology) + 1.7 kg 4WD
+const int SPEED_FORWARD_MIN = 85;   // 3S LiPo breakaway PWM (~3.1V effective, eliminates stall buzzing)
+const int SPEED_FORWARD_MAX = 140;  // Safe cruising max (~5.1V effective, protects 3-6V TT gearbox motors)
+const int SPEED_TURN_MIN = 50;      // Skid-steer rotational friction breakaway on 3S
+const int SPEED_TURN_MAX = 90;      // Controlled skid-steer turning limit
+const int SPEED_AVOID = 110;        // Obstacle avoidance pivot speed
+const int PWM_RAMP_STEP = 8;        // Smooth, non-jerky acceleration on high-voltage 3S
+const int KICKSTART_FEEDFORWARD_PWM = 110; // Instant 100ms stiction feedforward boost (~4.0V)
+const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 100; // 100 ms stiction breakaway duration
 
 // Human following distance parameters:
 // Robot stays in range at 130-175 cm, moves forward when user is > 175 cm away,
@@ -124,7 +127,9 @@ int currentLeftPower = 0;
 int currentRightPower = 0;
 
 bool forwardActive = false;
+bool prevForwardActive = false;
 bool turnActive = false;
+unsigned long forwardStartedAt = 0;
 
 // Heading alignment PID controller state
 float turnIntegral = 0.0f;
@@ -231,7 +236,9 @@ void serviceMotorRamp() {
 
 void resetMotionIntent() {
   forwardActive = false;
+  prevForwardActive = false;
   turnActive = false;
+  forwardStartedAt = 0;
   obstacleActive = false;
   obstacleClearSince = 0;
   turnIntegral = 0.0f;
@@ -480,14 +487,27 @@ void updateFollowingControl(unsigned long now) {
   int signedTurn = calculateTurnPID(horizontalError, now);
   turnActive = (signedTurn != 0);
 
+  // Detect rising edge of forwardActive to trigger feedforward kickstart
+  if (forwardActive && !prevForwardActive) {
+    forwardStartedAt = now;
+  }
+  prevForwardActive = forwardActive;
+
   int linearPower = 0;
   if (forwardActive) {
-    linearPower = proportionalPower(
-        (float)targetDistance,
-        (float)DIST_FORWARD_START,
-        (float)DIST_ESTIMATOR_MAX,
-        SPEED_FORWARD_MIN,
-        SPEED_FORWARD_MAX);
+    // 3. Stiction Feedforward Kickstart:
+    // When starting motion from rest with a 1.7 kg chassis, provide a brief feedforward boost
+    // to instantly overcome static friction without waiting for PWM ramping.
+    if (now - forwardStartedAt < KICKSTART_FEEDFORWARD_DURATION_MS) {
+      linearPower = KICKSTART_FEEDFORWARD_PWM;
+    } else {
+      linearPower = proportionalPower(
+          (float)targetDistance,
+          (float)DIST_FORWARD_START,
+          (float)DIST_ESTIMATOR_MAX,
+          SPEED_FORWARD_MIN,
+          SPEED_FORWARD_MAX);
+    }
   }
 
   // Large heading errors pivot in place slowly; smaller errors create gentle forward arc
@@ -497,8 +517,25 @@ void updateFollowingControl(unsigned long now) {
     signedTurn = (signedTurn > 0) ? (linearPower * 2) / 3 : -(linearPower * 2) / 3;
   }
 
-  int leftPower = clampPower(linearPower + signedTurn);
-  int rightPower = clampPower(linearPower - signedTurn);
+  // 4. Asymmetric Arc Turn Power Allocation:
+  // When forward moving (arc turn), avoid dropping inner wheel below minimum drive power
+  // (which would cause the 1.7 kg chassis to drag and stall). Instead, boost outer wheel!
+  int leftPower = 0;
+  int rightPower = 0;
+  if (linearPower > 0 && turnActive) {
+    if (signedTurn > 0) {
+      // Turn Right: left wheels drive faster, right wheels maintain at least base forward speed
+      leftPower = clampPower(linearPower + signedTurn);
+      rightPower = max(SPEED_FORWARD_MIN, linearPower - (signedTurn / 2));
+    } else {
+      // Turn Left: right wheels drive faster, left wheels maintain at least base forward speed
+      leftPower = max(SPEED_FORWARD_MIN, linearPower - (abs(signedTurn) / 2));
+      rightPower = clampPower(linearPower + abs(signedTurn));
+    }
+  } else {
+    leftPower = clampPower(linearPower + signedTurn);
+    rightPower = clampPower(linearPower - signedTurn);
+  }
   setDriveTarget(leftPower, rightPower);
 
   if (linearPower == 0 && signedTurn == 0) {
