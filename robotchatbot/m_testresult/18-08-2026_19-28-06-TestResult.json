@@ -1,0 +1,17 @@
+[
+    {
+        "input": "Selamat sore, Happy Bot!",
+        "previous_response": null,
+        "intent": "menyapa",
+        "sentiment": "positive",
+        "function": "response",
+        "time": "2026-08-18T19:28:21.539368+07:00",
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "selamat sore, saya ada ya?"
+    }
+]

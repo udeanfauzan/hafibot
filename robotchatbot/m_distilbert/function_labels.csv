@@ -1,0 +1,9 @@
+id,label
+0,command
+1,reminder
+2,response
+3,agenda_query
+4,time
+5,weather
+6,news
+7,repeat

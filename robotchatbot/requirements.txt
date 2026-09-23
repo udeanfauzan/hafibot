@@ -1,0 +1,13 @@
+transformers==4.57.6
+torch==2.12.1
+numpy
+pandas
+requests
+pytz
+dateparser
+peft
+SpeechRecognition
+pyaudio
+gtts
+sounddevice==0.5.6
+pydub==0.25.1

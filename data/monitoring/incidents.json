@@ -1,0 +1,802 @@
+[
+  {
+    "id": "20260827T053937Z-fe6f9e2e",
+    "detected_at": "2026-08-27T05:39:37.629071Z",
+    "detector_cleared_at": "2026-08-27T05:39:38.951266Z",
+    "acknowledged_at": "2026-08-27T05:39:44.334004Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T053937Z-fe6f9e2e.jpg"
+  },
+  {
+    "id": "20260827T054006Z-efeb770a",
+    "detected_at": "2026-08-27T05:40:06.603059Z",
+    "detector_cleared_at": "2026-08-27T05:40:06.826243Z",
+    "acknowledged_at": "2026-08-27T05:40:20.969864Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T054006Z-efeb770a.jpg"
+  },
+  {
+    "id": "20260827T054012Z-80ec302d",
+    "detected_at": "2026-08-27T05:40:12.867124Z",
+    "detector_cleared_at": "2026-08-27T05:40:17.910642Z",
+    "acknowledged_at": "2026-08-27T05:40:16.989973Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T054012Z-80ec302d.jpg"
+  },
+  {
+    "id": "20260827T054033Z-51c5b7ae",
+    "detected_at": "2026-08-27T05:40:33.902013Z",
+    "detector_cleared_at": "2026-08-27T05:40:35.236846Z",
+    "acknowledged_at": "2026-08-27T05:45:51.229303Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T054033Z-51c5b7ae.jpg"
+  },
+  {
+    "id": "20260827T054037Z-b4b0b259",
+    "detected_at": "2026-08-27T05:40:37.961690Z",
+    "detector_cleared_at": "2026-08-27T05:40:43.129112Z",
+    "acknowledged_at": "2026-08-27T05:40:41.477414Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T054037Z-b4b0b259.jpg"
+  },
+  {
+    "id": "20260827T062554Z-7f684d99",
+    "detected_at": "2026-08-27T06:25:54.052643Z",
+    "detector_cleared_at": "2026-08-27T06:26:11.934465Z",
+    "acknowledged_at": "2026-08-27T06:25:58.542576Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062554Z-7f684d99.jpg"
+  },
+  {
+    "id": "20260827T062612Z-6d77503c",
+    "detected_at": "2026-08-27T06:26:12.012642Z",
+    "detector_cleared_at": "2026-08-27T06:26:12.460571Z",
+    "acknowledged_at": "2026-08-27T06:26:26.604800Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062612Z-6d77503c.jpg"
+  },
+  {
+    "id": "20260827T062612Z-ad01a889",
+    "detected_at": "2026-08-27T06:26:12.694620Z",
+    "detector_cleared_at": "2026-08-27T06:26:12.923954Z",
+    "acknowledged_at": "2026-08-27T06:26:25.409888Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062612Z-ad01a889.jpg"
+  },
+  {
+    "id": "20260827T062614Z-6572d151",
+    "detected_at": "2026-08-27T06:26:14.222698Z",
+    "detector_cleared_at": "2026-08-27T06:26:14.811092Z",
+    "acknowledged_at": "2026-08-27T06:26:14.972306Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062614Z-6572d151.jpg"
+  },
+  {
+    "id": "20260827T062614Z-1b0dc5d4",
+    "detected_at": "2026-08-27T06:26:14.960076Z",
+    "detector_cleared_at": "2026-08-27T06:26:15.256678Z",
+    "acknowledged_at": "2026-08-27T06:26:23.700340Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062614Z-1b0dc5d4.jpg"
+  },
+  {
+    "id": "20260827T062615Z-daab5a9f",
+    "detected_at": "2026-08-27T06:26:15.339907Z",
+    "detector_cleared_at": "2026-08-27T06:26:16.145390Z",
+    "acknowledged_at": "2026-08-27T06:26:18.412722Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062615Z-daab5a9f.jpg"
+  },
+  {
+    "id": "20260827T062627Z-a74844a5",
+    "detected_at": "2026-08-27T06:26:27.049088Z",
+    "detector_cleared_at": "2026-08-27T06:26:28.770842Z",
+    "acknowledged_at": "2026-08-27T06:26:28.505715Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062627Z-a74844a5.jpg"
+  },
+  {
+    "id": "20260827T062628Z-c7ba963d",
+    "detected_at": "2026-08-27T06:26:28.847949Z",
+    "detector_cleared_at": "2026-08-27T06:26:34.481592Z",
+    "acknowledged_at": "2026-08-27T06:26:30.312849Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062628Z-c7ba963d.jpg"
+  },
+  {
+    "id": "20260827T062638Z-197f5eb0",
+    "detected_at": "2026-08-27T06:26:38.528759Z",
+    "detector_cleared_at": "2026-08-27T06:26:45.115298Z",
+    "acknowledged_at": "2026-08-27T06:26:50.853975Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062638Z-197f5eb0.jpg"
+  },
+  {
+    "id": "20260827T062748Z-c759e295",
+    "detected_at": "2026-08-27T06:27:48.474214Z",
+    "detector_cleared_at": "2026-08-27T06:27:49.833554Z",
+    "acknowledged_at": "2026-08-27T06:27:56.316275Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062748Z-c759e295.jpg"
+  },
+  {
+    "id": "20260827T062842Z-9dcb9b19",
+    "detected_at": "2026-08-27T06:28:42.787408Z",
+    "detector_cleared_at": "2026-08-27T06:28:43.181583Z",
+    "acknowledged_at": "2026-08-27T06:29:08.837527Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062842Z-9dcb9b19.jpg"
+  },
+  {
+    "id": "20260827T062935Z-dfebf967",
+    "detected_at": "2026-08-27T06:29:35.757496Z",
+    "detector_cleared_at": "2026-08-27T06:29:35.983664Z",
+    "acknowledged_at": "2026-08-27T07:10:17.537191Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062935Z-dfebf967.jpg"
+  },
+  {
+    "id": "20260827T062936Z-93818788",
+    "detected_at": "2026-08-27T06:29:36.154121Z",
+    "detector_cleared_at": "2026-08-27T06:29:36.405733Z",
+    "acknowledged_at": "2026-08-27T07:10:17.247540Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062936Z-93818788.jpg"
+  },
+  {
+    "id": "20260827T062936Z-b3dc887c",
+    "detected_at": "2026-08-27T06:29:36.482401Z",
+    "detector_cleared_at": "2026-08-27T06:29:36.720005Z",
+    "acknowledged_at": "2026-08-27T07:10:16.013956Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062936Z-b3dc887c.jpg"
+  },
+  {
+    "id": "20260827T062937Z-5953bb3e",
+    "detected_at": "2026-08-27T06:29:37.016115Z",
+    "detector_cleared_at": "2026-08-27T06:29:37.324367Z",
+    "acknowledged_at": "2026-08-27T06:29:38.211759Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062937Z-5953bb3e.jpg"
+  },
+  {
+    "id": "20260827T062937Z-8296037d",
+    "detected_at": "2026-08-27T06:29:37.728812Z",
+    "detector_cleared_at": "2026-08-27T06:29:37.992223Z",
+    "acknowledged_at": "2026-08-27T07:10:15.432763Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062937Z-8296037d.jpg"
+  },
+  {
+    "id": "20260827T062938Z-8dc2b05d",
+    "detected_at": "2026-08-27T06:29:38.151356Z",
+    "detector_cleared_at": "2026-08-27T06:29:38.763360Z",
+    "acknowledged_at": "2026-08-27T07:10:13.394226Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062938Z-8dc2b05d.jpg"
+  },
+  {
+    "id": "20260827T062938Z-10aaa95d",
+    "detected_at": "2026-08-27T06:29:38.859805Z",
+    "detector_cleared_at": "2026-08-27T06:29:39.182772Z",
+    "acknowledged_at": "2026-08-27T07:06:55.253936Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062938Z-10aaa95d.jpg"
+  },
+  {
+    "id": "20260827T062939Z-5e8c1edf",
+    "detected_at": "2026-08-27T06:29:39.266408Z",
+    "detector_cleared_at": "2026-08-27T06:29:39.504343Z",
+    "acknowledged_at": "2026-08-27T06:29:41.077313Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062939Z-5e8c1edf.jpg"
+  },
+  {
+    "id": "20260827T062941Z-4f7b895a",
+    "detected_at": "2026-08-27T06:29:41.053687Z",
+    "detector_cleared_at": "2026-08-27T06:29:41.302448Z",
+    "acknowledged_at": "2026-08-27T07:05:54.021539Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062941Z-4f7b895a.jpg"
+  },
+  {
+    "id": "20260827T062941Z-11abaf47",
+    "detected_at": "2026-08-27T06:29:41.469895Z",
+    "detector_cleared_at": "2026-08-27T06:29:41.703519Z",
+    "acknowledged_at": "2026-08-27T07:05:21.542272Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062941Z-11abaf47.jpg"
+  },
+  {
+    "id": "20260827T062941Z-dfe90b3a",
+    "detected_at": "2026-08-27T06:29:41.782437Z",
+    "detector_cleared_at": "2026-08-27T06:29:42.074719Z",
+    "acknowledged_at": "2026-08-27T07:04:45.079895Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062941Z-dfe90b3a.jpg"
+  },
+  {
+    "id": "20260827T062942Z-87223e5a",
+    "detected_at": "2026-08-27T06:29:42.149391Z",
+    "detector_cleared_at": "2026-08-27T06:29:42.496312Z",
+    "acknowledged_at": "2026-08-27T07:04:35.612075Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062942Z-87223e5a.jpg"
+  },
+  {
+    "id": "20260827T062942Z-33198e03",
+    "detected_at": "2026-08-27T06:29:42.587414Z",
+    "detector_cleared_at": "2026-08-27T06:29:42.862586Z",
+    "acknowledged_at": "2026-08-27T06:29:45.360688Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062942Z-33198e03.jpg"
+  },
+  {
+    "id": "20260827T062945Z-c899d5ea",
+    "detected_at": "2026-08-27T06:29:45.245425Z",
+    "detector_cleared_at": "2026-08-27T06:29:45.658013Z",
+    "acknowledged_at": "2026-08-27T07:04:19.418360Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062945Z-c899d5ea.jpg"
+  },
+  {
+    "id": "20260827T062945Z-c080c79c",
+    "detected_at": "2026-08-27T06:29:45.965704Z",
+    "detector_cleared_at": "2026-08-27T06:29:46.266215Z",
+    "acknowledged_at": "2026-08-27T07:04:09.619534Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062945Z-c080c79c.jpg"
+  },
+  {
+    "id": "20260827T062949Z-542aa06b",
+    "detected_at": "2026-08-27T06:29:49.156444Z",
+    "detector_cleared_at": "2026-08-27T06:29:49.432971Z",
+    "acknowledged_at": "2026-08-27T07:03:51.943668Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062949Z-542aa06b.jpg"
+  },
+  {
+    "id": "20260827T062950Z-acf44621",
+    "detected_at": "2026-08-27T06:29:50.030023Z",
+    "detector_cleared_at": "2026-08-27T06:29:50.310910Z",
+    "acknowledged_at": "2026-08-27T07:03:50.754898Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062950Z-acf44621.jpg"
+  },
+  {
+    "id": "20260827T062950Z-a4e14557",
+    "detected_at": "2026-08-27T06:29:50.705046Z",
+    "detector_cleared_at": "2026-08-27T06:29:51.142524Z",
+    "acknowledged_at": "2026-08-27T07:03:48.266339Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062950Z-a4e14557.jpg"
+  },
+  {
+    "id": "20260827T062951Z-2c9c7206",
+    "detected_at": "2026-08-27T06:29:51.313746Z",
+    "detector_cleared_at": "2026-08-27T06:29:51.589319Z",
+    "acknowledged_at": "2026-08-27T07:03:32.438832Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062951Z-2c9c7206.jpg"
+  },
+  {
+    "id": "20260827T062952Z-515ec3ed",
+    "detected_at": "2026-08-27T06:29:52.216034Z",
+    "detector_cleared_at": "2026-08-27T06:29:52.573787Z",
+    "acknowledged_at": "2026-08-27T07:03:22.162392Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062952Z-515ec3ed.jpg"
+  },
+  {
+    "id": "20260827T062952Z-f6d3e7b2",
+    "detected_at": "2026-08-27T06:29:52.848649Z",
+    "detector_cleared_at": "2026-08-27T06:29:53.362457Z",
+    "acknowledged_at": "2026-08-27T07:03:17.030670Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062952Z-f6d3e7b2.jpg"
+  },
+  {
+    "id": "20260827T062953Z-7a61e901",
+    "detected_at": "2026-08-27T06:29:53.558532Z",
+    "detector_cleared_at": "2026-08-27T06:29:53.847782Z",
+    "acknowledged_at": "2026-08-27T07:03:13.876119Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062953Z-7a61e901.jpg"
+  },
+  {
+    "id": "20260827T062954Z-fedfde80",
+    "detected_at": "2026-08-27T06:29:54.024496Z",
+    "detector_cleared_at": "2026-08-27T06:29:54.320058Z",
+    "acknowledged_at": "2026-08-27T06:30:39.329882Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062954Z-fedfde80.jpg"
+  },
+  {
+    "id": "20260827T062955Z-27f83430",
+    "detected_at": "2026-08-27T06:29:55.319157Z",
+    "detector_cleared_at": "2026-08-27T06:29:55.597836Z",
+    "acknowledged_at": "2026-08-27T06:30:38.832854Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T062955Z-27f83430.jpg"
+  },
+  {
+    "id": "20260827T070338Z-8a6a6cb1",
+    "detected_at": "2026-08-27T07:03:38.967993Z",
+    "detector_cleared_at": "2026-08-27T07:03:41.771817Z",
+    "acknowledged_at": "2026-08-27T07:03:45.155022Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T070338Z-8a6a6cb1.jpg"
+  },
+  {
+    "id": "20260827T070547Z-e8a5f6f9",
+    "detected_at": "2026-08-27T07:05:47.855238Z",
+    "detector_cleared_at": "2026-08-27T07:05:52.848614Z",
+    "acknowledged_at": "2026-08-27T07:05:51.799111Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T070547Z-e8a5f6f9.jpg"
+  },
+  {
+    "id": "20260827T070632Z-74f4e537",
+    "detected_at": "2026-08-27T07:06:32.964023Z",
+    "detector_cleared_at": "2026-08-27T07:06:33.136475Z",
+    "acknowledged_at": "2026-08-27T07:06:40.166608Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T070632Z-74f4e537.jpg"
+  },
+  {
+    "id": "20260827T071239Z-9b4e9f59",
+    "detected_at": "2026-08-27T07:12:39.776745Z",
+    "detector_cleared_at": "2026-08-27T07:12:39.851649Z",
+    "acknowledged_at": "2026-08-27T07:12:47.873019Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071239Z-9b4e9f59.jpg"
+  },
+  {
+    "id": "20260827T071534Z-1b1c9b6a",
+    "detected_at": "2026-08-27T07:15:34.518394Z",
+    "detector_cleared_at": "2026-08-27T07:15:36.162582Z",
+    "acknowledged_at": "2026-08-27T07:15:40.729100Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071534Z-1b1c9b6a.jpg"
+  },
+  {
+    "id": "20260827T071540Z-6089b6c4",
+    "detected_at": "2026-08-27T07:15:40.110459Z",
+    "detector_cleared_at": "2026-08-27T07:15:40.668919Z",
+    "acknowledged_at": "2026-08-27T07:15:43.111662Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071540Z-6089b6c4.jpg"
+  },
+  {
+    "id": "20260827T071540Z-e726460f",
+    "detected_at": "2026-08-27T07:15:40.979396Z",
+    "detector_cleared_at": "2026-08-27T07:15:41.138462Z",
+    "acknowledged_at": "2026-08-27T07:15:41.045580Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071540Z-e726460f.jpg"
+  },
+  {
+    "id": "20260827T071541Z-593ed578",
+    "detected_at": "2026-08-27T07:15:41.861709Z",
+    "detector_cleared_at": "2026-08-27T07:15:42.090435Z",
+    "acknowledged_at": "2026-08-27T07:15:42.109219Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071541Z-593ed578.jpg"
+  },
+  {
+    "id": "20260827T071544Z-6a759951",
+    "detected_at": "2026-08-27T07:15:44.944344Z",
+    "detector_cleared_at": "2026-08-27T07:15:46.902556Z",
+    "acknowledged_at": "2026-08-27T07:15:50.171808Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071544Z-6a759951.jpg"
+  },
+  {
+    "id": "20260827T071547Z-9d10e11d",
+    "detected_at": "2026-08-27T07:15:47.042648Z",
+    "detector_cleared_at": "2026-08-27T07:15:47.154348Z",
+    "acknowledged_at": "2026-08-27T07:15:49.677055Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071547Z-9d10e11d.jpg"
+  },
+  {
+    "id": "20260827T071604Z-458e5d4a",
+    "detected_at": "2026-08-27T07:16:04.693766Z",
+    "detector_cleared_at": "2026-08-27T07:16:04.964936Z",
+    "acknowledged_at": "2026-08-27T07:16:13.297433Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071604Z-458e5d4a.jpg"
+  },
+  {
+    "id": "20260827T071638Z-7b40893a",
+    "detected_at": "2026-08-27T07:16:38.768011Z",
+    "detector_cleared_at": "2026-08-27T07:16:40.723857Z",
+    "acknowledged_at": "2026-08-27T07:16:47.948824Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071638Z-7b40893a.jpg"
+  },
+  {
+    "id": "20260827T071701Z-d03167e7",
+    "detected_at": "2026-08-27T07:17:01.306987Z",
+    "detector_cleared_at": "2026-08-27T07:17:01.379706Z",
+    "acknowledged_at": "2026-08-27T07:17:10.248279Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071701Z-d03167e7.jpg"
+  },
+  {
+    "id": "20260827T071712Z-8d0353ed",
+    "detected_at": "2026-08-27T07:17:12.459014Z",
+    "detector_cleared_at": "2026-08-27T07:17:12.878900Z",
+    "acknowledged_at": "2026-08-27T07:17:50.488371Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071712Z-8d0353ed.jpg"
+  },
+  {
+    "id": "20260827T071717Z-a699a960",
+    "detected_at": "2026-08-27T07:17:17.974578Z",
+    "detector_cleared_at": "2026-08-27T07:17:18.554612Z",
+    "acknowledged_at": "2026-08-27T07:17:40.044723Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071717Z-a699a960.jpg"
+  },
+  {
+    "id": "20260827T071718Z-7292e41e",
+    "detected_at": "2026-08-27T07:17:18.707016Z",
+    "detector_cleared_at": "2026-08-27T07:17:19.013935Z",
+    "acknowledged_at": "2026-08-27T07:17:39.448521Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071718Z-7292e41e.jpg"
+  },
+  {
+    "id": "20260827T071802Z-487b04d8",
+    "detected_at": "2026-08-27T07:18:02.640997Z",
+    "detector_cleared_at": "2026-08-27T07:18:02.781974Z",
+    "acknowledged_at": "2026-08-27T07:18:22.172293Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071802Z-487b04d8.jpg"
+  },
+  {
+    "id": "20260827T071802Z-064f732c",
+    "detected_at": "2026-08-27T07:18:02.857079Z",
+    "detector_cleared_at": "2026-08-27T07:18:02.940359Z",
+    "acknowledged_at": "2026-08-27T07:18:21.272049Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071802Z-064f732c.jpg"
+  },
+  {
+    "id": "20260827T071803Z-e5ee5589",
+    "detected_at": "2026-08-27T07:18:03.018939Z",
+    "detector_cleared_at": "2026-08-27T07:18:03.095400Z",
+    "acknowledged_at": "2026-08-27T07:18:20.096603Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071803Z-e5ee5589.jpg"
+  },
+  {
+    "id": "20260827T071803Z-5a87907b",
+    "detected_at": "2026-08-27T07:18:03.173353Z",
+    "detector_cleared_at": "2026-08-27T07:18:03.543310Z",
+    "acknowledged_at": "2026-08-27T07:18:19.772187Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071803Z-5a87907b.jpg"
+  },
+  {
+    "id": "20260827T071803Z-ce2c4edf",
+    "detected_at": "2026-08-27T07:18:03.622991Z",
+    "detector_cleared_at": "2026-08-27T07:18:04.644540Z",
+    "acknowledged_at": "2026-08-27T07:18:17.247380Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071803Z-ce2c4edf.jpg"
+  },
+  {
+    "id": "20260827T071811Z-5ff771c2",
+    "detected_at": "2026-08-27T07:18:11.017134Z",
+    "detector_cleared_at": "2026-08-27T07:18:16.038589Z",
+    "acknowledged_at": "2026-08-27T07:18:13.392861Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071811Z-5ff771c2.jpg"
+  },
+  {
+    "id": "20260827T071850Z-68088d3d",
+    "detected_at": "2026-08-27T07:18:50.542579Z",
+    "detector_cleared_at": "2026-08-27T07:18:50.840326Z",
+    "acknowledged_at": "2026-08-27T07:19:00.829716Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071850Z-68088d3d.jpg"
+  },
+  {
+    "id": "20260827T071852Z-72f74483",
+    "detected_at": "2026-08-27T07:18:52.936557Z",
+    "detector_cleared_at": "2026-08-27T07:18:53.236440Z",
+    "acknowledged_at": "2026-08-27T07:18:57.739949Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071852Z-72f74483.jpg"
+  },
+  {
+    "id": "20260827T071853Z-47221747",
+    "detected_at": "2026-08-27T07:18:53.772961Z",
+    "detector_cleared_at": "2026-08-27T07:18:53.869129Z",
+    "acknowledged_at": "2026-08-27T07:18:56.972977Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071853Z-47221747.jpg"
+  },
+  {
+    "id": "20260827T071904Z-06f3c4c3",
+    "detected_at": "2026-08-27T07:19:04.521984Z",
+    "detector_cleared_at": "2026-08-27T07:19:09.624863Z",
+    "acknowledged_at": "2026-08-27T07:19:09.220594Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071904Z-06f3c4c3.jpg"
+  },
+  {
+    "id": "20260827T071929Z-bfc10207",
+    "detected_at": "2026-08-27T07:19:29.282102Z",
+    "detector_cleared_at": "2026-08-27T07:19:29.910066Z",
+    "acknowledged_at": "2026-08-27T07:20:11.871733Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071929Z-bfc10207.jpg"
+  },
+  {
+    "id": "20260827T071930Z-7c2b4713",
+    "detected_at": "2026-08-27T07:19:30.273280Z",
+    "detector_cleared_at": "2026-08-27T07:19:30.348524Z",
+    "acknowledged_at": "2026-08-27T07:20:10.788069Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071930Z-7c2b4713.jpg"
+  },
+  {
+    "id": "20260827T071930Z-4190d3a1",
+    "detected_at": "2026-08-27T07:19:30.510553Z",
+    "detector_cleared_at": "2026-08-27T07:19:30.595027Z",
+    "acknowledged_at": "2026-08-27T07:20:08.343394Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071930Z-4190d3a1.jpg"
+  },
+  {
+    "id": "20260827T071930Z-c8d715be",
+    "detected_at": "2026-08-27T07:19:30.759842Z",
+    "detector_cleared_at": "2026-08-27T07:19:30.843278Z",
+    "acknowledged_at": "2026-08-27T07:20:07.784690Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071930Z-c8d715be.jpg"
+  },
+  {
+    "id": "20260827T071931Z-7736d281",
+    "detected_at": "2026-08-27T07:19:31.007383Z",
+    "detector_cleared_at": "2026-08-27T07:19:31.452638Z",
+    "acknowledged_at": "2026-08-27T07:19:39.811632Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260827T071931Z-7736d281.jpg"
+  },
+  {
+    "id": "20260828T090705Z-9cc72747",
+    "detected_at": "2026-08-28T09:07:05.178002Z",
+    "detector_cleared_at": "2026-08-28T09:07:05.293511Z",
+    "acknowledged_at": "2026-08-28T09:07:08.426483Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260828T090705Z-9cc72747.jpg"
+  },
+  {
+    "id": "20260831T084558Z-7dd039d9",
+    "detected_at": "2026-08-31T08:45:58.616269Z",
+    "detector_cleared_at": "2026-08-31T08:45:59.648056Z",
+    "acknowledged_at": "2026-08-31T08:46:09.595218Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260831T084558Z-7dd039d9.jpg"
+  },
+  {
+    "id": "20260831T084601Z-05e46fa7",
+    "detected_at": "2026-08-31T08:46:01.530161Z",
+    "detector_cleared_at": "2026-08-31T08:46:01.657719Z",
+    "acknowledged_at": "2026-08-31T08:46:05.261231Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260831T084601Z-05e46fa7.jpg"
+  },
+  {
+    "id": "20260831T084621Z-486c14fa",
+    "detected_at": "2026-08-31T08:46:21.702308Z",
+    "detector_cleared_at": "2026-08-31T08:46:21.838238Z",
+    "acknowledged_at": "2026-08-31T08:46:40.647466Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260831T084621Z-486c14fa.jpg"
+  },
+  {
+    "id": "20260831T084622Z-d14d219e",
+    "detected_at": "2026-08-31T08:46:22.339440Z",
+    "detector_cleared_at": "2026-08-31T08:46:24.238529Z",
+    "acknowledged_at": "2026-08-31T08:46:40.460325Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260831T084622Z-d14d219e.jpg"
+  },
+  {
+    "id": "20260831T084625Z-5da6d3e6",
+    "detected_at": "2026-08-31T08:46:25.112499Z",
+    "detector_cleared_at": "2026-08-31T08:46:25.256775Z",
+    "acknowledged_at": "2026-08-31T08:46:31.336175Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260831T084625Z-5da6d3e6.jpg"
+  },
+  {
+    "id": "20260911T074104Z-469116dd",
+    "detected_at": "2026-09-11T07:41:04.487756Z",
+    "detector_cleared_at": "2026-09-11T07:41:04.674789Z",
+    "acknowledged_at": "2026-09-11T07:41:12.486955Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T074104Z-469116dd.jpg"
+  },
+  {
+    "id": "20260911T074805Z-52dc06b9",
+    "detected_at": "2026-09-11T07:48:05.277782Z",
+    "detector_cleared_at": "2026-09-11T07:48:05.391948Z",
+    "acknowledged_at": "2026-09-11T07:49:30.876273Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T074805Z-52dc06b9.jpg"
+  },
+  {
+    "id": "20260911T074805Z-4d2f3160",
+    "detected_at": "2026-09-11T07:48:05.487755Z",
+    "detector_cleared_at": "2026-09-11T07:48:05.633067Z",
+    "acknowledged_at": "2026-09-11T07:49:24.944673Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T074805Z-4d2f3160.jpg"
+  },
+  {
+    "id": "20260911T075017Z-23bdf0af",
+    "detected_at": "2026-09-11T07:50:17.491184Z",
+    "detector_cleared_at": "2026-09-11T07:50:21.201067Z",
+    "acknowledged_at": "2026-09-11T07:52:22.470442Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075017Z-23bdf0af.jpg"
+  },
+  {
+    "id": "20260911T075022Z-5c271dee",
+    "detected_at": "2026-09-11T07:50:22.150367Z",
+    "detector_cleared_at": "2026-09-11T07:50:22.923486Z",
+    "acknowledged_at": "2026-09-11T07:52:21.811636Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075022Z-5c271dee.jpg"
+  },
+  {
+    "id": "20260911T075023Z-f20a0d34",
+    "detected_at": "2026-09-11T07:50:23.060716Z",
+    "detector_cleared_at": "2026-09-11T07:50:23.461479Z",
+    "acknowledged_at": "2026-09-11T07:52:19.121943Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075023Z-f20a0d34.jpg"
+  },
+  {
+    "id": "20260911T075023Z-0b29bba6",
+    "detected_at": "2026-09-11T07:50:23.540320Z",
+    "detector_cleared_at": "2026-09-11T07:50:23.610918Z",
+    "acknowledged_at": "2026-09-11T07:52:18.650188Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075023Z-0b29bba6.jpg"
+  },
+  {
+    "id": "20260911T075023Z-5ed42853",
+    "detected_at": "2026-09-11T07:50:23.686244Z",
+    "detector_cleared_at": "2026-09-11T07:50:24.069041Z",
+    "acknowledged_at": "2026-09-11T07:51:33.345039Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075023Z-5ed42853.jpg"
+  },
+  {
+    "id": "20260911T075024Z-da6bc21b",
+    "detected_at": "2026-09-11T07:50:24.140451Z",
+    "detector_cleared_at": "2026-09-11T07:50:24.211082Z",
+    "acknowledged_at": "2026-09-11T07:51:33.138114Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075024Z-da6bc21b.jpg"
+  },
+  {
+    "id": "20260911T075024Z-8c0afa99",
+    "detected_at": "2026-09-11T07:50:24.399904Z",
+    "detector_cleared_at": "2026-09-11T07:50:24.477220Z",
+    "acknowledged_at": "2026-09-11T07:51:22.172597Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075024Z-8c0afa99.jpg"
+  },
+  {
+    "id": "20260911T075024Z-61dc78cf",
+    "detected_at": "2026-09-11T07:50:24.549045Z",
+    "detector_cleared_at": "2026-09-11T07:50:24.800719Z",
+    "acknowledged_at": "2026-09-11T07:51:21.156490Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075024Z-61dc78cf.jpg"
+  },
+  {
+    "id": "20260911T075024Z-c254ba61",
+    "detected_at": "2026-09-11T07:50:24.868653Z",
+    "detector_cleared_at": "2026-09-11T07:50:25.005671Z",
+    "acknowledged_at": "2026-09-11T07:51:14.700565Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075024Z-c254ba61.jpg"
+  },
+  {
+    "id": "20260911T075025Z-8ec9f7dd",
+    "detected_at": "2026-09-11T07:50:25.229853Z",
+    "detector_cleared_at": "2026-09-11T07:50:25.300347Z",
+    "acknowledged_at": "2026-09-11T07:51:13.686903Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075025Z-8ec9f7dd.jpg"
+  },
+  {
+    "id": "20260911T075025Z-f13b968f",
+    "detected_at": "2026-09-11T07:50:25.436033Z",
+    "detector_cleared_at": "2026-09-11T07:50:25.572496Z",
+    "acknowledged_at": "2026-09-11T07:51:12.698466Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075025Z-f13b968f.jpg"
+  },
+  {
+    "id": "20260911T075025Z-bbcbfaa8",
+    "detected_at": "2026-09-11T07:50:25.643673Z",
+    "detector_cleared_at": "2026-09-11T07:50:25.714457Z",
+    "acknowledged_at": "2026-09-11T07:51:12.544795Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075025Z-bbcbfaa8.jpg"
+  },
+  {
+    "id": "20260911T075026Z-78e62cd0",
+    "detected_at": "2026-09-11T07:50:26.059526Z",
+    "detector_cleared_at": "2026-09-11T07:50:26.138088Z",
+    "acknowledged_at": "2026-09-11T07:51:10.653396Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075026Z-78e62cd0.jpg"
+  },
+  {
+    "id": "20260911T075026Z-04539451",
+    "detected_at": "2026-09-11T07:50:26.274708Z",
+    "detector_cleared_at": "2026-09-11T07:50:26.945317Z",
+    "acknowledged_at": "2026-09-11T07:50:53.565196Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075026Z-04539451.jpg"
+  },
+  {
+    "id": "20260911T075027Z-3796a1e3",
+    "detected_at": "2026-09-11T07:50:27.025002Z",
+    "detector_cleared_at": "2026-09-11T07:50:32.025900Z",
+    "acknowledged_at": "2026-09-11T07:50:50.372753Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075027Z-3796a1e3.jpg"
+  },
+  {
+    "id": "20260911T075033Z-5de928c8",
+    "detected_at": "2026-09-11T07:50:33.104393Z",
+    "detector_cleared_at": "2026-09-11T07:50:33.592986Z",
+    "acknowledged_at": "2026-09-11T07:50:43.260310Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T075033Z-5de928c8.jpg"
+  },
+  {
+    "id": "20260911T082834Z-421db319",
+    "detected_at": "2026-09-11T08:28:34.963467Z",
+    "detector_cleared_at": "2026-09-11T08:28:47.663011Z",
+    "acknowledged_at": "2026-09-11T08:28:43.810079Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T082834Z-421db319.jpg"
+  },
+  {
+    "id": "20260911T083453Z-5bb1f40d",
+    "detected_at": "2026-09-11T08:34:53.719493Z",
+    "detector_cleared_at": "2026-09-11T08:35:09.109538Z",
+    "acknowledged_at": "2026-09-11T08:34:56.686398Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T083453Z-5bb1f40d.jpg"
+  },
+  {
+    "id": "20260911T084015Z-627f6163",
+    "detected_at": "2026-09-11T08:40:15.826749Z",
+    "detector_cleared_at": "2026-09-11T08:40:59.381890Z",
+    "acknowledged_at": "2026-09-11T08:40:39.631817Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T084015Z-627f6163.jpg"
+  },
+  {
+    "id": "20260911T084342Z-fefa7cb1",
+    "detected_at": "2026-09-11T08:43:42.416930Z",
+    "detector_cleared_at": "2026-09-11T08:43:55.929992Z",
+    "acknowledged_at": "2026-09-11T08:44:05.144631Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20260911T084342Z-fefa7cb1.jpg"
+  }
+]

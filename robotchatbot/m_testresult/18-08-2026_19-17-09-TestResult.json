@@ -1,0 +1,62 @@
+[
+    {
+        "input": " Sudah handle lo",
+        "previous_response": null,
+        "intent": "menyapa",
+        "sentiment": "positive",
+        "function": "response",
+        "time": "2026-08-18T19:17:28.269257+07:00",
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "sudah baik"
+    },
+    {
+        "input": " Sudah hatbelum",
+        "previous_response": "sudah baik",
+        "intent": "nanya_cuaca",
+        "sentiment": "neutral",
+        "function": "response",
+        "time": "2026-08-18T19:17:38.445445+07:00",
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "sudah satutah"
+    },
+    {
+        "input": " Sudahan dulu.",
+        "previous_response": "sudah satutah",
+        "intent": "berhenti",
+        "sentiment": "serious",
+        "function": "command",
+        "time": "2026-08-18T19:17:45.655804+07:00",
+        "news": null,
+        "weather": null,
+        "command_override": true,
+        "command_text": "Baik, saya akan berhenti bergerak dan merekam",
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "Baik, saya akan berhenti bergerak dan merekam"
+    },
+    {
+        "input": " So the handle low.",
+        "previous_response": "sudah satutah",
+        "intent": "menyapa",
+        "sentiment": "neutral",
+        "function": "response",
+        "time": "2026-08-18T19:17:53.123269+07:00",
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "silahkan diperiksa"
+    }
+]

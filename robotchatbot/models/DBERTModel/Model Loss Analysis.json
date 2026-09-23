@@ -1,0 +1,222 @@
+[
+    {
+        "epoch": 1,
+        "train_loss_total": 5.481042791815365,
+        "train_loss_intent": 2.596570547889261,
+        "train_loss_sentiment": 1.1667064217960132,
+        "train_loss_function": 1.7177658291424023,
+        "val_loss_total": 5.0029683113098145,
+        "val_loss_intent": 2.421166165669759,
+        "val_loss_sentiment": 1.0318985025087992,
+        "val_loss_function": 1.549903678894043
+    },
+    {
+        "epoch": 2,
+        "train_loss_total": 4.773924995871151,
+        "train_loss_intent": 2.3373262181001553,
+        "train_loss_sentiment": 0.9922429743935081,
+        "train_loss_function": 1.4443558419451994,
+        "val_loss_total": 4.075361045201619,
+        "val_loss_intent": 2.016884708404541,
+        "val_loss_sentiment": 0.8399279316266378,
+        "val_loss_function": 1.2185483932495118
+    },
+    {
+        "epoch": 3,
+        "train_loss_total": 3.6946624938179466,
+        "train_loss_intent": 1.8605202401385588,
+        "train_loss_sentiment": 0.7959704171208775,
+        "train_loss_function": 1.038171822533888,
+        "val_loss_total": 3.1082756519317627,
+        "val_loss_intent": 1.5642864465713502,
+        "val_loss_sentiment": 0.6818916618824005,
+        "val_loss_function": 0.8620975732803344
+    },
+    {
+        "epoch": 4,
+        "train_loss_total": 2.6181871330036834,
+        "train_loss_intent": 1.3562161063446718,
+        "train_loss_sentiment": 0.6117969742592644,
+        "train_loss_function": 0.6501740594120586,
+        "val_loss_total": 2.381657671928406,
+        "val_loss_intent": 1.2045313080151876,
+        "val_loss_sentiment": 0.5852398812770844,
+        "val_loss_function": 0.5918865044911702
+    },
+    {
+        "epoch": 5,
+        "train_loss_total": 1.8692237804917728,
+        "train_loss_intent": 0.9998739572132335,
+        "train_loss_sentiment": 0.47595031252678704,
+        "train_loss_function": 0.39339948883827996,
+        "val_loss_total": 1.9558978080749512,
+        "val_loss_intent": 0.965909731388092,
+        "val_loss_sentiment": 0.5029767254988352,
+        "val_loss_function": 0.48701131939888
+    },
+    {
+        "epoch": 6,
+        "train_loss_total": 1.3620402287034428,
+        "train_loss_intent": 0.7355847288580502,
+        "train_loss_sentiment": 0.37646010518074036,
+        "train_loss_function": 0.2499953955411911,
+        "val_loss_total": 1.6591445406277974,
+        "val_loss_intent": 0.7970022360483805,
+        "val_loss_sentiment": 0.4503661652406057,
+        "val_loss_function": 0.4117761433124542
+    },
+    {
+        "epoch": 7,
+        "train_loss_total": 1.0894106766756844,
+        "train_loss_intent": 0.5845416793051887,
+        "train_loss_sentiment": 0.3258451468804303,
+        "train_loss_function": 0.1790238504900652,
+        "val_loss_total": 1.5319597005844117,
+        "val_loss_intent": 0.7111306508382161,
+        "val_loss_sentiment": 0.4124927749236425,
+        "val_loss_function": 0.40833627730607985
+    },
+    {
+        "epoch": 8,
+        "train_loss_total": 0.8402025559369255,
+        "train_loss_intent": 0.45538455598494587,
+        "train_loss_sentiment": 0.25453001173103557,
+        "train_loss_function": 0.13028798690613577,
+        "val_loss_total": 1.3846832156181335,
+        "val_loss_intent": 0.6240187803904216,
+        "val_loss_sentiment": 0.3866544783115387,
+        "val_loss_function": 0.3740099534392357
+    },
+    {
+        "epoch": 9,
+        "train_loss_total": 0.6892420824836282,
+        "train_loss_intent": 0.35931120637585134,
+        "train_loss_sentiment": 0.22694091739899971,
+        "train_loss_function": 0.10298995564089101,
+        "val_loss_total": 1.3119819521903993,
+        "val_loss_intent": 0.5709300488233566,
+        "val_loss_sentiment": 0.36319331924120585,
+        "val_loss_function": 0.37785859604676564
+    },
+    {
+        "epoch": 10,
+        "train_loss_total": 0.5506789666764876,
+        "train_loss_intent": 0.2758065124644953,
+        "train_loss_sentiment": 0.19399109460851727,
+        "train_loss_function": 0.08088135631645427,
+        "val_loss_total": 1.265516209602356,
+        "val_loss_intent": 0.5330106824636459,
+        "val_loss_sentiment": 0.35468243757883705,
+        "val_loss_function": 0.3778231034676234
+    },
+    {
+        "epoch": 11,
+        "train_loss_total": 0.4705585241317749,
+        "train_loss_intent": 0.23216608604964087,
+        "train_loss_sentiment": 0.17058424498228467,
+        "train_loss_function": 0.06780819583903341,
+        "val_loss_total": 1.2290697813034057,
+        "val_loss_intent": 0.5121815999348959,
+        "val_loss_sentiment": 0.3388785844047864,
+        "val_loss_function": 0.3780095803240935
+    },
+    {
+        "epoch": 12,
+        "train_loss_total": 0.3919489339870565,
+        "train_loss_intent": 0.19946614455650835,
+        "train_loss_sentiment": 0.133185132571003,
+        "train_loss_function": 0.059297660584835446,
+        "val_loss_total": 1.189491573969523,
+        "val_loss_intent": 0.4879159470399221,
+        "val_loss_sentiment": 0.3616383011142413,
+        "val_loss_function": 0.3399373230834802
+    },
+    {
+        "epoch": 13,
+        "train_loss_total": 0.3289164843804696,
+        "train_loss_intent": 0.1697239034316119,
+        "train_loss_sentiment": 0.10842532774104792,
+        "train_loss_function": 0.050767254960887576,
+        "val_loss_total": 1.2203816056251526,
+        "val_loss_intent": 0.4869302660226822,
+        "val_loss_sentiment": 0.35417938282092415,
+        "val_loss_function": 0.3792719433705012
+    },
+    {
+        "epoch": 14,
+        "train_loss_total": 0.28364448862917285,
+        "train_loss_intent": 0.14083325599922852,
+        "train_loss_sentiment": 0.09813492493156124,
+        "train_loss_function": 0.04467630802708514,
+        "val_loss_total": 1.3158990104993185,
+        "val_loss_intent": 0.49570381740729014,
+        "val_loss_sentiment": 0.4055603687961896,
+        "val_loss_function": 0.41463483969370524
+    },
+    {
+        "epoch": 15,
+        "train_loss_total": 0.2410094374242951,
+        "train_loss_intent": 0.12016316831988447,
+        "train_loss_sentiment": 0.08214325512595036,
+        "train_loss_function": 0.03870301490978283,
+        "val_loss_total": 1.2277432401974997,
+        "val_loss_intent": 0.46576802531878153,
+        "val_loss_sentiment": 0.3725891644755999,
+        "val_loss_function": 0.3893860444426537
+    },
+    {
+        "epoch": 16,
+        "train_loss_total": 0.21577511903117685,
+        "train_loss_intent": 0.10862300961333163,
+        "train_loss_sentiment": 0.07000002681332476,
+        "train_loss_function": 0.03715208342627568,
+        "val_loss_total": 1.2203621476888658,
+        "val_loss_intent": 0.4560634473959605,
+        "val_loss_sentiment": 0.37497868463397027,
+        "val_loss_function": 0.3893200156589349
+    },
+    {
+        "epoch": 17,
+        "train_loss_total": 0.20348279572585048,
+        "train_loss_intent": 0.10235482213251731,
+        "train_loss_sentiment": 0.0644803650348502,
+        "train_loss_function": 0.03664760812021354,
+        "val_loss_total": 1.289458872874578,
+        "val_loss_intent": 0.4685542454322179,
+        "val_loss_sentiment": 0.4076503962278366,
+        "val_loss_function": 0.41325421929359435
+    },
+    {
+        "epoch": 18,
+        "train_loss_total": 0.17759528712314718,
+        "train_loss_intent": 0.08740242800730116,
+        "train_loss_sentiment": 0.05934825660113026,
+        "train_loss_function": 0.030844603719956735,
+        "val_loss_total": 1.263249534368515,
+        "val_loss_intent": 0.46443433264891304,
+        "val_loss_sentiment": 0.39797677025198935,
+        "val_loss_function": 0.40083842277526854
+    },
+    {
+        "epoch": 19,
+        "train_loss_total": 0.15115191393038807,
+        "train_loss_intent": 0.07740532639710342,
+        "train_loss_sentiment": 0.04656776588629274,
+        "train_loss_function": 0.027178821044371408,
+        "val_loss_total": 1.253118731578191,
+        "val_loss_intent": 0.46331071803967155,
+        "val_loss_sentiment": 0.38277688597639403,
+        "val_loss_function": 0.40703111874560516
+    },
+    {
+        "epoch": 20,
+        "train_loss_total": 0.13515684644089027,
+        "train_loss_intent": 0.07158544703441508,
+        "train_loss_sentiment": 0.03860969441559385,
+        "train_loss_function": 0.02496170482653029,
+        "val_loss_total": 1.2758527408043543,
+        "val_loss_intent": 0.4530058627327283,
+        "val_loss_sentiment": 0.4320947917799155,
+        "val_loss_function": 0.3907520901411772
+    }
+]

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">Hafibot</title>
+  <rect width="512" height="512" rx="112" fill="#147a5d"/>
+  <path d="M256 78 405 164v172L256 434 107 336V164Z" fill="#fff" opacity=".96"/>
+  <path d="M256 112 372 180v137l-116 76-116-76V180Z" fill="none" stroke="#68b99d" stroke-width="18"/>
+  <rect x="166" y="178" width="180" height="148" rx="68" fill="#f27616"/>
+  <path d="M206 244a22 22 0 0 1 44 0M262 244a22 22 0 0 1 44 0" fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round"/>
+  <path d="M225 278c10 31 52 31 62 0" fill="none" stroke="#fff" stroke-width="15" stroke-linecap="round"/>
+  <path d="M216 178v-30M296 178v-30" stroke="#17211e" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="216" cy="143" r="10" fill="#17211e"/>
+  <circle cx="296" cy="143" r="10" fill="#17211e"/>
+</svg>

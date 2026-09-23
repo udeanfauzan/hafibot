@@ -1,0 +1,2374 @@
+{
+  "description": "Pseudonymous subject ID for every raw ADL and Fall video",
+  "schema_version": 1,
+  "updated_at_unix": 1786126646.7595031,
+  "videos": {
+    "new_july:ADL_Berjalan_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_1.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_1"
+    },
+    "new_july:ADL_Berjalan_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_10.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_10"
+    },
+    "new_july:ADL_Berjalan_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_2"
+    },
+    "new_july:ADL_Berjalan_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_3"
+    },
+    "new_july:ADL_Berjalan_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_4"
+    },
+    "new_july:ADL_Berjalan_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_5"
+    },
+    "new_july:ADL_Berjalan_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_6.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_6"
+    },
+    "new_july:ADL_Berjalan_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_7.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_7"
+    },
+    "new_july:ADL_Berjalan_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_8.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_8"
+    },
+    "new_july:ADL_Berjalan_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Berjalan/ADL_Berjalan_9.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Berjalan_9"
+    },
+    "new_july:ADL_Jongkok_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Jongkok/ADL_Jongkok_1.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Jongkok_1"
+    },
+    "new_july:ADL_Jongkok_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Jongkok/ADL_Jongkok_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Jongkok_2"
+    },
+    "new_july:ADL_Jongkok_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Jongkok/ADL_Jongkok_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Jongkok_3"
+    },
+    "new_july:ADL_Jongkok_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Jongkok/ADL_Jongkok_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Jongkok_4"
+    },
+    "new_july:ADL_Jongkok_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Jongkok/ADL_Jongkok_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Jongkok_5"
+    },
+    "new_july:ADL_Jongkok_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Jongkok/ADL_Jongkok_6.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Jongkok_6"
+    },
+    "new_july:ADL_Jongkok_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Jongkok/ADL_Jongkok_7.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Jongkok_7"
+    },
+    "new_july:ADL_Jongkok_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Jongkok/ADL_Jongkok_8.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Jongkok_8"
+    },
+    "new_july:ADL_Lompat_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Lompat/ADL_Lompat_1.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Lompat_1"
+    },
+    "new_july:ADL_Lompat_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Lompat/ADL_Lompat_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Lompat_2"
+    },
+    "new_july:ADL_Lompat_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Lompat/ADL_Lompat_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Lompat_3"
+    },
+    "new_july:ADL_Lompat_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Lompat/ADL_Lompat_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Lompat_4"
+    },
+    "new_july:ADL_Lompat_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Lompat/ADL_Lompat_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Lompat_5"
+    },
+    "new_july:ADL_Lompat_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Lompat/ADL_Lompat_6.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Lompat_6"
+    },
+    "new_july:ADL_Lompat_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Lompat/ADL_Lompat_7.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Lompat_7"
+    },
+    "new_july:ADL_Plank_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_1.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_1"
+    },
+    "new_july:ADL_Plank_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_10.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_10"
+    },
+    "new_july:ADL_Plank_11": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_11.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_11"
+    },
+    "new_july:ADL_Plank_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_2"
+    },
+    "new_july:ADL_Plank_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_3"
+    },
+    "new_july:ADL_Plank_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_4"
+    },
+    "new_july:ADL_Plank_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_5"
+    },
+    "new_july:ADL_Plank_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_6.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_6"
+    },
+    "new_july:ADL_Plank_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_7.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_7"
+    },
+    "new_july:ADL_Plank_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_8.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_8"
+    },
+    "new_july:ADL_Plank_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Plank/ADL_Plank_9.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Plank_9"
+    },
+    "new_july:ADL_Stretching_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_1.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_1"
+    },
+    "new_july:ADL_Stretching_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_10.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_10"
+    },
+    "new_july:ADL_Stretching_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_2"
+    },
+    "new_july:ADL_Stretching_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_3"
+    },
+    "new_july:ADL_Stretching_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_4"
+    },
+    "new_july:ADL_Stretching_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_5"
+    },
+    "new_july:ADL_Stretching_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_6.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_6"
+    },
+    "new_july:ADL_Stretching_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_7.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_7"
+    },
+    "new_july:ADL_Stretching_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_8.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_8"
+    },
+    "new_july:ADL_Stretching_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Stretching/ADL_Stretching_9.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Stretching_9"
+    },
+    "new_july:ADL_Sujud_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Sujud/ADL_Sujud_1.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Sujud_1"
+    },
+    "new_july:ADL_Sujud_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Sujud/ADL_Sujud_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Sujud_2"
+    },
+    "new_july:ADL_Sujud_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Sujud/ADL_Sujud_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Sujud_3"
+    },
+    "new_july:ADL_Sujud_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Sujud/ADL_Sujud_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Sujud_4"
+    },
+    "new_july:ADL_Sujud_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Sujud/ADL_Sujud_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Sujud_5"
+    },
+    "new_july:ADL_Sujud_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Sujud/ADL_Sujud_6.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Sujud_6"
+    },
+    "new_july:ADL_Sujud_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "ADL_Sujud/ADL_Sujud_7.mp4",
+      "subject_id": "S01",
+      "video_stem": "ADL_Sujud_7"
+    },
+    "new_july:Fall_ke_depan_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_1.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_1"
+    },
+    "new_july:Fall_ke_depan_10": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_10.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_10"
+    },
+    "new_july:Fall_ke_depan_11": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_11.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_11"
+    },
+    "new_july:Fall_ke_depan_12": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_12.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_12"
+    },
+    "new_july:Fall_ke_depan_13": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_13.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_13"
+    },
+    "new_july:Fall_ke_depan_14": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_14.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_14"
+    },
+    "new_july:Fall_ke_depan_15": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_15.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_15"
+    },
+    "new_july:Fall_ke_depan_16": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_16.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_16"
+    },
+    "new_july:Fall_ke_depan_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_2"
+    },
+    "new_july:Fall_ke_depan_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_3"
+    },
+    "new_july:Fall_ke_depan_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_4"
+    },
+    "new_july:Fall_ke_depan_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_5"
+    },
+    "new_july:Fall_ke_depan_6": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_6.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_6"
+    },
+    "new_july:Fall_ke_depan_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_7.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_7"
+    },
+    "new_july:Fall_ke_depan_8": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_8.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_8"
+    },
+    "new_july:Fall_ke_depan_9": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_9.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_ke_depan_9"
+    },
+    "new_july:Fall_samping_kanan_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_1.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kanan_1"
+    },
+    "new_july:Fall_samping_kanan_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kanan_2"
+    },
+    "new_july:Fall_samping_kanan_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kanan_3"
+    },
+    "new_july:Fall_samping_kanan_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kanan_4"
+    },
+    "new_july:Fall_samping_kanan_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kanan_5"
+    },
+    "new_july:Fall_samping_kanan_6": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_6.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kanan_6"
+    },
+    "new_july:Fall_samping_kanan_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_7.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kanan_7"
+    },
+    "new_july:Fall_samping_kanan_8": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_8.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kanan_8"
+    },
+    "new_july:Fall_samping_kiri_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_2.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kiri_2"
+    },
+    "new_july:Fall_samping_kiri_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_3.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kiri_3"
+    },
+    "new_july:Fall_samping_kiri_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_4.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kiri_4"
+    },
+    "new_july:Fall_samping_kiri_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "new_july",
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_5.mp4",
+      "subject_id": "S01",
+      "video_stem": "Fall_samping_kiri_5"
+    },
+    "old:ADL_Bangun_dari_lantai_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_1.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126428.281173,
+      "video_stem": "ADL_Bangun_dari_lantai_1"
+    },
+    "old:ADL_Bangun_dari_lantai_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_10.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126432.8830483,
+      "video_stem": "ADL_Bangun_dari_lantai_10"
+    },
+    "old:ADL_Bangun_dari_lantai_11": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_11.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126434.1491585,
+      "video_stem": "ADL_Bangun_dari_lantai_11"
+    },
+    "old:ADL_Bangun_dari_lantai_12": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_12.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126435.06666,
+      "video_stem": "ADL_Bangun_dari_lantai_12"
+    },
+    "old:ADL_Bangun_dari_lantai_13": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_13.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126435.9242527,
+      "video_stem": "ADL_Bangun_dari_lantai_13"
+    },
+    "old:ADL_Bangun_dari_lantai_14": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_14.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126437.4079132,
+      "video_stem": "ADL_Bangun_dari_lantai_14"
+    },
+    "old:ADL_Bangun_dari_lantai_15": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_15.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126438.7698112,
+      "video_stem": "ADL_Bangun_dari_lantai_15"
+    },
+    "old:ADL_Bangun_dari_lantai_16": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_16.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126440.41226,
+      "video_stem": "ADL_Bangun_dari_lantai_16"
+    },
+    "old:ADL_Bangun_dari_lantai_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_2.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126442.15179,
+      "video_stem": "ADL_Bangun_dari_lantai_2"
+    },
+    "old:ADL_Bangun_dari_lantai_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_3.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126443.3113632,
+      "video_stem": "ADL_Bangun_dari_lantai_3"
+    },
+    "old:ADL_Bangun_dari_lantai_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_4.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126444.6614666,
+      "video_stem": "ADL_Bangun_dari_lantai_4"
+    },
+    "old:ADL_Bangun_dari_lantai_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126445.746255,
+      "video_stem": "ADL_Bangun_dari_lantai_5"
+    },
+    "old:ADL_Bangun_dari_lantai_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126446.5983534,
+      "video_stem": "ADL_Bangun_dari_lantai_6"
+    },
+    "old:ADL_Bangun_dari_lantai_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_7.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126447.5452998,
+      "video_stem": "ADL_Bangun_dari_lantai_7"
+    },
+    "old:ADL_Bangun_dari_lantai_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_8.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126448.4998264,
+      "video_stem": "ADL_Bangun_dari_lantai_8"
+    },
+    "old:ADL_Bangun_dari_lantai_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Bangun_dari_lantai/ADL_Bangun_dari_lantai_9.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126449.4089339,
+      "video_stem": "ADL_Bangun_dari_lantai_9"
+    },
+    "old:ADL_Berbaring_controlled_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_1.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126452.3273747,
+      "video_stem": "ADL_Berbaring_controlled_1"
+    },
+    "old:ADL_Berbaring_controlled_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_10.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126453.3263228,
+      "video_stem": "ADL_Berbaring_controlled_10"
+    },
+    "old:ADL_Berbaring_controlled_11": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_11.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126454.2308218,
+      "video_stem": "ADL_Berbaring_controlled_11"
+    },
+    "old:ADL_Berbaring_controlled_12": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_12.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126454.9881546,
+      "video_stem": "ADL_Berbaring_controlled_12"
+    },
+    "old:ADL_Berbaring_controlled_13": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_13.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126456.3080091,
+      "video_stem": "ADL_Berbaring_controlled_13"
+    },
+    "old:ADL_Berbaring_controlled_14": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_14.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126457.3573241,
+      "video_stem": "ADL_Berbaring_controlled_14"
+    },
+    "old:ADL_Berbaring_controlled_15": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_15.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126458.2231889,
+      "video_stem": "ADL_Berbaring_controlled_15"
+    },
+    "old:ADL_Berbaring_controlled_16": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_16.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126459.5424886,
+      "video_stem": "ADL_Berbaring_controlled_16"
+    },
+    "old:ADL_Berbaring_controlled_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_2.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126460.974884,
+      "video_stem": "ADL_Berbaring_controlled_2"
+    },
+    "old:ADL_Berbaring_controlled_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_3.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126461.9211802,
+      "video_stem": "ADL_Berbaring_controlled_3"
+    },
+    "old:ADL_Berbaring_controlled_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_4.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126462.9065113,
+      "video_stem": "ADL_Berbaring_controlled_4"
+    },
+    "old:ADL_Berbaring_controlled_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126464.3235116,
+      "video_stem": "ADL_Berbaring_controlled_5"
+    },
+    "old:ADL_Berbaring_controlled_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126465.5878785,
+      "video_stem": "ADL_Berbaring_controlled_6"
+    },
+    "old:ADL_Berbaring_controlled_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_7.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126466.4930944,
+      "video_stem": "ADL_Berbaring_controlled_7"
+    },
+    "old:ADL_Berbaring_controlled_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_8.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126467.3201268,
+      "video_stem": "ADL_Berbaring_controlled_8"
+    },
+    "old:ADL_Berbaring_controlled_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berbaring_controlled/ADL_Berbaring_controlled_9.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126468.4067523,
+      "video_stem": "ADL_Berbaring_controlled_9"
+    },
+    "old:ADL_Berdiri_diam_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_1.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126469.0561826,
+      "video_stem": "ADL_Berdiri_diam_1"
+    },
+    "old:ADL_Berdiri_diam_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_10.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126470.498095,
+      "video_stem": "ADL_Berdiri_diam_10"
+    },
+    "old:ADL_Berdiri_diam_11": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_11.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126471.6172147,
+      "video_stem": "ADL_Berdiri_diam_11"
+    },
+    "old:ADL_Berdiri_diam_12": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_12.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126472.4765959,
+      "video_stem": "ADL_Berdiri_diam_12"
+    },
+    "old:ADL_Berdiri_diam_13": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_13.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126473.9070287,
+      "video_stem": "ADL_Berdiri_diam_13"
+    },
+    "old:ADL_Berdiri_diam_14": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_14.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126474.7330585,
+      "video_stem": "ADL_Berdiri_diam_14"
+    },
+    "old:ADL_Berdiri_diam_15": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_15.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126475.6106968,
+      "video_stem": "ADL_Berdiri_diam_15"
+    },
+    "old:ADL_Berdiri_diam_16": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_16.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126476.4351277,
+      "video_stem": "ADL_Berdiri_diam_16"
+    },
+    "old:ADL_Berdiri_diam_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_2.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126477.9453027,
+      "video_stem": "ADL_Berdiri_diam_2"
+    },
+    "old:ADL_Berdiri_diam_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_3.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126479.1293318,
+      "video_stem": "ADL_Berdiri_diam_3"
+    },
+    "old:ADL_Berdiri_diam_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_4.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126480.0658803,
+      "video_stem": "ADL_Berdiri_diam_4"
+    },
+    "old:ADL_Berdiri_diam_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126481.145961,
+      "video_stem": "ADL_Berdiri_diam_5"
+    },
+    "old:ADL_Berdiri_diam_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126482.0206892,
+      "video_stem": "ADL_Berdiri_diam_6"
+    },
+    "old:ADL_Berdiri_diam_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_7.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126482.8248677,
+      "video_stem": "ADL_Berdiri_diam_7"
+    },
+    "old:ADL_Berdiri_diam_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_8.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126483.6068573,
+      "video_stem": "ADL_Berdiri_diam_8"
+    },
+    "old:ADL_Berdiri_diam_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berdiri_diam/ADL_Berdiri_diam_9.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126485.0240564,
+      "video_stem": "ADL_Berdiri_diam_9"
+    },
+    "old:ADL_Berjalan_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_1.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126486.1077518,
+      "video_stem": "ADL_Berjalan_1"
+    },
+    "old:ADL_Berjalan_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_10.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126487.303105,
+      "video_stem": "ADL_Berjalan_10"
+    },
+    "old:ADL_Berjalan_11": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_11.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126488.4059825,
+      "video_stem": "ADL_Berjalan_11"
+    },
+    "old:ADL_Berjalan_12": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_12.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126489.235211,
+      "video_stem": "ADL_Berjalan_12"
+    },
+    "old:ADL_Berjalan_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_2.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126491.0427978,
+      "video_stem": "ADL_Berjalan_2"
+    },
+    "old:ADL_Berjalan_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_3.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126492.449323,
+      "video_stem": "ADL_Berjalan_3"
+    },
+    "old:ADL_Berjalan_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_4.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126493.2941573,
+      "video_stem": "ADL_Berjalan_4"
+    },
+    "old:ADL_Berjalan_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_5.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126494.4707222,
+      "video_stem": "ADL_Berjalan_5"
+    },
+    "old:ADL_Berjalan_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_6.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126495.8406594,
+      "video_stem": "ADL_Berjalan_6"
+    },
+    "old:ADL_Berjalan_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_7.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126497.153369,
+      "video_stem": "ADL_Berjalan_7"
+    },
+    "old:ADL_Berjalan_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_8.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126498.151755,
+      "video_stem": "ADL_Berjalan_8"
+    },
+    "old:ADL_Berjalan_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Berjalan/ADL_Berjalan_9.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126499.420978,
+      "video_stem": "ADL_Berjalan_9"
+    },
+    "old:ADL_Duduk_di_kursi_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_1.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126501.5708592,
+      "video_stem": "ADL_Duduk_di_kursi_1"
+    },
+    "old:ADL_Duduk_di_kursi_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_10.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126503.134965,
+      "video_stem": "ADL_Duduk_di_kursi_10"
+    },
+    "old:ADL_Duduk_di_kursi_11": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_11.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126504.0206788,
+      "video_stem": "ADL_Duduk_di_kursi_11"
+    },
+    "old:ADL_Duduk_di_kursi_12": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_12.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126504.851968,
+      "video_stem": "ADL_Duduk_di_kursi_12"
+    },
+    "old:ADL_Duduk_di_kursi_13": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_13.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126505.572849,
+      "video_stem": "ADL_Duduk_di_kursi_13"
+    },
+    "old:ADL_Duduk_di_kursi_14": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_14.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126506.4984856,
+      "video_stem": "ADL_Duduk_di_kursi_14"
+    },
+    "old:ADL_Duduk_di_kursi_15": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_15.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126507.1961,
+      "video_stem": "ADL_Duduk_di_kursi_15"
+    },
+    "old:ADL_Duduk_di_kursi_16": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_16.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126507.9216568,
+      "video_stem": "ADL_Duduk_di_kursi_16"
+    },
+    "old:ADL_Duduk_di_kursi_17": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_17.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126509.0843759,
+      "video_stem": "ADL_Duduk_di_kursi_17"
+    },
+    "old:ADL_Duduk_di_kursi_18": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_18.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126509.782177,
+      "video_stem": "ADL_Duduk_di_kursi_18"
+    },
+    "old:ADL_Duduk_di_kursi_19": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_19.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126510.5031683,
+      "video_stem": "ADL_Duduk_di_kursi_19"
+    },
+    "old:ADL_Duduk_di_kursi_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_2.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126511.8217232,
+      "video_stem": "ADL_Duduk_di_kursi_2"
+    },
+    "old:ADL_Duduk_di_kursi_20": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_20.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126513.9657106,
+      "video_stem": "ADL_Duduk_di_kursi_20"
+    },
+    "old:ADL_Duduk_di_kursi_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_3.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126516.1053123,
+      "video_stem": "ADL_Duduk_di_kursi_3"
+    },
+    "old:ADL_Duduk_di_kursi_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_4.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126517.4381833,
+      "video_stem": "ADL_Duduk_di_kursi_4"
+    },
+    "old:ADL_Duduk_di_kursi_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_5.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126518.4589367,
+      "video_stem": "ADL_Duduk_di_kursi_5"
+    },
+    "old:ADL_Duduk_di_kursi_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126519.5827463,
+      "video_stem": "ADL_Duduk_di_kursi_6"
+    },
+    "old:ADL_Duduk_di_kursi_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_7.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126520.5376031,
+      "video_stem": "ADL_Duduk_di_kursi_7"
+    },
+    "old:ADL_Duduk_di_kursi_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_8.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126521.3857694,
+      "video_stem": "ADL_Duduk_di_kursi_8"
+    },
+    "old:ADL_Duduk_di_kursi_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Duduk_di_kursi/ADL_Duduk_di_kursi_9.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126522.2242088,
+      "video_stem": "ADL_Duduk_di_kursi_9"
+    },
+    "old:ADL_Jongkok_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_1.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126523.6229184,
+      "video_stem": "ADL_Jongkok_1"
+    },
+    "old:ADL_Jongkok_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_10.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126524.4874082,
+      "video_stem": "ADL_Jongkok_10"
+    },
+    "old:ADL_Jongkok_11": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_11.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126525.6570518,
+      "video_stem": "ADL_Jongkok_11"
+    },
+    "old:ADL_Jongkok_12": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_12.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126526.3558881,
+      "video_stem": "ADL_Jongkok_12"
+    },
+    "old:ADL_Jongkok_13": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_13.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126527.5738153,
+      "video_stem": "ADL_Jongkok_13"
+    },
+    "old:ADL_Jongkok_14": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_14.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126528.5031908,
+      "video_stem": "ADL_Jongkok_14"
+    },
+    "old:ADL_Jongkok_15": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_15.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126529.5327947,
+      "video_stem": "ADL_Jongkok_15"
+    },
+    "old:ADL_Jongkok_16": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_16.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126531.149842,
+      "video_stem": "ADL_Jongkok_16"
+    },
+    "old:ADL_Jongkok_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_2.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126532.1825564,
+      "video_stem": "ADL_Jongkok_2"
+    },
+    "old:ADL_Jongkok_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_3.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126533.3794801,
+      "video_stem": "ADL_Jongkok_3"
+    },
+    "old:ADL_Jongkok_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_4.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126534.2283118,
+      "video_stem": "ADL_Jongkok_4"
+    },
+    "old:ADL_Jongkok_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126535.456995,
+      "video_stem": "ADL_Jongkok_5"
+    },
+    "old:ADL_Jongkok_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126536.5012922,
+      "video_stem": "ADL_Jongkok_6"
+    },
+    "old:ADL_Jongkok_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_7.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126537.2289639,
+      "video_stem": "ADL_Jongkok_7"
+    },
+    "old:ADL_Jongkok_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_8.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126537.9315443,
+      "video_stem": "ADL_Jongkok_8"
+    },
+    "old:ADL_Jongkok_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Jongkok/ADL_Jongkok_9.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126539.0606036,
+      "video_stem": "ADL_Jongkok_9"
+    },
+    "old:ADL_Membungkuk_1": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_1.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126539.8539937,
+      "video_stem": "ADL_Membungkuk_1"
+    },
+    "old:ADL_Membungkuk_10": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_10.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126540.934467,
+      "video_stem": "ADL_Membungkuk_10"
+    },
+    "old:ADL_Membungkuk_11": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_11.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126541.8071544,
+      "video_stem": "ADL_Membungkuk_11"
+    },
+    "old:ADL_Membungkuk_12": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_12.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126542.4917703,
+      "video_stem": "ADL_Membungkuk_12"
+    },
+    "old:ADL_Membungkuk_13": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_13.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126543.9108243,
+      "video_stem": "ADL_Membungkuk_13"
+    },
+    "old:ADL_Membungkuk_14": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_14.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126545.3837924,
+      "video_stem": "ADL_Membungkuk_14"
+    },
+    "old:ADL_Membungkuk_15": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_15.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126546.9522703,
+      "video_stem": "ADL_Membungkuk_15"
+    },
+    "old:ADL_Membungkuk_16": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_16.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126548.3785648,
+      "video_stem": "ADL_Membungkuk_16"
+    },
+    "old:ADL_Membungkuk_2": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_2.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126550.821676,
+      "video_stem": "ADL_Membungkuk_2"
+    },
+    "old:ADL_Membungkuk_3": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_3.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126551.7331285,
+      "video_stem": "ADL_Membungkuk_3"
+    },
+    "old:ADL_Membungkuk_4": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_4.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126552.677663,
+      "video_stem": "ADL_Membungkuk_4"
+    },
+    "old:ADL_Membungkuk_5": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126553.7891378,
+      "video_stem": "ADL_Membungkuk_5"
+    },
+    "old:ADL_Membungkuk_6": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126554.917117,
+      "video_stem": "ADL_Membungkuk_6"
+    },
+    "old:ADL_Membungkuk_7": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_7.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126555.7917585,
+      "video_stem": "ADL_Membungkuk_7"
+    },
+    "old:ADL_Membungkuk_8": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_8.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126556.5744116,
+      "video_stem": "ADL_Membungkuk_8"
+    },
+    "old:ADL_Membungkuk_9": {
+      "class_label": "ADL",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "ADL/ADL_Membungkuk/ADL_Membungkuk_9.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126564.7680385,
+      "video_stem": "ADL_Membungkuk_9"
+    },
+    "old:Fall_dari_duduk_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_1.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126567.323551,
+      "video_stem": "Fall_dari_duduk_1"
+    },
+    "old:Fall_dari_duduk_10": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_10.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126569.3805575,
+      "video_stem": "Fall_dari_duduk_10"
+    },
+    "old:Fall_dari_duduk_11": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_11.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126570.0913267,
+      "video_stem": "Fall_dari_duduk_11"
+    },
+    "old:Fall_dari_duduk_12": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_12.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126570.7780728,
+      "video_stem": "Fall_dari_duduk_12"
+    },
+    "old:Fall_dari_duduk_13": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_13.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126571.432785,
+      "video_stem": "Fall_dari_duduk_13"
+    },
+    "old:Fall_dari_duduk_14": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_14.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126572.0459564,
+      "video_stem": "Fall_dari_duduk_14"
+    },
+    "old:Fall_dari_duduk_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_2.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126572.9587376,
+      "video_stem": "Fall_dari_duduk_2"
+    },
+    "old:Fall_dari_duduk_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_3.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126573.6030004,
+      "video_stem": "Fall_dari_duduk_3"
+    },
+    "old:Fall_dari_duduk_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_4.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126574.2585642,
+      "video_stem": "Fall_dari_duduk_4"
+    },
+    "old:Fall_dari_duduk_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_5.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126575.4837608,
+      "video_stem": "Fall_dari_duduk_5"
+    },
+    "old:Fall_dari_duduk_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_7.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126576.4091527,
+      "video_stem": "Fall_dari_duduk_7"
+    },
+    "old:Fall_dari_duduk_8": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_8.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126577.0815918,
+      "video_stem": "Fall_dari_duduk_8"
+    },
+    "old:Fall_dari_duduk_9": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_dari_duduk/Fall_dari_duduk_9.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126578.065749,
+      "video_stem": "Fall_dari_duduk_9"
+    },
+    "old:Fall_ke_belakang_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_belakang/Fall_ke_belakang_1.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126579.1963565,
+      "video_stem": "Fall_ke_belakang_1"
+    },
+    "old:Fall_ke_belakang_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_belakang/Fall_ke_belakang_2.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126581.1806598,
+      "video_stem": "Fall_ke_belakang_2"
+    },
+    "old:Fall_ke_belakang_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_belakang/Fall_ke_belakang_3.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126590.0994928,
+      "video_stem": "Fall_ke_belakang_3"
+    },
+    "old:Fall_ke_belakang_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_belakang/Fall_ke_belakang_4.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126590.476003,
+      "video_stem": "Fall_ke_belakang_4"
+    },
+    "old:Fall_ke_belakang_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_belakang/Fall_ke_belakang_5.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126590.8753808,
+      "video_stem": "Fall_ke_belakang_5"
+    },
+    "old:Fall_ke_belakang_6": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_belakang/Fall_ke_belakang_6.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126591.6026578,
+      "video_stem": "Fall_ke_belakang_6"
+    },
+    "old:Fall_ke_belakang_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_belakang/Fall_ke_belakang_7.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126592.4544969,
+      "video_stem": "Fall_ke_belakang_7"
+    },
+    "old:Fall_ke_belakang_8": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_belakang/Fall_ke_belakang_8.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126593.8429482,
+      "video_stem": "Fall_ke_belakang_8"
+    },
+    "old:Fall_ke_depan_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_1.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126594.981753,
+      "video_stem": "Fall_ke_depan_1"
+    },
+    "old:Fall_ke_depan_10": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_10.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126596.3609824,
+      "video_stem": "Fall_ke_depan_10"
+    },
+    "old:Fall_ke_depan_11": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_11.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126597.8489168,
+      "video_stem": "Fall_ke_depan_11"
+    },
+    "old:Fall_ke_depan_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_2.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126598.912337,
+      "video_stem": "Fall_ke_depan_2"
+    },
+    "old:Fall_ke_depan_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_3.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126600.6421254,
+      "video_stem": "Fall_ke_depan_3"
+    },
+    "old:Fall_ke_depan_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_4.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126601.4196336,
+      "video_stem": "Fall_ke_depan_4"
+    },
+    "old:Fall_ke_depan_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126602.0304928,
+      "video_stem": "Fall_ke_depan_5"
+    },
+    "old:Fall_ke_depan_6": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_6.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126602.8083131,
+      "video_stem": "Fall_ke_depan_6"
+    },
+    "old:Fall_ke_depan_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_7.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126603.5909967,
+      "video_stem": "Fall_ke_depan_7"
+    },
+    "old:Fall_ke_depan_8": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_8.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126604.4367564,
+      "video_stem": "Fall_ke_depan_8"
+    },
+    "old:Fall_ke_depan_9": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_ke_depan/Fall_ke_depan_9.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126605.1027725,
+      "video_stem": "Fall_ke_depan_9"
+    },
+    "old:Fall_saat_berbalik_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berbalik/Fall_saat_berbalik_1.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126605.794246,
+      "video_stem": "Fall_saat_berbalik_1"
+    },
+    "old:Fall_saat_berbalik_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berbalik/Fall_saat_berbalik_2.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126606.816479,
+      "video_stem": "Fall_saat_berbalik_2"
+    },
+    "old:Fall_saat_berbalik_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berbalik/Fall_saat_berbalik_3.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126607.5562801,
+      "video_stem": "Fall_saat_berbalik_3"
+    },
+    "old:Fall_saat_berbalik_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berbalik/Fall_saat_berbalik_4.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126608.2580352,
+      "video_stem": "Fall_saat_berbalik_4"
+    },
+    "old:Fall_saat_berbalik_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berbalik/Fall_saat_berbalik_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126609.0692337,
+      "video_stem": "Fall_saat_berbalik_5"
+    },
+    "old:Fall_saat_berbalik_6": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berbalik/Fall_saat_berbalik_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126609.902083,
+      "video_stem": "Fall_saat_berbalik_6"
+    },
+    "old:Fall_saat_berbalik_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berbalik/Fall_saat_berbalik_7.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126610.6981149,
+      "video_stem": "Fall_saat_berbalik_7"
+    },
+    "old:Fall_saat_berjalan_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_1.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126612.0394592,
+      "video_stem": "Fall_saat_berjalan_1"
+    },
+    "old:Fall_saat_berjalan_10": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_10.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126613.2495017,
+      "video_stem": "Fall_saat_berjalan_10"
+    },
+    "old:Fall_saat_berjalan_11": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_11.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126614.1371534,
+      "video_stem": "Fall_saat_berjalan_11"
+    },
+    "old:Fall_saat_berjalan_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_2.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126615.0879385,
+      "video_stem": "Fall_saat_berjalan_2"
+    },
+    "old:Fall_saat_berjalan_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_3.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126615.9207103,
+      "video_stem": "Fall_saat_berjalan_3"
+    },
+    "old:Fall_saat_berjalan_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_4.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126616.857318,
+      "video_stem": "Fall_saat_berjalan_4"
+    },
+    "old:Fall_saat_berjalan_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_5.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126617.8851984,
+      "video_stem": "Fall_saat_berjalan_5"
+    },
+    "old:Fall_saat_berjalan_6": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_6.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126618.6147914,
+      "video_stem": "Fall_saat_berjalan_6"
+    },
+    "old:Fall_saat_berjalan_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_7.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126619.3576841,
+      "video_stem": "Fall_saat_berjalan_7"
+    },
+    "old:Fall_saat_berjalan_8": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_8.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126620.658712,
+      "video_stem": "Fall_saat_berjalan_8"
+    },
+    "old:Fall_saat_berjalan_9": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_saat_berjalan/Fall_saat_berjalan_9.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126621.2848344,
+      "video_stem": "Fall_saat_berjalan_9"
+    },
+    "old:Fall_samping_kanan_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_1.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126622.1449976,
+      "video_stem": "Fall_samping_kanan_1"
+    },
+    "old:Fall_samping_kanan_11": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_11.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126622.9604776,
+      "video_stem": "Fall_samping_kanan_11"
+    },
+    "old:Fall_samping_kanan_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_2.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126623.6956704,
+      "video_stem": "Fall_samping_kanan_2"
+    },
+    "old:Fall_samping_kanan_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_3.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126624.4416213,
+      "video_stem": "Fall_samping_kanan_3"
+    },
+    "old:Fall_samping_kanan_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_4.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126625.2027836,
+      "video_stem": "Fall_samping_kanan_4"
+    },
+    "old:Fall_samping_kanan_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126625.9274762,
+      "video_stem": "Fall_samping_kanan_5"
+    },
+    "old:Fall_samping_kanan_6": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126626.5140038,
+      "video_stem": "Fall_samping_kanan_6"
+    },
+    "old:Fall_samping_kanan_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_7.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126627.6730807,
+      "video_stem": "Fall_samping_kanan_7"
+    },
+    "old:Fall_samping_kanan_8": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_8.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126628.5336754,
+      "video_stem": "Fall_samping_kanan_8"
+    },
+    "old:Fall_samping_kanan_9": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kanan/Fall_samping_kanan_9.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126629.2816772,
+      "video_stem": "Fall_samping_kanan_9"
+    },
+    "old:Fall_samping_kiri_1": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_1.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126630.227541,
+      "video_stem": "Fall_samping_kiri_1"
+    },
+    "old:Fall_samping_kiri_10": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_10.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126631.0404892,
+      "video_stem": "Fall_samping_kiri_10"
+    },
+    "old:Fall_samping_kiri_11": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_11.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126632.220954,
+      "video_stem": "Fall_samping_kiri_11"
+    },
+    "old:Fall_samping_kiri_12": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_12.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126632.8777492,
+      "video_stem": "Fall_samping_kiri_12"
+    },
+    "old:Fall_samping_kiri_13": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_13.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126634.2605352,
+      "video_stem": "Fall_samping_kiri_13"
+    },
+    "old:Fall_samping_kiri_14": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_14.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126635.3930988,
+      "video_stem": "Fall_samping_kiri_14"
+    },
+    "old:Fall_samping_kiri_15": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_15.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126636.1180897,
+      "video_stem": "Fall_samping_kiri_15"
+    },
+    "old:Fall_samping_kiri_16": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_16.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126636.7918842,
+      "video_stem": "Fall_samping_kiri_16"
+    },
+    "old:Fall_samping_kiri_17": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_17.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126637.9595063,
+      "video_stem": "Fall_samping_kiri_17"
+    },
+    "old:Fall_samping_kiri_18": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_18.mp4",
+      "subject_id": "S03",
+      "subject_updated_at_unix": 1786126638.6669521,
+      "video_stem": "Fall_samping_kiri_18"
+    },
+    "old:Fall_samping_kiri_19": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_19.mp4",
+      "subject_id": "S04",
+      "subject_updated_at_unix": 1786126639.9306977,
+      "video_stem": "Fall_samping_kiri_19"
+    },
+    "old:Fall_samping_kiri_2": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_2.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126641.1030083,
+      "video_stem": "Fall_samping_kiri_2"
+    },
+    "old:Fall_samping_kiri_3": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_3.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126642.2753415,
+      "video_stem": "Fall_samping_kiri_3"
+    },
+    "old:Fall_samping_kiri_4": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_4.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126643.0802188,
+      "video_stem": "Fall_samping_kiri_4"
+    },
+    "old:Fall_samping_kiri_5": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_5.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126643.760395,
+      "video_stem": "Fall_samping_kiri_5"
+    },
+    "old:Fall_samping_kiri_6": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_6.mp4",
+      "subject_id": "S01",
+      "subject_updated_at_unix": 1786126644.4282143,
+      "video_stem": "Fall_samping_kiri_6"
+    },
+    "old:Fall_samping_kiri_7": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_7.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126645.349223,
+      "video_stem": "Fall_samping_kiri_7"
+    },
+    "old:Fall_samping_kiri_8": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_8.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126646.1234143,
+      "video_stem": "Fall_samping_kiri_8"
+    },
+    "old:Fall_samping_kiri_9": {
+      "class_label": "Fall",
+      "present_in_raw": true,
+      "source": "old",
+      "source_relative_path": "Fall/Fall_samping_kiri/Fall_samping_kiri_9.mp4",
+      "subject_id": "S02",
+      "subject_updated_at_unix": 1786126646.7595031,
+      "video_stem": "Fall_samping_kiri_9"
+    }
+  }
+}

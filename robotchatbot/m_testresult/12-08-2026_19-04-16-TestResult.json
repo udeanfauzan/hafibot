@@ -1,0 +1,66 @@
+[
+    {
+        "input": "selamat datang, robot",
+        "previous_response": null,
+        "intent": "menyapa",
+        "sentiment": "neutral",
+        "function": "response",
+        "time": null,
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "selamat datang"
+    },
+    {
+        "input": "sekarang cuacanya gimana?",
+        "previous_response": "selamat datang",
+        "intent": "nanya_cuaca",
+        "sentiment": "neutral",
+        "function": "weather",
+        "time": null,
+        "news": null,
+        "weather": {
+            "cuaca": "Cerah",
+            "suhu": 22,
+            "kelembapan": 73
+        },
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": true,
+        "TBA_text": "Maaf, saya belum dilatih untuk cuaca",
+        "response": "Maaf, saya belum dilatih untuk cuaca"
+    },
+    {
+        "input": "berikan saya pengingat untuk bekerja keras",
+        "previous_response": "selamat datang",
+        "intent": "pertanyaan",
+        "sentiment": "negative",
+        "function": "response",
+        "time": null,
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "saya adalah human following robot yang dikembangkan oleh Teknik Elektro Unpad, saya akan memperbarui informasi saya secara berkala, hingga ditemukan sebelumnya"
+    },
+    {
+        "input": "berikan saya pengingat untuk minum obat besok pagi",
+        "previous_response": "saya adalah human following robot yang dikembangkan oleh Teknik Elektro Unpad, saya akan memperbarui informasi saya secara berkala, hingga ditemukan sebelumnya",
+        "intent": "buatagenda",
+        "sentiment": "serious",
+        "function": "reminder",
+        "time": null,
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": true,
+        "TBA_text": "Maaf, pengingat belum diimplementasikan",
+        "response": "Maaf, pengingat belum diimplementasikan"
+    }
+]

@@ -1,0 +1,7 @@
+# Jetson, Docker, ROS, and Python entrypoints require Unix line endings.
+*.sh text eol=lf
+*.py text eol=lf
+*.launch text eol=lf
+Dockerfile text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf

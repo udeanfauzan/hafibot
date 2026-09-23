@@ -1,0 +1,47 @@
+[
+    {
+        "input": "Selamat pagi Happy Board",
+        "previous_response": null,
+        "intent": "menyapa",
+        "sentiment": "positive",
+        "function": "response",
+        "time": "2026-08-19T12:47:26.341299+07:00",
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "selamat pagi"
+    },
+    {
+        "input": "kevalasa yang merasa pur sing",
+        "previous_response": "selamat pagi",
+        "intent": "pertanyaan",
+        "sentiment": "positive",
+        "function": "response",
+        "time": "2026-08-19T12:48:48.287188+07:00",
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "jika terdapat kesepian, jangan terjatuh dan jangan menunggu"
+    },
+    {
+        "input": "ents supplement sama development",
+        "previous_response": "jika terdapat kesepian, jangan terjatuh dan jangan menunggu",
+        "intent": "pertanyaan",
+        "sentiment": "neutral",
+        "function": "response",
+        "time": "2026-08-19T12:50:09.335483+07:00",
+        "news": null,
+        "weather": null,
+        "command_override": false,
+        "command_text": null,
+        "TBA_override": false,
+        "TBA_text": null,
+        "response": "silahkan dikembangkan"
+    }
+]

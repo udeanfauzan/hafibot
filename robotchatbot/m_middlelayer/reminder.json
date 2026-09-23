@@ -1,0 +1,37 @@
+[
+    {
+        "uuid": "dea6604d-d68b-46bf-b511-da543ce8bb77",
+        "task": "waktu solat subuh",
+        "startdate": "2026-09-01T04:45:00+07:00",
+        "repeat_type": 1,
+        "called_upon": true
+    },
+    {
+        "uuid": "9700db41-a17a-4a50-8f58-509eee9e1f38",
+        "task": "waktu solat dzuhur",
+        "startdate": "2026-09-01T12:00:00+07:00",
+        "repeat_type": 1,
+        "called_upon": false
+    },
+    {
+        "uuid": "aaa69fa5-ba55-4224-b843-89e504b58609",
+        "task": "waktu solat ashar",
+        "startdate": "2026-08-31T15:15:00+07:00",
+        "repeat_type": 1,
+        "called_upon": false
+    },
+    {
+        "uuid": "9ca6f330-f92a-44bc-9935-8722d03a6625",
+        "task": "waktu solat magrib",
+        "startdate": "2026-08-31T18:05:00+07:00",
+        "repeat_type": 1,
+        "called_upon": false
+    },
+    {
+        "uuid": "e9b68383-aaf8-44fb-b296-0801eccdb888",
+        "task": "waktu solat isya",
+        "startdate": "2026-08-31T19:15:00+07:00",
+        "repeat_type": 1,
+        "called_upon": false
+    }
+]

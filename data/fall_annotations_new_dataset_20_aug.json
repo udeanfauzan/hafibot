@@ -1,0 +1,238 @@
+{
+  "description": "Inclusive frame interval where the person is actively falling",
+  "schema_version": 1,
+  "source_root": "data/new dataset 20 aug",
+  "videos": {
+    "Fall_ke_depan_12": {
+      "fall_end_frame": 44,
+      "fall_end_sec": 2.933333333333333,
+      "fall_start_frame": 17,
+      "fall_start_sec": 1.1333333333333333,
+      "source_fps": 15.0,
+      "source_frame_count": 75,
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_12.mp4",
+      "updated_at_unix": 1787229385.8875494,
+      "video_stem": "Fall_ke_depan_12"
+    },
+    "Fall_ke_depan_13": {
+      "fall_end_frame": 60,
+      "fall_end_sec": 4.0,
+      "fall_start_frame": 6,
+      "fall_start_sec": 0.4,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_13.mp4",
+      "updated_at_unix": 1787229401.9568784,
+      "video_stem": "Fall_ke_depan_13"
+    },
+    "Fall_ke_depan_14": {
+      "fall_end_frame": 56,
+      "fall_end_sec": 3.7333333333333334,
+      "fall_start_frame": 10,
+      "fall_start_sec": 0.6666666666666666,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_14.mp4",
+      "updated_at_unix": 1787229411.52765,
+      "video_stem": "Fall_ke_depan_14"
+    },
+    "Fall_ke_depan_15": {
+      "fall_end_frame": 43,
+      "fall_end_sec": 2.8666666666666667,
+      "fall_start_frame": 9,
+      "fall_start_sec": 0.6,
+      "source_fps": 15.0,
+      "source_frame_count": 75,
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_15.mp4",
+      "updated_at_unix": 1787229423.669119,
+      "video_stem": "Fall_ke_depan_15"
+    },
+    "Fall_ke_depan_16": {
+      "fall_end_frame": 74,
+      "fall_end_sec": 4.933333333333334,
+      "fall_start_frame": 40,
+      "fall_start_sec": 2.6666666666666665,
+      "source_fps": 15.0,
+      "source_frame_count": 75,
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_16.mp4",
+      "updated_at_unix": 1787229435.6762931,
+      "video_stem": "Fall_ke_depan_16"
+    },
+    "Fall_ke_depan_17": {
+      "fall_end_frame": 73,
+      "fall_end_sec": 4.866666666666666,
+      "fall_start_frame": 38,
+      "fall_start_sec": 2.533333333333333,
+      "source_fps": 15.0,
+      "source_frame_count": 75,
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_17.mp4",
+      "updated_at_unix": 1787229446.9194984,
+      "video_stem": "Fall_ke_depan_17"
+    },
+    "Fall_ke_depan_18": {
+      "fall_end_frame": 65,
+      "fall_end_sec": 4.333333333333333,
+      "fall_start_frame": 28,
+      "fall_start_sec": 1.8666666666666667,
+      "source_fps": 15.0,
+      "source_frame_count": 75,
+      "source_relative_path": "Fall_ke_depan/Fall_ke_depan_18.mp4",
+      "updated_at_unix": 1787229456.0068421,
+      "video_stem": "Fall_ke_depan_18"
+    },
+    "Fall_samping_kanan_12": {
+      "fall_end_frame": 70,
+      "fall_end_sec": 4.666666666666667,
+      "fall_start_frame": 32,
+      "fall_start_sec": 2.1333333333333333,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_12.mp4",
+      "updated_at_unix": 1787229468.1895108,
+      "video_stem": "Fall_samping_kanan_12"
+    },
+    "Fall_samping_kanan_13": {
+      "fall_end_frame": 51,
+      "fall_end_sec": 3.4,
+      "fall_start_frame": 11,
+      "fall_start_sec": 0.7333333333333333,
+      "source_fps": 15.0,
+      "source_frame_count": 75,
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_13.mp4",
+      "updated_at_unix": 1787229483.0657034,
+      "video_stem": "Fall_samping_kanan_13"
+    },
+    "Fall_samping_kanan_14": {
+      "fall_end_frame": 53,
+      "fall_end_sec": 3.533333333333333,
+      "fall_start_frame": 16,
+      "fall_start_sec": 1.0666666666666667,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_14.mp4",
+      "updated_at_unix": 1787229490.4427094,
+      "video_stem": "Fall_samping_kanan_14"
+    },
+    "Fall_samping_kanan_15": {
+      "fall_end_frame": 52,
+      "fall_end_sec": 3.466666666666667,
+      "fall_start_frame": 15,
+      "fall_start_sec": 1.0,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_15.mp4",
+      "updated_at_unix": 1787229498.9448128,
+      "video_stem": "Fall_samping_kanan_15"
+    },
+    "Fall_samping_kanan_16": {
+      "fall_end_frame": 70,
+      "fall_end_sec": 4.666666666666667,
+      "fall_start_frame": 41,
+      "fall_start_sec": 2.7333333333333334,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_16.mp4",
+      "updated_at_unix": 1787229506.7755287,
+      "video_stem": "Fall_samping_kanan_16"
+    },
+    "Fall_samping_kanan_17": {
+      "fall_end_frame": 75,
+      "fall_end_sec": 5.0,
+      "fall_start_frame": 46,
+      "fall_start_sec": 3.066666666666667,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_17.mp4",
+      "updated_at_unix": 1787229514.7591307,
+      "video_stem": "Fall_samping_kanan_17"
+    },
+    "Fall_samping_kanan_18": {
+      "fall_end_frame": 71,
+      "fall_end_sec": 4.733333333333333,
+      "fall_start_frame": 28,
+      "fall_start_sec": 1.8666666666666667,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kanan/Fall_samping_kanan_18.mp4",
+      "updated_at_unix": 1787229522.826888,
+      "video_stem": "Fall_samping_kanan_18"
+    },
+    "Fall_samping_kiri_20": {
+      "fall_end_frame": 60,
+      "fall_end_sec": 4.0,
+      "fall_start_frame": 21,
+      "fall_start_sec": 1.4,
+      "source_fps": 15.0,
+      "source_frame_count": 74,
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_20.mp4",
+      "updated_at_unix": 1787229537.4803593,
+      "video_stem": "Fall_samping_kiri_20"
+    },
+    "Fall_samping_kiri_21": {
+      "fall_end_frame": 51,
+      "fall_end_sec": 3.4,
+      "fall_start_frame": 33,
+      "fall_start_sec": 2.2,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_21.mp4",
+      "updated_at_unix": 1787229562.1077225,
+      "video_stem": "Fall_samping_kiri_21"
+    },
+    "Fall_samping_kiri_22": {
+      "fall_end_frame": 52,
+      "fall_end_sec": 3.466666666666667,
+      "fall_start_frame": 21,
+      "fall_start_sec": 1.4,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_22.mp4",
+      "updated_at_unix": 1787229578.7135932,
+      "video_stem": "Fall_samping_kiri_22"
+    },
+    "Fall_samping_kiri_23": {
+      "fall_end_frame": 47,
+      "fall_end_sec": 3.1333333333333333,
+      "fall_start_frame": 19,
+      "fall_start_sec": 1.2666666666666666,
+      "source_fps": 15.0,
+      "source_frame_count": 75,
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_23.mp4",
+      "updated_at_unix": 1787229586.1860845,
+      "video_stem": "Fall_samping_kiri_23"
+    },
+    "Fall_samping_kiri_24": {
+      "fall_end_frame": 65,
+      "fall_end_sec": 4.333333333333333,
+      "fall_start_frame": 39,
+      "fall_start_sec": 2.6,
+      "source_fps": 15.0,
+      "source_frame_count": 75,
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_24.mp4",
+      "updated_at_unix": 1787229603.1128716,
+      "video_stem": "Fall_samping_kiri_24"
+    },
+    "Fall_samping_kiri_25": {
+      "fall_end_frame": 75,
+      "fall_end_sec": 5.0,
+      "fall_start_frame": 55,
+      "fall_start_sec": 3.6666666666666665,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_25.mp4",
+      "updated_at_unix": 1787229611.9087548,
+      "video_stem": "Fall_samping_kiri_25"
+    },
+    "Fall_samping_kiri_26": {
+      "fall_end_frame": 69,
+      "fall_end_sec": 4.6,
+      "fall_start_frame": 35,
+      "fall_start_sec": 2.3333333333333335,
+      "source_fps": 15.0,
+      "source_frame_count": 76,
+      "source_relative_path": "Fall_samping_kiri/Fall_samping_kiri_26.mp4",
+      "updated_at_unix": 1787229620.3728132,
+      "video_stem": "Fall_samping_kiri_26"
+    }
+  }
+}

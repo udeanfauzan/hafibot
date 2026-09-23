@@ -1,0 +1,29 @@
+# ============================================================
+# Fall Detection 1D CNN-LSTM - Dependencies
+# ============================================================
+
+# Deep Learning Framework
+# Install PyTorch separately: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+torch
+torchvision
+torchaudio
+
+# Pose Estimation
+mediapipe>=0.10.0
+
+# Data Processing
+numpy>=1.24.0
+opencv-contrib-python>=4.8.0
+scikit-learn>=1.3.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+
+# Utilities
+tqdm>=4.65.0
+
+# Export
+onnx>=1.14.0
+onnxruntime>=1.16.0

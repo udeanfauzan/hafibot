@@ -1,0 +1,34 @@
+# Virtual environment & cache
+env_falldetect/
+venv/
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Credentials & secrets
+Vapid Keys.txt
+push_subscriptions.json
+
+# Dataset besar (video raw)
+data/raw/
+data/dataset new july realtime/
+data/new dataset 20 aug/
+data/processed_yolo*/
+
+# Model biner & file bobot AI (jangan di-push ke git)
+models/**/*.pt
+models/**/*.onnx
+models/**/*.safetensors
+models/**/*.task
+models/**/*.bin
+models/*.pt
+models/*.onnx
+models/*.task
+robotchatbot/models/**/*.pth
+robotchatbot/models/**/*.pt
+robotchatbot/models/**/*.safetensors
+robotchatbot/models/**/*.bin
+
+# Log dan output sementara
+results/logs/

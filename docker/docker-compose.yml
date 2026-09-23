@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  fall_detection:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      network: host
+    container_name: fall_detection_container
+    # Wajib agar Docker bisa menggunakan GPU Jetson (CUDA + EGL)
+    runtime: nvidia
+    environment:
+      - DISPLAY=:0
+      - QT_X11_NO_MITSHM=1
+      # 'all' mengizinkan akses compute, utility, graphics, dan video (Wajib untuk EGL MediaPipe)
+      - NVIDIA_DRIVER_CAPABILITIES=all
+      - NVIDIA_VISIBLE_DEVICES=all
+      # Web Push Notification (VAPID keys — generate di https://vapidkeys.com)
+      - VAPID_PRIVATE_KEY=${VAPID_PRIVATE_KEY:-}
+      - VAPID_PUBLIC_KEY=${VAPID_PUBLIC_KEY:-}
+      - VAPID_EMAIL=${VAPID_EMAIL:-mailto:hafibot@example.com}
+      # Monitoring security: deployment fails closed when these are absent.
+      - FLASK_SECRET_KEY=${FLASK_SECRET_KEY:?Set FLASK_SECRET_KEY in .env}
+      - HAFIBOT_USERNAME=${HAFIBOT_USERNAME:?Set HAFIBOT_USERNAME in .env}
+      - HAFIBOT_PASSWORD=${HAFIBOT_PASSWORD:?Set HAFIBOT_PASSWORD in .env}
+      - HAFIBOT_SECURE_COOKIES=${HAFIBOT_SECURE_COOKIES:-true}
+      - HAFIBOT_SESSION_HOURS=${HAFIBOT_SESSION_HOURS:-12}
+      - HAFIBOT_WEB_THREADS=${HAFIBOT_WEB_THREADS:-8}
+      - HAFIBOT_MONITORING_DATA_DIR=/workspace/FallDetectionCNN/data/monitoring
+      # Local audible Fall alarm (ALSA). `aplay -L` lists valid device names.
+      - HAFIBOT_FALL_ALARM_ENABLED=${HAFIBOT_FALL_ALARM_ENABLED:-true}
+      - HAFIBOT_ALSA_DEVICE=${HAFIBOT_ALSA_DEVICE:-default}
+    volumes:
+      # Mount folder project agar jika ada perubahan model/config tidak perlu build ulang image
+      - ../models:/workspace/FallDetectionCNN/models
+      - ../src:/workspace/FallDetectionCNN/src
+      - ../img:/workspace/FallDetectionCNN/img
+      - ../ros_packages/fall_detection_ros:/root/catkin_ws/src/fall_detection_ros
+      # Timestamped Jetson landmarks persist on the host for retraining.
+      - ../data/jetson_recordings:/workspace/FallDetectionCNN/data/jetson_recordings
+      # Persistent, private incident metadata and snapshots.
+      - ../data/monitoring:/workspace/FallDetectionCNN/data/monitoring
+      # Mount X11 socket dari host agar container bisa akses display GPU (HDMI dummy plug)
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      # Mount argus socket agar container bisa mengakses CSI Camera via nvargus-daemon
+      - /tmp/argus_socket:/tmp/argus_socket
+    devices:
+      - /dev/video0:/dev/video0
+      # Arduino Mega 2560 Pro Mini biasanya muncul sbg /dev/ttyUSB0 (CH340) atau
+      # /dev/ttyACM0 (ATmega16U2). Sesuaikan dengan `ls /dev/tty*` di host.
+      # Uncomment sesuai board yang terdeteksi.
+      - /dev/ttyUSB0:/dev/ttyUSB0
+      # - /dev/ttyACM0:/dev/ttyACM0
+    group_add:
+      - dialout
+    network_mode: "host"
+    privileged: true
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:5000/healthz', timeout=3).read()"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    command: >
+      /bin/bash -c "
+        source /opt/ros/noetic/setup.bash &&
+        source /root/catkin_ws/devel/setup.bash &&
+        roslaunch fall_detection_ros fall_detection.launch
+      "
