@@ -25,6 +25,7 @@ models/**/*.bin
 models/*.pt
 models/*.onnx
 models/*.task
+models/candidates/
 robotchatbot/models/**/*.pth
 robotchatbot/models/**/*.pt
 robotchatbot/models/**/*.safetensors

@@ -45,10 +45,14 @@ def video_max_probability(model, windows, mean, std, device):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Calibrate Fall threshold using validation subjects only"
+        description="Calibrate Fall threshold using validation videos only"
     )
     parser.add_argument(
         "--checkpoint", type=Path, default=MODEL_DIR / "best_model.pt"
+    )
+    parser.add_argument(
+        "--feature-root", type=Path,
+        help="Override the checkpoint-bound cache for an explicit comparison",
     )
     parser.add_argument(
         "--output", type=Path,
@@ -74,12 +78,14 @@ def main():
     std = np.asarray(checkpoint["scaler_std"], dtype=np.float32)
 
     split = checkpoint_split_config(checkpoint)
+    feature_root = args.feature_root or checkpoint.get("training_config", {}).get("feature_root")
     data = load_all_data(
         window_stride=1,
         include_ambiguous=True,
         return_subject_ids=(split["strategy"] == "subject"),
         require_subject_metadata=(split["strategy"] == "subject"),
         feature_pipeline=feature_pipeline,
+        feature_root=feature_root,
     )
     windows, _, labels, names = data[:4]
     subjects = data[4] if len(data) == 5 else None
@@ -110,6 +116,8 @@ def main():
     ]
     result = {
         "checkpoint": str(args.checkpoint),
+        "feature_root": str(feature_root) if feature_root else None,
+        "evaluation_scope": "validation classifier video maxima; no runtime posture gates",
         "checkpoint_epoch": checkpoint.get("epoch", checkpoint.get("fold")),
         "data_split": checkpoint.get("data_split", {
             "strategy": "video_stratified"

@@ -1,6 +1,6 @@
 ﻿# Hafibot - Smart Elderly-Care Mobile Robot
 
-Hafibot adalah robot pendamping lansia cerdas berbasis mobile robot dengan arsitektur komputasi terdistribusi (Distributed AI Server + Edge Robot). Sistem ini mengintegrasikan **Fall Detection** (YOLOv8/11 Pose + 1D CNN-BiLSTM Attention), **Autonomous Human Following** berbasis PID, serta **Voice Chatbot Interaktif** (DistilBERT + Qwen).
+Hafibot adalah robot pendamping lansia cerdas berbasis mobile robot dengan arsitektur komputasi terdistribusi (Distributed AI Server + Edge Robot). Sistem ini mengintegrasikan **Fall Detection** (YOLO11m Pose + 1D CNN-BiLSTM Attention), **Autonomous Human Following** berbasis PID, serta **Voice Chatbot Interaktif** (DistilBERT + Qwen).
 
 ---
 
@@ -23,7 +23,7 @@ Sistem dibagi menjadi dua komponen utama yang terhubung via LAN / Tailscale:
 +---------------------------------------------------------+
 |                 LAPTOP / WORKSTATION AI SERVER          |
 |  - NVIDIA GPU Acceleration (CUDA)                       |
-|  - YOLO Pose Estimator (YOLO11m / YOLOv8s)              |
+|  - YOLO Pose Estimator (YOLO11m-pose)                  |
 |  - 1D CNN-BiLSTM Attention Fall Classifier (PyTorch)    |
 |  - Geometric Posture Gating (Torso Angle & Lying Check) |
 |  - Adaptive Human Following Controller (PID Distance)   |
@@ -116,7 +116,7 @@ hafibot/
 
 1. **Geometric Posture Gating**:
    - Model AI 1D CNN-LSTM dikombinasikan dengan verifikasi geometri postur tubuh (kemiringan sudut torso dan deteksi terbaring/di lantai).
-   - Menghilangkan false alarm saat pengguna duduk tenang, membungkuk sesaat, atau berjalan menjauhi robot.
+   - Memblokir kandidat alarm saat postur terverifikasi tegak; bukan jaminan bebas false alarm, dan gate yang terlalu ketat dapat melewatkan jatuh.
 2. **Smooth PID Steering**:
    - Kontrol kemudi robot menggunakan kalkulasi PID halus untuk mencegah robot overshooting dan kehilangan target visual.
 3. **Latched ESTOP on Fall**:
@@ -130,3 +130,83 @@ Untuk memverifikasi integritas modul:
 ```powershell
 pytest tests/
 ```
+
+## Retraining dengan Pose Deployment (YOLO11m)
+
+Model Fall lama dilatih dari fitur YOLOv8n, sementara server memakai YOLO11m.
+Ekstraksi sekarang memakai konfigurasi dan pemilihan orang yang sama dengan
+deployment, termasuk confidence 0.35, normalisasi koordinat, dan pemeriksaan
+anatomi. Cache baru dipisahkan dari cache YOLOv8n; bobot, konfigurasi, dan kode
+detektor dicatat dengan SHA-256 agar fitur berbeda tidak tercampur.
+
+Jalankan dari root repository dengan environment Python aktif:
+
+```powershell
+python src/extract_features_yolo.py --all --batch-size 8
+python src/train.py --checkpoint models/candidates/yolo11m/best_model.pt --scaler models/candidates/yolo11m/scaler_params.npz --history results/logs/yolo11m_retrain/training_history.npy
+python scripts/calibrate_threshold.py --checkpoint models/candidates/yolo11m/best_model.pt --output results/logs/yolo11m_retrain/threshold_calibration.json
+python src/evaluate.py --checkpoint models/candidates/yolo11m/best_model.pt --output results/logs/yolo11m_retrain/evaluation.json --figures-dir results/figures/yolo11m_retrain --history results/logs/yolo11m_retrain/training_history.npy
+python scripts/evaluate_runtime_replay.py --checkpoint models/candidates/yolo11m/best_model.pt --output results/logs/yolo11m_retrain/runtime_replay.json
+```
+
+Fitur baru tersimpan di `data/processed_yolo11m/{old,new_july,new_aug}/`.
+Ekstraksi dapat dilanjutkan dengan perintah yang sama; cache hanya digunakan
+jika hash bobot, sumber video, dan fitur cocok. FPS sumber harus 15; jangan
+mengubah metadata FPS untuk mengganti kecepatan gerakan. Jangan menjalankan
+ekstraksi dan training secara bersamaan pada cache yang sama.
+
+Gunakan `--threshold` pada evaluasi untuk nilai hasil kalibrasi validation.
+Evaluasi classifier menggunakan window/video maxima. Runtime replay juga
+menerapkan posture gating, pose reacquisition, dan latch pada waktu video,
+tetapi tidak mengukur latency kamera/jaringan. Untuk membandingkan model lama
+pada input deployment baru, gunakan `--checkpoint models/best_model.pt
+--feature-root data/processed_yolo11m` pada perintah evaluasi.
+
+Percobaan pertama mempertahankan arsitektur dan split per video yang sama.
+Hasil ini belum membuktikan generalisasi pada orang atau ruangan baru.
+Checkpoint kandidat dan scaler tidak mengganti model aktif secara otomatis;
+pastikan hasil replay dan uji robot memadai sebelum aktivasi.
+Default `src/train.py` juga menulis ke direktori kandidat agar model aktif
+tidak tertimpa tanpa menentukan path output secara eksplisit.
+
+Setelah training, seluruh kalibrasi dan perbandingan dapat dijalankan sekaligus:
+
+```powershell
+python scripts/compare_pose_retraining.py
+```
+
+Ringkasan tersedia di `results/yolo11m_retraining_comparison.json`; laporan,
+log, dan grafik detail di `results/logs/yolo11m_retrain/`. Script memastikan
+kedua model dievaluasi pada video test yang sama dan hash model aktif tetap
+tidak berubah. Threshold kandidat dipilih pada validation sebelum test.
+
+### Hasil percobaan 10 Oktober 2026
+
+Ekstraksi YOLO11m selesai untuk **332 video / 29.588 frame**. Training berhenti
+di epoch 35; checkpoint terbaik berdasarkan validation loss adalah epoch 10.
+Pada 50 video test yang sama, replay **dengan gate dan latch aktif** memberi:
+
+| Classifier (input YOLO11m) | Threshold | Fall terdeteksi dalam interval anotasi | Video ADL false alarm |
+|---|---:|---:|---:|
+| Model aktif lama | 0.90 | 18/19 (94.7%) | 1/31 |
+| Kandidat retraining | 0.90 | 17/19 (89.5%) | 0/31 |
+| Kandidat, threshold validation classifier | 0.93 | 15/19 (78.9%) | 0/31 |
+
+Threshold 0.93 dipilih **hanya dari validation classifier video maxima**, bukan
+dari test. Dua kasus di baris terakhir tetap menghasilkan alert setelah
+interval anotasi berakhir; angka 15/19 memakai kriteria interval yang lebih
+ketat daripada sekadar ada alert di dalam video.
+
+Offline classifier video-max accuracy kandidat adalah 98%, tetapi itu **bukan
+akurasi runtime**: kedua kandidat threshold mendeteksi semua 19 video Fall
+secara offline, sedangkan posture gating dan perilaku buffer mengubah hasil
+replay. Salah satu Fall yang terlewat memiliki tujuh prediksi positif yang
+semuanya diblokir gate; kasus lain berada sedikit di bawah threshold 0.90 dan
+mengalami reset buffer setelah satu frame pose hilang.
+
+**Kandidat belum diaktifkan:** pengurangan false alarm disertai penurunan
+recall. Model aktif dan scaler lama tetap dipertahankan. Perlu evaluasi
+validation yang mengikuti state machine runtime, audit pose-loss/gating,
+serta pengujian robot/ADL kontinu sebelum mengganti model. Hanya ada 19 kasus
+Fall test dan split ini bukan subject-disjoint; jangan menyatakan reliabilitas
+lapangan dari persentase tersebut.

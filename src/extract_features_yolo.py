@@ -1,191 +1,220 @@
-'''
-extract_features_yolo.py - Ekstraksi fitur pose dari video menggunakan YOLOv8n-Pose.
+"""Extract YOLO11m pose features using the deployment detector's policy.
 
-Pipeline:
-    1. Baca setiap video dari dataset raw
-    2. Jalankan YOLOv8n-pose per frame (GPU/CUDA)
-    3. Ambil 13 keypoint utama (COCO: nose, shoulders, elbows, wrists, hips, knees, ankles)
-    4. Simpan sebagai .npy shape (num_frames, 52) dengan layout [x, y, z, conf] per sendi
+    python src/extract_features_yolo.py --all --batch-size 8
 
-Penggunaan:
-    python src/extract_features_yolo.py --all
-'''
+New features are kept in data/processed_yolo11m/{old,new_july,new_aug}.
+The historical YOLOv8n caches remain available for baseline evaluation.
+"""
 
 import argparse
-import hashlib
 import json
-import re
 import sys
 import time
 from pathlib import Path
+
 import cv2
 import numpy as np
 import torch
-from ultralytics import YOLO
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
-from src.config import (
-    DATA_DIR,
-    MODEL_DIR,
-    EXPECTED_VIDEO_FPS,
-    RAW_DIR,
-    NEW_JULY_RAW_DIR,
-    NEW_AUG_RAW_DIR,
+
+from src.config import (  # noqa: E402
+    EXPECTED_VIDEO_FPS, YOLO11_FEATURE_ROOT, YOLO_POSE_MODEL_PATH,
+    training_dataset_sources,
 )
+from src.pose_provenance import (  # noqa: E402
+    pose_extraction_signature, validate_pose_metadata,
+)
+from src.temporal_labels import file_sha256  # noqa: E402
+from src.yolo_detector import YOLOPoseDetector  # noqa: E402
 
-# COCO 17 Keypoints -> 13 Selected Keypoints mapping
-# 0: nose, 5: l_shoulder, 6: r_shoulder, 7: l_elbow, 8: r_elbow, 9: l_wrist, 10: r_wrist,
-# 11: l_hip, 12: r_hip, 13: l_knee, 14: r_knee, 15: l_ankle, 16: r_ankle
-COCO_SELECTED_KEYPOINTS = [0, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-NUM_SELECTED_JOINTS = len(COCO_SELECTED_KEYPOINTS)  # 13
-FEATURES_PER_JOINT = 4  # x, y, z, v
-TOTAL_FEATURES = NUM_SELECTED_JOINTS * FEATURES_PER_JOINT  # 52
-
-YOLO_MODEL_PATH = MODEL_DIR / 'yolov8n-pose.pt'
+TOTAL_FEATURES = 52
 
 
-def extract_landmarks_from_video(video_path: Path, model: YOLO, device: str = 'cuda', conf_thresh: float = 0.25):
+def landmarks_to_features(landmarks):
+    """Match the live classifier's [x,y,z,confidence] selected-joint layout."""
+    if landmarks is None:
+        return np.zeros(TOTAL_FEATURES, dtype=np.float32)
+    return np.asarray([
+        value for joint in landmarks
+        for value in (joint.x, joint.y, joint.z, joint.visibility)
+    ], dtype=np.float32)
+
+
+def extract_landmarks_from_video(video_path, detector, batch_size=8):
+    """Bound memory to one batch, retaining one feature row per source frame."""
+    if batch_size < 1:
+        raise ValueError("batch_size must be positive")
     cap = cv2.VideoCapture(str(video_path))
     if not cap.isOpened():
-        return np.empty((0, TOTAL_FEATURES), dtype=np.float32), {'fps': 0.0, 'frames': 0, 'detected_frames': 0}
+        cap.release()
+        raise ValueError(f"Cannot open source video: {video_path}")
+    try:
+        fps = float(cap.get(cv2.CAP_PROP_FPS))
+        if not np.isfinite(fps) or abs(fps - EXPECTED_VIDEO_FPS) > 0.1:
+            raise ValueError(
+                f"{video_path}: {fps} FPS, expected {EXPECTED_VIDEO_FPS}; "
+                "resample real motion before extraction"
+            )
+        info = {
+            "fps": fps,
+            "width": int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)),
+            "height": int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)),
+        }
+        detector.reset_tracking()
+        rows = []
+        batch = []
+        detected = 0
+        while True:
+            ok, frame = cap.read()
+            if ok:
+                batch.append(frame)
+            if batch and (len(batch) == batch_size or not ok):
+                for landmarks in detector.detect_batch(batch):
+                    rows.append(landmarks_to_features(landmarks))
+                    detected += int(landmarks is not None)
+                batch = []
+            if not ok:
+                break
+        if not rows:
+            raise ValueError(f"Source video has no decoded frames: {video_path}")
+        values = np.asarray(rows, dtype=np.float32)
+        if values.shape != (len(rows), TOTAL_FEATURES) or not np.isfinite(values).all():
+            raise ValueError(f"Invalid pose features: {video_path}")
+        return values, {**info, "frames": len(rows), "detected_frames": detected}
+    finally:
+        cap.release()
 
-    fps = float(cap.get(cv2.CAP_PROP_FPS) or EXPECTED_VIDEO_FPS)
-    frames = []
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
-        frames.append(frame)
-    cap.release()
 
-    if not frames:
-        return np.empty((0, TOTAL_FEATURES), dtype=np.float32), {'fps': fps, 'frames': 0, 'detected_frames': 0}
+def write_metadata(path, metadata):
+    temporary = path.with_suffix(".json.tmp")
+    temporary.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
+    # Windows readers/antivirus can briefly deny atomic replacement. Keep the
+    # existing manifest intact and retry; never publish a partially written JSON.
+    for attempt in range(8):
+        try:
+            temporary.replace(path)
+            return
+        except PermissionError:
+            if attempt == 7:
+                raise
+            time.sleep(min(0.1 * (2 ** attempt), 1.0))
 
-    # Predict in batches on GPU
-    batch_size = 32
-    all_features = []
-    detected_count = 0
 
-    for b_start in range(0, len(frames), batch_size):
-        batch_frames = frames[b_start:b_start + batch_size]
-        results = model(batch_frames, device=device, verbose=False, conf=conf_thresh)
-        for res in results:
-            if res.keypoints is not None and len(res.keypoints.data) > 0:
-                boxes = res.boxes
-                if len(boxes) > 1:
-                    areas = (boxes.xyxy[:, 2] - boxes.xyxy[:, 0]) * (boxes.xyxy[:, 3] - boxes.xyxy[:, 1])
-                    best_idx = int(torch.argmax(areas).item())
-                else:
-                    best_idx = 0
+def process_dataset(raw_dir, processed_dir, detector, batch_size=8, overwrite=False):
+    raw_dir, processed_dir = Path(raw_dir).resolve(), Path(processed_dir).resolve()
+    if not raw_dir.is_dir():
+        raise FileNotFoundError(f"Source dataset not found: {raw_dir}")
+    signature = pose_extraction_signature(
+        detector.model_path, detector.conf_threshold, detector.input_size,
+    )
+    videos = []
+    seen = set()
+    for video in sorted(raw_dir.rglob("*")):
+        if not video.is_file() or video.suffix.lower() not in (".mp4", ".avi", ".mov", ".mkv"):
+            continue
+        parts = [part.lower() for part in video.relative_to(raw_dir).parts]
+        classes = [name for name in ("ADL", "Fall")
+                   if any(name.lower() in part for part in parts)]
+        if len(classes) != 1:
+            raise ValueError(f"Ambiguous or absent source class: {video}")
+        key = f"{classes[0]}:{video.stem}"
+        if key in seen:
+            raise ValueError(f"Duplicate feature output stem: {key}")
+        seen.add(key)
+        videos.append((classes[0], video, key))
+    if not videos or {category for category, _, _ in videos} != {"ADL", "Fall"}:
+        raise ValueError(f"Dataset must contain both ADL and Fall videos: {raw_dir}")
 
-                xyn = res.keypoints.xyn[best_idx].cpu().numpy()
-                conf = res.keypoints.conf[best_idx].cpu().numpy()
+    metadata_path = processed_dir / "extraction_metadata.json"
+    previous = {}
+    if metadata_path.exists() and not overwrite:
+        previous = json.loads(metadata_path.read_text(encoding="utf-8"))
+        validate_pose_metadata(previous, signature, require_completed=False)
+        if previous.get("source_root") != str(raw_dir):
+            raise ValueError(f"Feature cache belongs to another source: {processed_dir}")
+    elif any(processed_dir.glob("*/*.npy")) and not overwrite:
+        raise ValueError(f"Existing features have no provenance: {processed_dir}")
 
-                frame_feat = []
-                for kpt_idx in COCO_SELECTED_KEYPOINTS:
-                    x = float(xyn[kpt_idx, 0])
-                    y = float(xyn[kpt_idx, 1])
-                    z = 0.0
-                    v = float(conf[kpt_idx])
-                    frame_feat.extend([x, y, z, v])
-                all_features.append(frame_feat)
-                detected_count += 1
-            else:
-                all_features.append([0.0] * TOTAL_FEATURES)
-
-    landmarks_arr = np.array(all_features, dtype=np.float32)
-    return landmarks_arr, {
-        'fps': fps,
-        'frames': len(frames),
-        'detected_frames': detected_count,
+    expected_outputs = {processed_dir / category / f"{video.stem}.npy"
+                        for category, video, _ in videos}
+    stale = set(processed_dir.glob("*/*.npy")) - expected_outputs
+    if stale:
+        raise ValueError(f"Stale feature files in {processed_dir}: {sorted(map(str, stale))}")
+    for category in ("ADL", "Fall"):
+        (processed_dir / category).mkdir(parents=True, exist_ok=True)
+    metadata = {
+        "schema_version": 2, **signature, "completed": False,
+        "source_root": str(raw_dir), "processed_root": str(processed_dir),
+        "videos": {}, "categories": {},
     }
-
-
-def process_dataset(raw_dir: Path, processed_dir: Path, model: YOLO, device: str = 'cuda', overwrite: bool = False):
-    processed_adl_dir = processed_dir / 'ADL'
-    processed_fall_dir = processed_dir / 'Fall'
-    processed_adl_dir.mkdir(parents=True, exist_ok=True)
-    processed_fall_dir.mkdir(parents=True, exist_ok=True)
-
-    video_exts = {'.mp4', '.avi', '.mov', '.mkv'}
-    all_videos = sorted([f for f in raw_dir.rglob('*') if f.is_file() and f.suffix.lower() in video_exts])
-
-    adl_videos = [v for v in all_videos if 'adl' in v.stem.lower() or any('adl' in p.lower() for p in v.relative_to(raw_dir).parts)]
-    fall_videos = [v for v in all_videos if 'fall' in v.stem.lower() or any('fall' in p.lower() for p in v.relative_to(raw_dir).parts)]
-
-    print('=' * 60)
-    print(f'  Processing dataset: {raw_dir.name}')
-    print(f'  Input:  {raw_dir}')
-    print(f'  Output: {processed_dir}')
-    print(f'  Found : {len(adl_videos)} ADL, {len(fall_videos)} Fall ({len(all_videos)} total)')
-    print('=' * 60)
-
-    stats = {'ADL': {'total': len(adl_videos), 'success': 0, 'detected_frames': 0, 'frames': 0},
-             'Fall': {'total': len(fall_videos), 'success': 0, 'detected_frames': 0, 'frames': 0}}
-
-    for category, video_list, out_dir in [('ADL', adl_videos, processed_adl_dir), ('Fall', fall_videos, processed_fall_dir)]:
-        for i, v_path in enumerate(video_list, 1):
-            out_npy = out_dir / f'{v_path.stem}.npy'
-            if out_npy.exists() and not overwrite:
-                print(f'  [{i}/{len(video_list)}] SKIP (exists): {v_path.name}')
-                stats[category]['success'] += 1
-                continue
-
-            landmarks, v_stats = extract_landmarks_from_video(v_path, model, device=device)
-            if landmarks.shape[0] == 0:
-                print(f'  [WARNING] Empty landmarks for {v_path.name}')
-                continue
-
-            np.save(str(out_npy), landmarks)
-            stats[category]['success'] += 1
-            stats[category]['frames'] += v_stats['frames']
-            stats[category]['detected_frames'] += v_stats['detected_frames']
-            det_pct = (v_stats['detected_frames'] / max(1, v_stats['frames'])) * 100.0
-            print(f'  [{i}/{len(video_list)}] {v_path.name}: {v_stats["frames"]} fr, {v_stats["detected_frames"]} det ({det_pct:.1f}%)')
-
-    # Write extraction metadata
-    meta = {
-        'schema_version': 1,
-        'extractor': 'yolov8n-pose',
-        'features_per_frame': TOTAL_FEATURES,
-        'selected_joints': NUM_SELECTED_JOINTS,
-        'source_root': str(raw_dir),
-        'processed_root': str(processed_dir),
-        'categories': stats,
-    }
-    with (processed_dir / 'extraction_metadata.json').open('w', encoding='utf-8') as f:
-        json.dump(meta, f, indent=2)
-
-    return stats
+    write_metadata(metadata_path, metadata)
+    print(f"Extracting {len(videos)} videos: {raw_dir.name} -> {processed_dir}", flush=True)
+    for index, (category, video, key) in enumerate(videos, 1):
+        output = processed_dir / category / f"{video.stem}.npy"
+        source_hash = file_sha256(video)
+        entry = previous.get("videos", {}).get(key)
+        cached = (not overwrite and entry and output.exists()
+                  and entry.get("source_sha256") == source_hash
+                  and entry.get("array_sha256") == file_sha256(output))
+        if cached:
+            values = np.load(output, allow_pickle=False)
+            cached = (values.shape == (entry["frames"], TOTAL_FEATURES)
+                      and np.isfinite(values).all())
+        if not cached:
+            values, info = extract_landmarks_from_video(video, detector, batch_size)
+            temporary = output.with_suffix(".npy.tmp")
+            with temporary.open("wb") as handle:
+                np.save(handle, values)
+            temporary.replace(output)
+            entry = {
+                **info, "source_relative_path": str(video.relative_to(raw_dir)),
+                "source_sha256": source_hash, "array_sha256": file_sha256(output),
+            }
+        metadata["videos"][key] = entry
+        write_metadata(metadata_path, metadata)
+        print(f"[{index}/{len(videos)}] {video.name}: "
+              f"{entry['detected_frames']}/{entry['frames']} poses"
+              f"{' (cached)' if cached else ''}", flush=True)
+    for category in ("ADL", "Fall"):
+        entries = [entry for key, entry in metadata["videos"].items()
+                   if key.startswith(category + ":")]
+        metadata["categories"][category] = {
+            "total": len(entries), "success": len(entries),
+            "frames": sum(entry["frames"] for entry in entries),
+            "detected_frames": sum(entry["detected_frames"] for entry in entries),
+        }
+    metadata["completed"] = True
+    write_metadata(metadata_path, metadata)
+    return metadata
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Extract YOLOv8n-pose landmarks from videos')
-    parser.add_argument('--all', action='store_true', help='Extract all 3 datasets')
-    parser.add_argument('--dataset-dir', type=Path, help='Custom dataset raw dir')
-    parser.add_argument('--processed-dir', type=Path, help='Custom dataset processed dir')
-    parser.add_argument('--overwrite', action='store_true', help='Overwrite existing .npy')
+    parser = argparse.ArgumentParser(description="Extract deployment-compatible YOLO11m features")
+    sources = parser.add_mutually_exclusive_group()
+    sources.add_argument("--all", action="store_true", help="Extract all three local datasets")
+    sources.add_argument("--dataset-dir", type=Path, help="Custom raw dataset")
+    parser.add_argument("--processed-dir", type=Path, help="Custom output with --dataset-dir")
+    parser.add_argument("--feature-root", type=Path, default=YOLO11_FEATURE_ROOT)
+    parser.add_argument("--model", type=Path, default=YOLO_POSE_MODEL_PATH)
+    parser.add_argument("--batch-size", type=int, default=8)
+    parser.add_argument("--overwrite", action="store_true")
     args = parser.parse_args()
-
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print(f'Loading YOLOv8n-pose on {device}...')
-    model = YOLO(str(YOLO_MODEL_PATH))
-
-    if args.all or not args.dataset_dir:
-        datasets = [
-            (RAW_DIR, DATA_DIR / 'processed_yolo'),
-            (NEW_JULY_RAW_DIR, DATA_DIR / 'processed_yolo_new_july_realtime'),
-            (NEW_AUG_RAW_DIR, DATA_DIR / 'processed_yolo_new_dataset_20_aug'),
-        ]
-        for raw_path, proc_path in datasets:
-            if raw_path.exists():
-                process_dataset(raw_path, proc_path, model, device=device, overwrite=args.overwrite)
+    if args.processed_dir and not args.dataset_dir:
+        parser.error("--processed-dir requires --dataset-dir")
+    if args.batch_size < 1:
+        parser.error("--batch-size must be positive")
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    detector = YOLOPoseDetector(model_path=args.model, device=device)
+    if args.dataset_dir:
+        output = args.processed_dir or args.feature_root / args.dataset_dir.name
+        process_dataset(args.dataset_dir, output, detector, args.batch_size, args.overwrite)
     else:
-        raw_dir = args.dataset_dir.resolve()
-        proc_dir = args.processed_dir.resolve() if args.processed_dir else DATA_DIR / f'processed_yolo_{raw_dir.stem}'
-        process_dataset(raw_dir, proc_dir, model, device=device, overwrite=args.overwrite)
+        for source in training_dataset_sources(args.feature_root):
+            process_dataset(source["raw_root"], source["processed_adl_dir"].parent,
+                            detector, args.batch_size, args.overwrite)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

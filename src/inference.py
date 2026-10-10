@@ -45,7 +45,7 @@ from src.config import (
     MP_MIN_TRACKING_CONFIDENCE, MP_MODEL_PATH,
     USE_VELOCITY, USE_ACCELERATION, VELOCITY_FEATURES,
     CLASS_NAMES, DEVICE, FALL_CONFIDENCE_THRESHOLD,
-    FEATURE_PIPELINE,
+    FEATURE_PIPELINE, YOLO_POSE_MODEL_PATH,
 )
 from src.model import (
     FallDetectionModel,
@@ -156,7 +156,8 @@ class FallDetector:
                  enable_posture_filter: bool = True,
                  min_upright_torso_angle: float = DEFAULT_MIN_UPRIGHT_TORSO_ANGLE,
                  min_upright_aspect_ratio: float = DEFAULT_MIN_UPRIGHT_ASPECT_RATIO,
-                 min_dy_torso: float = DEFAULT_MIN_DY_TORSO):
+                 min_dy_torso: float = DEFAULT_MIN_DY_TORSO,
+                 checkpoint_path=None):
         """
         Inisialisasi FallDetector.
 
@@ -176,6 +177,7 @@ class FallDetector:
             min_dy_torso: Jarak vertikal minimum bahu di atas pinggul.
         """
         self.confidence_threshold = confidence_threshold
+        self.checkpoint_path = Path(checkpoint_path or MODEL_DIR / "best_model.pt")
         self.pose_loss_grace_sec = max(0.0, float(pose_loss_grace_sec))
         self.fall_hold_sec = max(0.0, float(fall_hold_sec))
         self.pose_reacquire_confirmation_frames = max(
@@ -226,7 +228,7 @@ class FallDetector:
 
     def _load_model(self):
         """Load model CNN-LSTM dari checkpoint."""
-        model_path = MODEL_DIR / "best_model.pt"
+        model_path = self.checkpoint_path
         if not model_path.exists():
             print(f"  [ERROR] Model tidak ditemukan: {model_path}")
             print("  Jalankan: python src/train.py")
@@ -295,29 +297,7 @@ class FallDetector:
         )
 
     def _create_landmarker(self):
-        yolo_pt = MODEL_DIR / "yolov8n-pose.pt"
-        yolo_engine = MODEL_DIR / "yolov8n-pose.engine"
-        yolo_onnx = MODEL_DIR / "yolov8n-pose.onnx"
-        if yolo_engine.exists() or yolo_pt.exists() or yolo_onnx.exists():
-            model_file = str(yolo_engine if yolo_engine.exists() else (yolo_pt if yolo_pt.exists() else yolo_onnx))
-            return YOLOPoseDetector(model_path=model_file)
-        elif MP_USE_TASKS:
-            options = PoseLandmarkerOptions(
-                base_options=BaseOptions(model_asset_path=str(MP_MODEL_PATH)),
-                running_mode=VisionRunningMode.VIDEO,
-                num_poses=1,
-                min_pose_detection_confidence=MP_MIN_DETECTION_CONFIDENCE,
-                min_pose_presence_confidence=MP_MIN_POSE_PRESENCE_CONFIDENCE,
-                min_tracking_confidence=MP_MIN_TRACKING_CONFIDENCE,
-            )
-            return PoseLandmarker.create_from_options(options)
-        else:
-            return mp.solutions.pose.Pose(
-                static_image_mode=False,
-                model_complexity=0,
-                min_detection_confidence=MP_MIN_DETECTION_CONFIDENCE,
-                min_tracking_confidence=MP_MIN_TRACKING_CONFIDENCE,
-            )
+        return YOLOPoseDetector(model_path=YOLO_POSE_MODEL_PATH, device=str(self.device))
 
     def _extract_frame_features(self, landmarks) -> np.ndarray:
         if isinstance(landmarks, np.ndarray):

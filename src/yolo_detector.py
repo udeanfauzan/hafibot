@@ -21,6 +21,10 @@ import cv2
 import numpy as np
 import torch
 
+from src.config import (
+    YOLO_POSE_MODEL_PATH, YOLO_POSE_CONFIDENCE, YOLO_POSE_INPUT_SIZE,
+)
+
 # COCO 17 Keypoints -> 13 Selected Keypoints mapping
 # 0: nose, 5: l_shoulder, 6: r_shoulder, 7: l_elbow, 8: r_elbow, 9: l_wrist, 10: r_wrist,
 # 11: l_hip, 12: r_hip, 13: l_knee, 14: r_knee, 15: l_ankle, 16: r_ankle
@@ -74,21 +78,13 @@ class YOLOPoseDetector:
         self,
         model_path: Optional[str] = None,
         backend: str = 'auto',
-        conf_threshold: float = 0.35,
-        input_size: Tuple[int, int] = (640, 640),
+        conf_threshold: float = YOLO_POSE_CONFIDENCE,
+        input_size: Tuple[int, int] = YOLO_POSE_INPUT_SIZE,
         device: str = 'cuda',
     ):
-        # Default priority: yolo11m-pose -> yolo11s-pose -> yolov8s-pose -> yolov8n-pose
-        if model_path:
-            self.model_path = Path(model_path)
-        else:
-            candidates = [
-                Path('models/yolo11m-pose.pt'),
-                Path('models/yolo11s-pose.pt'),
-                Path('models/yolov8s-pose.pt'),
-                Path('models/yolov8n-pose.pt'),
-            ]
-            self.model_path = next((p for p in candidates if p.exists()), Path('models/yolov8n-pose.pt'))
+        self.model_path = Path(model_path or YOLO_POSE_MODEL_PATH)
+        if not self.model_path.is_file():
+            raise FileNotFoundError(f'Pose weights not found: {self.model_path}')
         self.conf_threshold = float(conf_threshold)
         self.input_size = input_size
         self.device = device
@@ -180,11 +176,36 @@ class YOLOPoseDetector:
         return None
 
     def _detect_ultralytics(self, frame: np.ndarray) -> Optional[List[PoseKeypoint]]:
-        results = self.model(frame, verbose=False, conf=self.conf_threshold, device=self.device)
+        results = self.model(
+            frame, verbose=False, conf=self.conf_threshold, device=self.device,
+            imgsz=(self.input_size[1], self.input_size[0]), rect=True,
+        )
         if not results or len(results) == 0:
             self.target_lost_frames += 1
             return None
-        r = results[0]
+        return self._keypoints_from_ultralytics_result(results[0])
+
+    def reset_tracking(self):
+        """Start each independent source video without a previous target."""
+        self.last_target_center = None
+        self.target_lost_frames = 0
+
+    def detect_batch(self, frames):
+        """Batch pose inference; apply live target selection in temporal order."""
+        if not frames:
+            return []
+        if self.backend != 'ultralytics':
+            return [self.detect(frame) for frame in frames]
+        results = self.model(
+            frames, verbose=False, conf=self.conf_threshold, device=self.device,
+            imgsz=(self.input_size[1], self.input_size[0]), rect=True,
+        )
+        if len(results) != len(frames):
+            raise ValueError('Pose inference did not return one result per frame')
+        return [self._keypoints_from_ultralytics_result(r) for r in results]
+
+    def _keypoints_from_ultralytics_result(self, r):
+        """Shared selection, normalization, confidence and anatomical checks."""
         if r.keypoints is None or len(r.keypoints.data) == 0:
             self.target_lost_frames += 1
             return None

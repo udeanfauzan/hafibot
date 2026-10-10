@@ -1,0 +1,362 @@
+{
+  "protocol": "same video-stratified split, seed 42; validation-only threshold selection; both models receive the same YOLO11m pose features",
+  "pose_signature": {
+    "extractor": "yolo11m-pose",
+    "model_sha256": "29b17eaf3a3117cbea906090dbedf9159f7c6a49db58ec8b99ed2dfde1cf6eb2",
+    "confidence_threshold": 0.35,
+    "input_size": [
+      640,
+      640
+    ],
+    "expected_video_fps": 15.0,
+    "pose_policy_sha256": "0f0c21083fc661a44fb2b6b42d8bde32536cbbe54fc6da889a0700c9800e4178",
+    "features_per_frame": 52,
+    "selected_joints": 13
+  },
+  "software": {
+    "python": "3.12.10",
+    "torch": "2.11.0+cu126",
+    "ultralytics": "8.4.126",
+    "numpy": "2.4.4"
+  },
+  "source_counts": {
+    "old": {
+      "ADL": {
+        "total": 112,
+        "success": 112,
+        "frames": 10629,
+        "detected_frames": 10579
+      },
+      "Fall": {
+        "total": 79,
+        "success": 79,
+        "frames": 5971,
+        "detected_frames": 5715
+      }
+    },
+    "new_july": {
+      "ADL": {
+        "total": 53,
+        "success": 53,
+        "frames": 5281,
+        "detected_frames": 5064
+      },
+      "Fall": {
+        "total": 28,
+        "success": 28,
+        "frames": 2501,
+        "detected_frames": 2491
+      }
+    },
+    "new_aug": {
+      "ADL": {
+        "total": 39,
+        "success": 39,
+        "frames": 3620,
+        "detected_frames": 3530
+      },
+      "Fall": {
+        "total": 21,
+        "success": 21,
+        "frames": 1586,
+        "detected_frames": 1574
+      }
+    }
+  },
+  "duplicate_source_video_hashes": [],
+  "training": {
+    "best_epoch": 10,
+    "epochs_run": 35,
+    "best_val_loss": 0.1681505937107031,
+    "best_val_accuracy": 0.948220064724919,
+    "configuration": {
+      "sequence_length": 30,
+      "stride": 5,
+      "input_features": 130,
+      "base_features": 52,
+      "feature_pipeline": "legacy_v1",
+      "augmentation_profile": "legacy_v1",
+      "rnn_type": "LSTM",
+      "class_names": [
+        "ADL",
+        "Fall"
+      ],
+      "random_seed": 42,
+      "pose_model_variant": "yolo11m-pose",
+      "feature_root": "data\\processed_yolo11m",
+      "expected_video_fps": 15.0
+    },
+    "video_split_sizes": {
+      "train_videos": 232,
+      "validation_videos": 50,
+      "test_videos": 50
+    }
+  },
+  "artifacts": {
+    "baseline": "models\\best_model.pt",
+    "baseline_sha256": "24d6d30cdfd44f152c7a1d1bd0bd4a3418ac9f0352262206dc399425b928b46f",
+    "baseline_training_extractors": {
+      "old": "yolov8n-pose",
+      "new_july": "yolov8n-pose",
+      "new_aug": "yolov8n-pose"
+    },
+    "active_scaler_sha256": "50a6e84ca707d4a99d7809d6bd1cd92f560456a010855dabfd30a5372e8e73f6",
+    "candidate": "models\\candidates\\yolo11m\\best_model.pt",
+    "candidate_sha256": "77f0e5838a4436967d3c7daabbc39bc3594fcc152f75aadec661fce7622251df",
+    "candidate_activated": false
+  },
+  "validation_calibration": {
+    "threshold": 0.93,
+    "tn": 29,
+    "fp": 2,
+    "fn": 1,
+    "tp": 18,
+    "precision": 0.9,
+    "recall": 0.9473684210526315,
+    "f1": 0.9230769230769231,
+    "balanced_accuracy": 0.9414261460101867
+  },
+  "held_out_test_videos": [
+    "new_july:ADL_Stretching_3",
+    "old:Fall_samping_kanan_5",
+    "old:Fall_ke_belakang_3",
+    "old:ADL_Berjalan_1",
+    "new_aug:ADL_Stretching_6",
+    "new_aug:ADL_Duduk_di_kursi_23",
+    "old:Fall_dari_duduk_7",
+    "old:Fall_samping_kiri_5",
+    "old:Fall_ke_depan_9",
+    "old:Fall_samping_kanan_4",
+    "new_aug:ADL_Membungkuk_18",
+    "new_july:ADL_Stretching_10",
+    "new_aug:Fall_samping_kiri_23",
+    "old:ADL_Berjalan_7",
+    "new_july:ADL_Lompat_1",
+    "old:ADL_Berbaring_controlled_13",
+    "old:ADL_Membungkuk_12",
+    "old:Fall_ke_belakang_4",
+    "old:ADL_Bangun_dari_lantai_10",
+    "new_july:ADL_Berjalan_9",
+    "old:ADL_Duduk_di_kursi_4",
+    "new_aug:Fall_samping_kiri_24",
+    "new_july:Fall_ke_depan_15",
+    "old:ADL_Membungkuk_16",
+    "old:Fall_saat_berjalan_3",
+    "old:Fall_samping_kiri_17",
+    "old:Fall_ke_depan_11",
+    "old:ADL_Berjalan_8",
+    "new_aug:ADL_Membungkuk_22",
+    "old:ADL_Berdiri_diam_14",
+    "new_july:Fall_ke_depan_4",
+    "old:ADL_Jongkok_6",
+    "new_july:ADL_Jongkok_8",
+    "old:Fall_samping_kiri_18",
+    "old:ADL_Jongkok_16",
+    "old:ADL_Bangun_dari_lantai_8",
+    "old:ADL_Berjalan_2",
+    "old:ADL_Jongkok_2",
+    "old:Fall_samping_kiri_16",
+    "old:ADL_Duduk_di_kursi_2",
+    "new_july:ADL_Stretching_9",
+    "old:ADL_Membungkuk_4",
+    "old:Fall_saat_berbalik_6",
+    "new_july:ADL_Berjalan_4",
+    "old:ADL_Membungkuk_15",
+    "new_july:ADL_Sujud_3",
+    "new_july:Fall_samping_kanan_3",
+    "old:ADL_Berbaring_controlled_14",
+    "new_aug:Fall_samping_kanan_16",
+    "new_aug:ADL_Jongkok_21"
+  ],
+  "comparisons": {
+    "baseline": {
+      "threshold": 0.9,
+      "window_level": {
+        "accuracy": 0.9487179487179487,
+        "precision_weighted": 0.9498440952986408,
+        "recall_weighted": 0.9487179487179487,
+        "f1_weighted": 0.9473455477023719,
+        "confusion_matrix": [
+          [
+            456,
+            4
+          ],
+          [
+            28,
+            136
+          ]
+        ],
+        "fall_precision": 0.9714285714285714,
+        "fall_recall": 0.8292682926829268,
+        "fall_f1": 0.8947368421052632
+      },
+      "classifier_video_max": {
+        "accuracy": 0.92,
+        "fall_precision": 0.8260869565217391,
+        "fall_recall": 1.0,
+        "fall_f1": 0.9047619047619048,
+        "confusion_matrix": [
+          [
+            27,
+            4
+          ],
+          [
+            0,
+            19
+          ]
+        ]
+      },
+      "runtime_replay": {
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 0.9473684210526315,
+        "false_adl_videos": 1,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 1.1666666666666665,
+        "p95_detection_delay_sec": 1.4866666666666664,
+        "pre_fall_alert_videos": 0
+      },
+      "detailed_offline_report": "results\\logs\\yolo11m_retrain\\baseline_offline.json",
+      "detailed_runtime_report": "results\\logs\\yolo11m_retrain\\baseline_runtime.json"
+    },
+    "candidate_same_threshold": {
+      "threshold": 0.9,
+      "window_level": {
+        "accuracy": 0.9358974358974359,
+        "precision_weighted": 0.9401831992193439,
+        "recall_weighted": 0.9358974358974359,
+        "f1_weighted": 0.9329689579491609,
+        "confusion_matrix": [
+          [
+            459,
+            1
+          ],
+          [
+            39,
+            125
+          ]
+        ],
+        "fall_precision": 0.9920634920634921,
+        "fall_recall": 0.7621951219512195,
+        "fall_f1": 0.8620689655172413
+      },
+      "classifier_video_max": {
+        "accuracy": 0.98,
+        "fall_precision": 0.95,
+        "fall_recall": 1.0,
+        "fall_f1": 0.9743589743589743,
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            0,
+            19
+          ]
+        ]
+      },
+      "runtime_replay": {
+        "confusion_matrix": [
+          [
+            31,
+            0
+          ],
+          [
+            2,
+            17
+          ]
+        ],
+        "fall_recall": 0.8947368421052632,
+        "fall_precision": 1.0,
+        "false_adl_videos": 0,
+        "fall_videos": 19,
+        "detected_falls": 17,
+        "median_detection_delay_sec": 1.0666666666666667,
+        "p95_detection_delay_sec": 1.7866666666666662,
+        "pre_fall_alert_videos": 0
+      },
+      "detailed_offline_report": "results\\logs\\yolo11m_retrain\\candidate_same_threshold_offline.json",
+      "detailed_runtime_report": "results\\logs\\yolo11m_retrain\\candidate_same_threshold_runtime.json"
+    },
+    "candidate_validation_threshold": {
+      "threshold": 0.93,
+      "window_level": {
+        "accuracy": 0.9294871794871795,
+        "precision_weighted": 0.9347008770299214,
+        "recall_weighted": 0.9294871794871795,
+        "f1_weighted": 0.925848925848926,
+        "confusion_matrix": [
+          [
+            459,
+            1
+          ],
+          [
+            43,
+            121
+          ]
+        ],
+        "fall_precision": 0.9918032786885246,
+        "fall_recall": 0.7378048780487805,
+        "fall_f1": 0.8461538461538461
+      },
+      "classifier_video_max": {
+        "accuracy": 0.98,
+        "fall_precision": 0.95,
+        "fall_recall": 1.0,
+        "fall_f1": 0.9743589743589743,
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            0,
+            19
+          ]
+        ]
+      },
+      "runtime_replay": {
+        "confusion_matrix": [
+          [
+            31,
+            0
+          ],
+          [
+            4,
+            15
+          ]
+        ],
+        "fall_recall": 0.7894736842105263,
+        "fall_precision": 1.0,
+        "false_adl_videos": 0,
+        "fall_videos": 19,
+        "detected_falls": 15,
+        "median_detection_delay_sec": 1.0666666666666667,
+        "p95_detection_delay_sec": 1.64,
+        "pre_fall_alert_videos": 0
+      },
+      "detailed_offline_report": "results\\logs\\yolo11m_retrain\\candidate_validation_threshold_offline.json",
+      "detailed_runtime_report": "results\\logs\\yolo11m_retrain\\candidate_validation_threshold_runtime.json"
+    }
+  },
+  "limitations": [
+    "Single training seed and a small test sample; observed differences are not significance claims.",
+    "Video-disjoint, not subject/room/session-disjoint; augmented windows are correlated.",
+    "Classifier video maxima can count pre-fall positives; live replay requires interval overlap.",
+    "Replay uses recorded poses and synthetic 15 FPS time; camera/network latency is excluded.",
+    "False alerts are counted per short ADL video, not per hour of continuous monitoring.",
+    "Validation calibration uses classifier maxima, not the full runtime gates.",
+    "Candidate remains separate pending physical robot and continuous-ADL testing."
+  ]
+}

@@ -23,7 +23,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.config import (
     PROCESSED_ADL_DIR, PROCESSED_FALL_DIR,
     FALL_ANNOTATIONS_PATH, FALL_MIN_OVERLAP_FRAMES,
-    TRAINING_DATASETS, SUBJECT_METADATA_PATH,
+    TRAINING_DATASETS, SUBJECT_METADATA_PATH, training_dataset_sources,
     LABEL_MAP, MP_TOTAL_FEATURES, MP_NUM_LANDMARKS, MP_FEATURES_PER_LANDMARK,
     SELECTED_LANDMARKS, NUM_SELECTED_LANDMARKS, SELECTED_FEATURES,
     SEQUENCE_LENGTH, STRIDE, INPUT_FEATURES,
@@ -608,6 +608,7 @@ def load_all_data(
     return_subject_ids: bool = False,
     require_subject_metadata: bool = False,
     feature_pipeline: str = FEATURE_PIPELINE,
+    feature_root=None,
 ) -> tuple:
     """
     Load semua file .npy, apply feature engineering, dan buat sliding windows.
@@ -634,7 +635,8 @@ def load_all_data(
     }
     source_summary = {}
 
-    for source in TRAINING_DATASETS:
+    for source in (TRAINING_DATASETS if feature_root is None
+                   else training_dataset_sources(feature_root)):
         source_name = source["name"]
         source_summary[source_name] = {"ADL": 0, "Fall": 0}
         for label_name, label_id in LABEL_MAP.items():
@@ -1028,6 +1030,8 @@ def get_dataloaders(
     val_subject_ids=SUBJECT_VAL_IDS,
     test_subject_ids=SUBJECT_TEST_IDS,
     feature_pipeline: str = FEATURE_PIPELINE,
+    feature_root=None,
+    return_split_metadata: bool = False,
 ):
     """
     Entry point utama: load data, split, normalize, buat DataLoader.
@@ -1047,6 +1051,7 @@ def get_dataloaders(
         return_subject_ids=(split_strategy == "subject"),
         require_subject_metadata=(split_strategy == "subject"),
         feature_pipeline=feature_pipeline,
+        feature_root=feature_root,
     )
     video_windows, video_window_labels, video_event_labels, video_names = data[:4]
     video_subject_ids = data[4] if len(data) == 5 else None
@@ -1144,9 +1149,20 @@ def get_dataloaders(
     print(f"    Val  : {len(val_loader)} batches")
     print(f"    Test : {len(test_loader)} batches")
 
+    result = (train_loader, val_loader, test_loader)
     if return_scaler:
-        return train_loader, val_loader, test_loader, (train_mean, train_std)
-    return train_loader, val_loader, test_loader
+        result += ((train_mean, train_std),)
+    if return_split_metadata:
+        indices = split_video_indices(
+            video_event_labels, video_subject_ids=video_subject_ids,
+            split_strategy=split_strategy, train_subject_ids=train_subject_ids,
+            val_subject_ids=val_subject_ids, test_subject_ids=test_subject_ids,
+        )
+        result += ({
+            name: [video_names[index] for index in group]
+            for name, group in zip(("train_videos", "validation_videos", "test_videos"), indices)
+        },)
+    return result
 
 
 # ============================================================

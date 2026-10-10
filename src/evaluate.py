@@ -96,18 +96,20 @@ def checkpoint_split_config(checkpoint):
 
 
 @torch.no_grad()
-def get_video_event_predictions(model, device, checkpoint, threshold):
+def get_video_event_predictions(model, device, checkpoint, threshold, feature_root=None):
     """Agregasi window menjadi event: satu video positif jika ada window Fall."""
     # Runtime memprediksi setiap pose frame setelah buffer penuh (stride=1),
     # bukan hanya setiap STRIDE training window.
     split_config = checkpoint_split_config(checkpoint)
     feature_pipeline = checkpoint_feature_pipeline(checkpoint)
+    feature_root = feature_root or checkpoint.get("training_config", {}).get("feature_root")
     data = load_all_data(
         window_stride=1,
         include_ambiguous=True,
         return_subject_ids=(split_config["strategy"] == "subject"),
         require_subject_metadata=(split_config["strategy"] == "subject"),
         feature_pipeline=feature_pipeline,
+        feature_root=feature_root,
     )
     video_windows, _video_window_labels, video_event_labels, video_names = data[:4]
     video_subject_ids = data[4] if len(data) == 5 else None
@@ -244,6 +246,7 @@ def evaluate_model(
     results_path=None,
     figures_dir=None,
     history_path=None,
+    feature_root=None,
 ):
     """Entry point: evaluasi model terbaik pada test set."""
 
@@ -277,6 +280,7 @@ def evaluate_model(
     except TypeError:
         checkpoint = torch.load(str(best_model_path), map_location=device)
     feature_pipeline = checkpoint_feature_pipeline(checkpoint)
+    feature_root = feature_root or checkpoint.get("training_config", {}).get("feature_root")
     input_features = checkpoint_input_features(checkpoint)
     model = FallDetectionModel(
         input_size=input_features,
@@ -300,6 +304,7 @@ def evaluate_model(
         val_subject_ids=split_config["val_subject_ids"],
         test_subject_ids=split_config["test_subject_ids"],
         feature_pipeline=feature_pipeline,
+        feature_root=feature_root,
     )
 
     # ========================================
@@ -330,7 +335,7 @@ def evaluate_model(
     # EVENT-LEVEL EVALUATION
     # ========================================
     event_true, event_pred, event_details = get_video_event_predictions(
-        model, device, checkpoint, threshold
+        model, device, checkpoint, threshold, feature_root=feature_root,
     )
     event_accuracy = accuracy_score(event_true, event_pred)
     event_precision = precision_score(event_true, event_pred, pos_label=1)
@@ -375,6 +380,8 @@ def evaluate_model(
 
     evaluation_results = {
         "threshold": threshold,
+        "feature_root": str(feature_root) if feature_root else None,
+        "evaluation_scope": "offline classifier windows and video maxima; no runtime posture gates",
         "data_split": checkpoint.get("data_split", {
             "strategy": "video_stratified"
         }),
@@ -416,6 +423,10 @@ if __name__ == "__main__":
         help="Checkpoint to evaluate",
     )
     parser.add_argument(
+        "--feature-root", type=Path,
+        help="Override the checkpoint cache for an explicit comparison",
+    )
+    parser.add_argument(
         "--output", type=Path,
         default=LOGS_DIR / "evaluation_results.json",
         help="Evaluation JSON output path",
@@ -435,4 +446,5 @@ if __name__ == "__main__":
         results_path=args.output,
         figures_dir=args.figures_dir,
         history_path=args.history,
+        feature_root=args.feature_root,
     )

@@ -3092,7 +3092,7 @@ import sys
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from src.config import DEVICE, FALL_CONFIDENCE_THRESHOLD, MODEL_DIR
+from src.config import DEVICE, FALL_CONFIDENCE_THRESHOLD, MODEL_DIR, YOLO_POSE_MODEL_PATH
 from src.inference import FallDetector
 from src.yolo_detector import YOLOPoseDetector
 from src.human_following import ShoulderTargetFilter
@@ -3103,8 +3103,7 @@ print('=' * 60)
 print('  INITIALIZING HAFIBOT GPU AI PIPELINE ON LAPTOP')
 print('=' * 60)
 
-candidates = [MODEL_DIR / 'yolo11m-pose.pt', MODEL_DIR / 'yolo11s-pose.pt', MODEL_DIR / 'yolov8s-pose.pt', MODEL_DIR / 'yolov8n-pose.pt']
-pose_model_file = str(next((p for p in candidates if p.exists()), MODEL_DIR / 'yolov8n-pose.pt'))
+pose_model_file = str(YOLO_POSE_MODEL_PATH)
 pose_detector = YOLOPoseDetector(model_path=pose_model_file, device='cuda' if torch.cuda.is_available() else 'cpu')
 fall_detector = FallDetector(confidence_threshold=FALL_CONFIDENCE_THRESHOLD, enable_posture_filter=True)
 target_filter = ShoulderTargetFilter(coefficients=[DEFAULT_FOCAL_CONSTANT], confirmation_frames=2, min_visibility=0.35)

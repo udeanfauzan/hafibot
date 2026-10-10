@@ -26,19 +26,22 @@ from collections import Counter
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from src.config import (
-    DEVICE, MODEL_DIR, LOGS_DIR, PROCESSED_DIR,
+    DEVICE, MODEL_DIR, LOGS_DIR,
     NUM_EPOCHS, LEARNING_RATE, WEIGHT_DECAY,
     EARLY_STOPPING_PATIENCE, RANDOM_SEED,
     SEQUENCE_LENGTH, STRIDE, INPUT_FEATURES, CLASS_NAMES,
     FEATURE_PIPELINE, BASE_FEATURES, AUGMENTATION_PROFILE,
     RNN_TYPE,
-    MP_MODEL_VARIANT, EXPECTED_VIDEO_FPS,
-    FALL_MIN_OVERLAP_FRAMES, TRAINING_DATASETS, SUBJECT_METADATA_PATH,
+    EXPECTED_VIDEO_FPS,
+    FALL_MIN_OVERLAP_FRAMES, SUBJECT_METADATA_PATH,
     SPLIT_STRATEGY, SUBJECT_TRAIN_IDS, SUBJECT_VAL_IDS, SUBJECT_TEST_IDS,
+    YOLO11_FEATURE_ROOT, YOLO_POSE_MODEL_PATH, training_dataset_sources,
+    PROJECT_ROOT,
 )
 from src.dataset import get_dataloaders
 from src.model import FallDetectionModel, count_parameters
 from src.temporal_labels import file_sha256
+from src.pose_provenance import pose_extraction_signature, validate_pose_metadata
 
 
 # ============================================================
@@ -124,18 +127,30 @@ def train(
     scaler_path=None,
     history_path=None,
     split_strategy=SPLIT_STRATEGY,
+    feature_root=YOLO11_FEATURE_ROOT,
 ):
     """Entry point: training loop lengkap."""
     set_seed()
+    feature_root = Path(feature_root).resolve()
+    sources = training_dataset_sources(feature_root)
+    extraction_metadata = {}
+    expected_pose = pose_extraction_signature()
+    for source in sources:
+        metadata_path = source["processed_adl_dir"].parent / "extraction_metadata.json"
+        if not metadata_path.is_file():
+            raise FileNotFoundError(f"Extract YOLO11 features first: {metadata_path}")
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        validate_pose_metadata(metadata, expected_pose)
+        extraction_metadata[source["name"]] = metadata
 
     checkpoint_path = Path(
-        checkpoint_path or (MODEL_DIR / "best_model.pt")
+        checkpoint_path or (MODEL_DIR / "candidates" / "yolo11m" / "best_model.pt")
     )
     scaler_path = Path(
-        scaler_path or (MODEL_DIR / "scaler_params.npz")
+        scaler_path or (MODEL_DIR / "candidates" / "yolo11m" / "scaler_params.npz")
     )
     history_path = Path(
-        history_path or (LOGS_DIR / "training_history.npy")
+        history_path or (LOGS_DIR / "yolo11m_retrain" / "training_history.npy")
     )
     checkpoint_path.parent.mkdir(parents=True, exist_ok=True)
     scaler_path.parent.mkdir(parents=True, exist_ok=True)
@@ -152,21 +167,24 @@ def train(
         print(f"  VRAM  : {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 
     # Data
-    train_loader, val_loader, test_loader, scaler = get_dataloaders(
+    train_loader, val_loader, test_loader, scaler, split_videos = get_dataloaders(
         return_scaler=True,
         save_scaler=False,
         split_strategy=split_strategy,
+        feature_root=feature_root,
+        return_split_metadata=True,
     )
     scaler_mean, scaler_std = scaler
     np.savez(str(scaler_path), mean=scaler_mean, std=scaler_std)
     print(f"    Scaler saved: {scaler_path}")
     data_split_metadata = {
         "strategy": split_strategy,
-        "train_subject_ids": list(SUBJECT_TRAIN_IDS),
-        "val_subject_ids": list(SUBJECT_VAL_IDS),
-        "test_subject_ids": list(SUBJECT_TEST_IDS),
+        "train_subject_ids": list(SUBJECT_TRAIN_IDS) if split_strategy == "subject" else [],
+        "val_subject_ids": list(SUBJECT_VAL_IDS) if split_strategy == "subject" else [],
+        "test_subject_ids": list(SUBJECT_TEST_IDS) if split_strategy == "subject" else [],
         "subject_metadata_file": SUBJECT_METADATA_PATH.name,
         "subject_metadata_sha256": file_sha256(SUBJECT_METADATA_PATH),
+        **split_videos,
     }
     fall_labeling_metadata = {
         "method": "visible_pose_interval_overlap",
@@ -176,27 +194,13 @@ def train(
                 "file": source["fall_annotations_path"].name,
                 "sha256": file_sha256(source["fall_annotations_path"]),
             }
-            for source in TRAINING_DATASETS
+            for source in sources
         },
         "minimum_fall_overlap_frames": FALL_MIN_OVERLAP_FRAMES,
         "ambiguous_boundary_policy": "exclude",
         "fall_overlap_requires_visible_pose": True,
         "window_end_requires_visible_pose": True,
     }
-
-    extraction_metadata = {}
-    for source in TRAINING_DATASETS:
-        extraction_metadata_path = (
-            source["processed_adl_dir"].parent / "extraction_metadata.json"
-        )
-        if extraction_metadata_path.exists():
-            with extraction_metadata_path.open("r", encoding="utf-8") as handle:
-                extraction_metadata[source["name"]] = json.load(handle)
-        else:
-            print(
-                f"  [WARNING] Metadata ekstraksi tidak ditemukan: "
-                f"{extraction_metadata_path}"
-            )
 
     # Hitung class weights (menangani imbalance ADL vs Fall)
     all_labels = []
@@ -285,7 +289,9 @@ def train(
                     "rnn_type": RNN_TYPE,
                     "class_names": CLASS_NAMES,
                     "random_seed": RANDOM_SEED,
-                    "pose_model_variant": MP_MODEL_VARIANT,
+                    "pose_model_variant": YOLO_POSE_MODEL_PATH.stem,
+                    "feature_root": str(feature_root.relative_to(PROJECT_ROOT))
+                    if feature_root.is_relative_to(PROJECT_ROOT) else str(feature_root),
                     "expected_video_fps": EXPECTED_VIDEO_FPS,
                 },
                 "extraction_metadata": extraction_metadata,
@@ -340,16 +346,20 @@ def train(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Train fall detector")
     parser.add_argument(
-        "--checkpoint", type=Path, default=MODEL_DIR / "best_model.pt",
+        "--checkpoint", type=Path, default=MODEL_DIR / "candidates" / "yolo11m" / "best_model.pt",
         help="Best-checkpoint output path",
     )
     parser.add_argument(
-        "--scaler", type=Path, default=MODEL_DIR / "scaler_params.npz",
+        "--scaler", type=Path, default=MODEL_DIR / "candidates" / "yolo11m" / "scaler_params.npz",
         help="Legacy scaler output path",
     )
     parser.add_argument(
-        "--history", type=Path, default=LOGS_DIR / "training_history.npy",
+        "--history", type=Path, default=LOGS_DIR / "yolo11m_retrain" / "training_history.npy",
         help="Training-history output path",
+    )
+    parser.add_argument(
+        "--feature-root", type=Path, default=YOLO11_FEATURE_ROOT,
+        help="Model-specific feature cache (default: %(default)s)",
     )
     parser.add_argument(
         "--split-strategy", choices=("video_stratified", "subject"),
@@ -362,4 +372,5 @@ if __name__ == "__main__":
         scaler_path=args.scaler,
         history_path=args.history,
         split_strategy=args.split_strategy,
+        feature_root=args.feature_root,
     )

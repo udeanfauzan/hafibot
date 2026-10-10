@@ -84,6 +84,26 @@ RESULTS_DIR = PROJECT_ROOT / "results"
 FIGURES_DIR = RESULTS_DIR / "figures"
 LOGS_DIR = RESULTS_DIR / "logs"
 
+# One pose configuration shared by offline extraction and live inference.
+YOLO_POSE_MODEL_PATH = MODEL_DIR / "yolo11m-pose.pt"
+YOLO_POSE_CONFIDENCE = 0.35
+YOLO_POSE_INPUT_SIZE = (640, 640)
+YOLO11_FEATURE_ROOT = DATA_DIR / "processed_yolo11m"
+
+
+def training_dataset_sources(feature_root=None):
+    """Select an isolated feature cache while preserving source IDs/annotations."""
+    if feature_root is None:
+        return TRAINING_DATASETS
+    root = Path(feature_root)
+    if not root.is_absolute():
+        root = PROJECT_ROOT / root
+    return tuple({
+        **source,
+        "processed_adl_dir": root / source["name"] / "ADL",
+        "processed_fall_dir": root / source["name"] / "Fall",
+    } for source in TRAINING_DATASETS)
+
 # ============================================================
 # LABEL MAPPING
 # ============================================================
@@ -160,8 +180,8 @@ STRIDE = 5              # Langkah sliding window (83% overlap, lebih banyak data
 # Window Fall harus mengandung setidaknya 0.4 detik gerakan Fall pada 15 FPS.
 # Window dengan 1..5 frame Fall dianggap boundary ambigu dan tidak dilatih.
 FALL_MIN_OVERLAP_FRAMES = 6
-# Active deployment threshold for the combined 332-video model.
-# Threshold 0.90 with YOLOv8n-Pose achieves 98.0% event accuracy and 0 False Alarms on ADL.
+# Active baseline threshold. Historical YOLOv8n-cache evaluation reported
+# 98.0% video-max accuracy; this is not a live YOLO11m/posture-gated guarantee.
 FALL_CONFIDENCE_THRESHOLD = 0.90
 
 # ============================================================ 
