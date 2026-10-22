@@ -367,7 +367,16 @@ class FallDetector:
 
         return pred_class, confidence, probs
 
-    def process_frame(self, landmarks) -> dict:
+    def _analyze_posture(self, landmarks, frame_size=None):
+        """Legacy geometry hook; experimental detectors override this explicitly."""
+        return analyze_posture(
+            landmarks,
+            min_upright_torso_angle=self.min_upright_torso_angle,
+            min_upright_aspect_ratio=self.min_upright_aspect_ratio,
+            min_dy_torso=self.min_dy_torso,
+        )
+
+    def process_frame(self, landmarks, frame_size=None) -> dict:
         """
         Proses satu frame: update buffer, predict jika buffer penuh.
 
@@ -440,12 +449,7 @@ class FallDetector:
         posture_gated = False
         is_upright = False
         if person_detected:
-            posture_info = analyze_posture(
-                landmarks,
-                min_upright_torso_angle=self.min_upright_torso_angle,
-                min_upright_aspect_ratio=self.min_upright_aspect_ratio,
-                min_dy_torso=self.min_dy_torso,
-            )
+            posture_info = self._analyze_posture(landmarks, frame_size)
             is_upright = bool(posture_info and posture_info.get('is_upright', False))
             if is_upright:
                 self.upright_streak += 1

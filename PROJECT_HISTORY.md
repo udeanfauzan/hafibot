@@ -163,3 +163,87 @@ hafibot/
 - Full regression suite: **101 passed** (three existing dependency/fixture deprecation warnings). On this Windows environment use a fresh workspace-local pytest `--basetemp` and `-p no:cacheprovider` if the default temp directory denies access.
 - Training completed its final evaluation and saved history, but the process then exited abnormally (`0xc0000409`, Windows event identified `ucrtbase.dll`). The root cause is unconfirmed. Subsequent independent checkpoint validation, calibration and all six comparison subprocesses exited normally; do not describe the training process itself as a clean exit.
 - This is one training seed and a small correlated video-level holdout, not a significance test or field-reliability estimate. Replay excludes camera/network latency, unseen-person/room generalization, long-duration false alarms, and the external caregiver notification/motor-delivery chain.
+
+---
+
+## 9. Opt-in Runtime Candidates and Full-State Validation Calibration (2026-10-10)
+
+### Scope and isolation
+- User approved posture/temporal corrections, bounded short-gap history retention, and validation-only full-runtime calibration. Do not interpret this as permission to promise 100% field recall or activate a new model automatically.
+- Active checkpoint/scaler and server default remain the legacy detector at 0.90. `src/inference.py` only adds an overridable geometry hook and optional `frame_size`; legacy decisions remain reproducible. Shared `src/yolo_detector.py` was not modified, preserving extraction provenance.
+- New `src/runtime_candidate.py` contains frozen profiles: `geometry_v2`, `gap_v2`, `temporal_v2`. The original `legacy_v1` remains a control. No further NN training or feature dimension change was needed: brief gaps retain the raw zero rows already present in training rather than invented/interpolated keypoints.
+- `geometry_v2` measures equal-scale image-plane pixel geometry and honors the configured angle, aspect and signed torso-height thresholds. Arrays/live objects use the same confidence cutoff; missing shoulder/hip anchors or degenerate geometry are unknown, not upright evidence. This does not calibrate physical 3D angles or fix fisheye/perspective/capture resizing.
+- `gap_v2` retains compatible gaps up to 3 frames and 0.30 s, with sufficiently visible previous/current hips and bounded center displacement. Long/incompatible gaps, >0.50 s stream interruption, resolution changes or explicit `target_changed` discard motion evidence and rewarm actual frames, not 30 copies of the returning pose. Fast continuous downward motion alone is no longer a target-switch reset. Confirmed fall holds survive visual discontinuities; explicit new identity resets the detector latch.
+- `temporal_v2` adds three consecutive raw positive observations, five-frame low-score upright recovery, and a timestamped nose + both-hip descending/rising gate. Reliable motion anchors are required to override upright; motion alone cannot create a Fall. Votes precede geometric veto, so previous positive scores during a transition can confirm on the first gate-permitted frame. Missing poses reset votes and never invoke the model or begin new alerts; pose reacquisition still requires three observations.
+- Hip compatibility is not identity tracking. The candidate API accepts explicit `target_changed`, but current live YOLO does not supply a reliable person-ID signal to the server. Limit initial supervised trials to one person. Camera ego-motion can confound the temporal gate.
+
+### Calibration and frozen results
+- `scripts/calibrate_runtime.py` replays the full state machine for all four predefined profiles and thresholds 0.50 through 0.99 on **validation only**, using the checkpoint-bound 50-video manifest. Only identical hashed neural inputs/predictions are memoized; gate/vote/recovery/latch decisions are rerun at every point. Tests verify cache/direct replay equivalence and fail on input mismatch.
+- Predeclared objective: maximum **fresh alert-onset recall inside the original Fall annotation**, then minimum false ADL videos/episodes, minimum premature episodes, minimum median onset delay, highest threshold, simpler profile. A false alert latched from before a Fall is not credited as a true onset; late alerts remain separate. No interval stretching and no test-based parameter selection.
+- Frozen local audit: `results/logs/runtime_v2/calibration.json`. Exclusive creation prevents overwriting selections; checkpoint, pose policy, feature/source hashes, code hashes, annotations and validation manifest are recorded. Model-forward calls per profile: 2,916 legacy/geometry and 2,863 gap/temporal, reused safely for the 50 threshold points.
+
+| YOLO11m candidate profile | Validation-selected threshold | Fresh-onset interval confusion [[TN,FP],[FN,TP]] | Median onset delay |
+|---|---:|---|---:|
+| legacy_v1 | 0.86 | [[30,1],[1,18]] | 1.10 s |
+| geometry_v2 | 0.78 | [[30,1],[1,18]] | 0.90 s |
+| gap_v2 | 0.78 | [[29,2],[1,18]] | 0.90 s |
+| **temporal_v2** | **0.72** | **[[30,1],[1,18]]** | **0.70 s** |
+
+- Global selection was `temporal_v2` / 0.72, with 18/19 validation Fall onsets and 1/31 false ADL video. The missed validation clip `old:Fall_ke_depan_8` has 59/76 missing accepted poses and zero neural evaluations in this replay; a score threshold cannot repair absent visual evidence. The false ADL was controlled lying (`old:ADL_Berbaring_controlled_2`). ADL validation exposure is only 193 seconds; false-alert/hour values are explicitly a short-clip proxy, not continuous monitoring estimates.
+
+### Regression after freezing selection
+- `scripts/compare_runtime_candidates.py` verifies calibration integrity before/after evaluation, uses identical regression video IDs for all scenarios, rejects overlap with validation, and checks active artifact hashes. The first orchestration attempt exposed a relative/absolute report-path bug after baseline evaluation; it was fixed in the comparison script without changing runtime code or validation selection. The complete comparison then exited successfully.
+- Tracked summary: `results/runtime_v2_comparison.json`. Detailed six replay reports and logs: `results/logs/runtime_v2/` (ignored). All table entries use fresh alert onsets inside the same annotations; no pre-fall onsets occurred.
+
+| Classifier/runtime | Threshold | Interval Fall onsets | False ADL videos | Median delay |
+|---|---:|---:|---:|---:|
+| Active original / legacy | 0.90 | 18/19 | 1/31 | 1.17 s |
+| YOLO11m candidate / legacy | 0.90 | 17/19 | 0/31 | 1.07 s |
+| YOLO11m candidate / geometry | 0.90 | 18/19 | 1/31 | 0.73 s |
+| YOLO11m candidate / gap | 0.90 | 18/19 | 1/31 | 0.73 s |
+| YOLO11m candidate / temporal | 0.90 | 18/19 | 0/31 | 0.80 s |
+| **YOLO11m candidate / validation-selected temporal** | **0.72** | **19/19** | **1/31** | **0.73 s** |
+
+- Gap/temporal at 0.90 each have one late-only alert (still an interval miss). Selected 0.72 has no late-only or premature episodes. **Do not claim 100% real-world recall:** these 19 falls were already inspected to diagnose prior runtime failures; this is a regression set, not a pristine unseen final test. Validation itself is still 18/19. All thresholds/settings remained unchanged after regression results were seen.
+- Relative to the YOLO11m legacy candidate, the selected runtime gains two detected falls while adding one false ADL clip. Compared with the original active baseline it gains one fall with the same one false ADL clip. Small correlated video-disjoint samples do not establish significance or unseen-person/scene performance.
+
+### Controlled access and verification
+- Server opt-in only: set `HAFIBOT_FALL_RUNTIME_CALIBRATION` to the frozen audit path and restart. `src/runtime_loader.py` refuses changed code/settings, checkpoint or pose-extraction signature. With the variable unset, it constructs the original `FallDetector` and original threshold. `.env.example` only contains a commented example; no active configuration was changed.
+- Server passes the actual decoded frame dimensions. Replay uses source time at 15 FPS; live network timing/frame loss and mobile-camera ego-motion are not simulated. External motor ESTOP latching, caregiver push delivery, capture-to-alert latency and multi-person tracking remain outside detector replay.
+- Both active artifact hashes remained exactly those in section 8. Candidate scalers are embedded in their checkpoint and were independently verified. Existing unrelated `data/monitoring/reminders.json` edits were retained byte-for-byte: legacy chatbot integration tests advanced prayer dates, and the exact pre-test state/hash was restored rather than replacing user changes with Git's version.
+- Full suite: **136 passed**, three existing deprecation warnings; syntax compilation and `git diff --check` passed. Calibration and complete comparison processes exited normally. Changes from this runtime task have **not been committed or pushed**.
+- Next required evidence before promotion: fresh subject/room-disjoint recordings; difficult intentional lying/sitting/bending hard negatives; pose-visibility/low-angle occlusion audit; long continuous ADL stationary and moving-robot trials; real capture/network alert latency and full notification/ESTOP delivery. Keep any future model/profile tuning separated from the new final holdout.
+
+---
+
+## 10. Summary of Progress, Runtime Evaluation, and Next Steps (October 2026)
+
+### Key Accomplishments & State of the Project
+1. **Retrained YOLO11m-Compatible 1D CNN-BiLSTM Candidate**:
+   - Re-extracted all 332 dataset videos (29,588 frames) with YOLO11m-pose to eliminate the mismatch between training (formerly YOLOv8n) and deployment (YOLO11m-pose).
+   - Provenance tracking with SHA-256 caching verified under `data/processed_yolo11m/`.
+   - Candidate model trained and evaluated; checkpoint stored at `models/candidates/yolo11m/best_model.pt`.
+
+2. **Runtime Candidate Enhancements (`src/runtime_candidate.py`)**:
+   - **`geometry_v2`**: Pixel-aspect-ratio corrected torso inclination angles and bounding box ratios using actual frame pixel dimensions.
+   - **`gap_v2`**: Bounded gap history preservation (<= 3 frames / 0.30 s) with reliable hip anchors, preventing artificial velocity spikes upon target re-entry without hallucinating keypoints.
+   - **`temporal_v2`**: Multi-frame temporal voting (3 consecutive positive frames), vertical downward motion gating (head + hip descending), and 5-frame stable upright recovery.
+
+3. **Validation Calibration & Regression Replay Results**:
+   - Swept thresholds from 0.50 to 0.99 across all profiles using held-out validation only.
+   - Selected operating point: **`temporal_v2` at threshold 0.72** (18/19 validation falls detected, 1/31 false ADL video, 0.70 s median delay).
+   - On the 50 regression clips, `temporal_v2` detected **19/19 fall onsets** with 1/31 false ADL clips (median delay 0.73 s), compared to the active baseline legacy at 0.90 (18/19 falls, 1/31 false ADL, 1.17 s median delay).
+
+4. **Safety & Deployment Status**:
+   - **The candidate model remains inactive by default.** The active production model is `models/best_model.pt` with legacy runtime and 0.90 threshold.
+   - Added an opt-in switch via the `HAFIBOT_FALL_RUNTIME_CALIBRATION` environment variable through `src/runtime_loader.py` for safe, supervised evaluation.
+   - Full test suite verified with 136 passing tests.
+
+5. **Motor Dynamics & Human Following Enhancements**:
+   - Diagnosed 4WD 1.7 kg skid-steer static friction and L298N forward voltage drop (~2-3V) causing motor stalls.
+   - Defined breakaway kick-start pulse (PWM 255 for 100 ms) and deadband floor remapping (180-255 PWM) in motor controller architecture.
+
+### Recommended Next Steps
+- **Supervised Robot Trials**: Run live trials with the camera feed and robot using the opt-in variable to test natural interaction (sitting, walking, bending, floor transfers) before promoting the candidate.
+- **Continuous Multi-Hour ADL Benchmark**: Collect extended continuous ADL recordings to measure the true false-alarm rate per hour.
+- **Low-Angle Occlusion Audit**: Investigate remaining edge cases where pose keypoints drop below threshold due to the 21 cm ground-level camera perspective.

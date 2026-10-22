@@ -3094,6 +3094,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config import DEVICE, FALL_CONFIDENCE_THRESHOLD, MODEL_DIR, YOLO_POSE_MODEL_PATH
 from src.inference import FallDetector
+from src.runtime_loader import create_server_fall_detector
 from src.yolo_detector import YOLOPoseDetector
 from src.human_following import ShoulderTargetFilter
 from src.hafibot_protocol import encode_command, FOLLOW, STOP, ESTOP, RESET_ESTOP, FallEStopLatch
@@ -3105,7 +3106,7 @@ print('=' * 60)
 
 pose_model_file = str(YOLO_POSE_MODEL_PATH)
 pose_detector = YOLOPoseDetector(model_path=pose_model_file, device='cuda' if torch.cuda.is_available() else 'cpu')
-fall_detector = FallDetector(confidence_threshold=FALL_CONFIDENCE_THRESHOLD, enable_posture_filter=True)
+fall_detector = create_server_fall_detector(os.environ.get('HAFIBOT_FALL_RUNTIME_CALIBRATION'))
 target_filter = ShoulderTargetFilter(coefficients=[DEFAULT_FOCAL_CONSTANT], confirmation_frames=2, min_visibility=0.35)
 _load_calibration()
 fall_safety_latch = FallEStopLatch()
@@ -3210,10 +3211,16 @@ def _process_robot_frame():
     landmarks = pose_detector.detect(frame)
 
     # 2. Fall detection (1D CNN-LSTM + Kinematic Gating)
-    fall_res = fall_detector.process_frame(landmarks)
+    fall_res = fall_detector.process_frame(landmarks, frame_size=(frame.shape[1], frame.shape[0]))
     is_fall = bool(fall_res.get('is_fall', False))
 
     # 3. Following target calculation
+
+
+
+
+
+    # probe
     if landmarks and len(landmarks) >= 13:
         target = target_filter.update(landmarks)
     else:

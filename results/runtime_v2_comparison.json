@@ -1,0 +1,536 @@
+{
+  "scope": "REGRESSION on 50 previously inspected clips, NOT a pristine unseen final test. No test-based selection.",
+  "calibration_sha256": "068678402745a22bfb826672769a4e7863fcb1596a70d057a8517b4fa96a3741",
+  "checkpoint_sha256": "77f0e5838a4436967d3c7daabbc39bc3594fcc152f75aadec661fce7622251df",
+  "active_artifacts_sha256": {
+    "D:\\Tugas Akhir\\hafibot\\models\\best_model.pt": "24d6d30cdfd44f152c7a1d1bd0bd4a3418ac9f0352262206dc399425b928b46f",
+    "D:\\Tugas Akhir\\hafibot\\models\\scaler_params.npz": "50a6e84ca707d4a99d7809d6bd1cd92f560456a010855dabfd30a5372e8e73f6"
+  },
+  "code_sha256": {
+    "src/runtime_candidate.py": "e8e90a76d065709d1b5477ac15dc4b491c909d6a6454564c876a3d351b79e8ce",
+    "src/runtime_loader.py": "2c826809c686e4ddbbf5e31d629a6f74db3c786fe386c1735dcf5af47c87fcd3",
+    "src/inference.py": "6e7526307e29c910e9a6505b65dae1cf2116aabecc97739d5f325e07cc73bb72",
+    "src/posture.py": "32c4f9c99198d1b4f140249caa23f8833d8c67d4faafb49e3f0454ee2c12b27b",
+    "src/config.py": "8d6917503c95d84767e85678eb4f7ba8461fb5e35a2945427c012610919b6ae1",
+    "src/dataset.py": "58ac50cc01fd1ea8a130d8f796547cc93df41ff02282d4aeb8ab262a0c971351",
+    "src/model.py": "2c7ae04c984f2cf2363c6e85747d1dc175f84cee446dac70a8f64a5411ed98b3",
+    "src/temporal_labels.py": "25689a0d5f12fe2fc272aa39da37ed957e7e7280b2e09f1bfce8e7b318c04a35",
+    "scripts/evaluate_runtime_replay.py": "96957c28d61a88c0a45c915cb9f3088aed062c8ec0c33696fefcf0f79533cbd8",
+    "scripts/calibrate_runtime.py": "af71ac7579df35659f56734bf427bf2d830736445704423984ed4df1eed042ae"
+  },
+  "settings": {
+    "max_short_gap_frames": 3,
+    "max_short_gap_sec": 0.3,
+    "max_stream_interval_sec": 0.5,
+    "max_reacquire_center_distance": 0.25,
+    "confirmation_frames": 3,
+    "upright_recovery_frames": 5,
+    "motion_horizon_sec": 0.4,
+    "minimum_motion_span_sec": 0.2,
+    "motion_torso_fraction": 0.35,
+    "minimum_torso_height": 0.04,
+    "motion_anchor_visibility": 0.35
+  },
+  "validation_selected": {
+    "profile": "temporal_v2",
+    "threshold": 0.72,
+    "confusion_matrix": [
+      [
+        30,
+        1
+      ],
+      [
+        1,
+        18
+      ]
+    ],
+    "fall_recall": 0.9473684210526315,
+    "fall_precision": 0.9473684210526315,
+    "false_adl_videos": 1,
+    "fall_videos": 19,
+    "detected_falls": 18,
+    "median_detection_delay_sec": 0.7,
+    "p95_detection_delay_sec": 1.3666666666666656,
+    "pre_fall_alert_videos": 0,
+    "onset_confusion_matrix": [
+      [
+        30,
+        1
+      ],
+      [
+        1,
+        18
+      ]
+    ],
+    "onset_fall_recall": 0.9473684210526315,
+    "false_adl_alert_episodes": 1,
+    "adl_exposure_sec": 193.0,
+    "false_alerts_per_hour_short_clip_proxy": 18.65284974093264,
+    "late_only_fall_videos": 0,
+    "pre_fall_alert_episodes": 0,
+    "median_onset_delay_sec": 0.7
+  },
+  "validation_profile_bests": {
+    "legacy_v1": {
+      "selected": {
+        "profile": "legacy_v1",
+        "threshold": 0.86,
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 0.9473684210526315,
+        "false_adl_videos": 1,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 1.1,
+        "p95_detection_delay_sec": 1.9933333333333327,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "onset_fall_recall": 0.9473684210526315,
+        "false_adl_alert_episodes": 1,
+        "adl_exposure_sec": 193.0,
+        "false_alerts_per_hour_short_clip_proxy": 18.65284974093264,
+        "late_only_fall_videos": 0,
+        "pre_fall_alert_episodes": 0,
+        "median_onset_delay_sec": 1.1
+      },
+      "model_forward_calls": 2916
+    },
+    "geometry_v2": {
+      "selected": {
+        "profile": "geometry_v2",
+        "threshold": 0.78,
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 0.9473684210526315,
+        "false_adl_videos": 1,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 0.9,
+        "p95_detection_delay_sec": 1.6866666666666665,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "onset_fall_recall": 0.9473684210526315,
+        "false_adl_alert_episodes": 1,
+        "adl_exposure_sec": 193.0,
+        "false_alerts_per_hour_short_clip_proxy": 18.65284974093264,
+        "late_only_fall_videos": 0,
+        "pre_fall_alert_episodes": 0,
+        "median_onset_delay_sec": 0.9
+      },
+      "model_forward_calls": 2916
+    },
+    "gap_v2": {
+      "selected": {
+        "profile": "gap_v2",
+        "threshold": 0.78,
+        "confusion_matrix": [
+          [
+            29,
+            2
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 0.9,
+        "false_adl_videos": 2,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 0.9,
+        "p95_detection_delay_sec": 1.6866666666666665,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            29,
+            2
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "onset_fall_recall": 0.9473684210526315,
+        "false_adl_alert_episodes": 2,
+        "adl_exposure_sec": 193.0,
+        "false_alerts_per_hour_short_clip_proxy": 37.30569948186528,
+        "late_only_fall_videos": 0,
+        "pre_fall_alert_episodes": 0,
+        "median_onset_delay_sec": 0.9
+      },
+      "model_forward_calls": 2863
+    },
+    "temporal_v2": {
+      "selected": {
+        "profile": "temporal_v2",
+        "threshold": 0.72,
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 0.9473684210526315,
+        "false_adl_videos": 1,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 0.7,
+        "p95_detection_delay_sec": 1.3666666666666656,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "onset_fall_recall": 0.9473684210526315,
+        "false_adl_alert_episodes": 1,
+        "adl_exposure_sec": 193.0,
+        "false_alerts_per_hour_short_clip_proxy": 18.65284974093264,
+        "late_only_fall_videos": 0,
+        "pre_fall_alert_episodes": 0,
+        "median_onset_delay_sec": 0.7
+      },
+      "model_forward_calls": 2863
+    }
+  },
+  "validation_video_count": 50,
+  "regression_video_count": 50,
+  "regression_scenarios": {
+    "active_legacy_090": {
+      "profile": "legacy_v1",
+      "threshold": 0.9,
+      "summary": {
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 0.9473684210526315,
+        "false_adl_videos": 1,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 1.1666666666666665,
+        "p95_detection_delay_sec": 1.4866666666666664,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "onset_fall_recall": 0.9473684210526315,
+        "false_adl_alert_episodes": 1,
+        "adl_exposure_sec": 195.13333333333333,
+        "false_alerts_per_hour_short_clip_proxy": 18.44892381277759,
+        "late_only_fall_videos": 0,
+        "pre_fall_alert_episodes": 0
+      },
+      "missed_onset_falls": [
+        "old:Fall_ke_depan_9"
+      ],
+      "false_adl_videos": [
+        "old:ADL_Berbaring_controlled_14"
+      ],
+      "details_path": "results\\logs\\runtime_v2\\active_legacy_090_regression.json"
+    },
+    "legacy_v1_090": {
+      "profile": "legacy_v1",
+      "threshold": 0.9,
+      "summary": {
+        "confusion_matrix": [
+          [
+            31,
+            0
+          ],
+          [
+            2,
+            17
+          ]
+        ],
+        "fall_recall": 0.8947368421052632,
+        "fall_precision": 1.0,
+        "false_adl_videos": 0,
+        "fall_videos": 19,
+        "detected_falls": 17,
+        "median_detection_delay_sec": 1.0666666666666667,
+        "p95_detection_delay_sec": 1.7866666666666662,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            31,
+            0
+          ],
+          [
+            2,
+            17
+          ]
+        ],
+        "onset_fall_recall": 0.8947368421052632,
+        "false_adl_alert_episodes": 0,
+        "adl_exposure_sec": 195.13333333333333,
+        "false_alerts_per_hour_short_clip_proxy": 0.0,
+        "late_only_fall_videos": 0,
+        "pre_fall_alert_episodes": 0
+      },
+      "missed_onset_falls": [
+        "old:Fall_ke_belakang_3",
+        "old:Fall_ke_depan_9"
+      ],
+      "false_adl_videos": [],
+      "details_path": "results\\logs\\runtime_v2\\legacy_v1_090_regression.json"
+    },
+    "geometry_v2_090": {
+      "profile": "geometry_v2",
+      "threshold": 0.9,
+      "summary": {
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 0.9473684210526315,
+        "false_adl_videos": 1,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 0.7333333333333333,
+        "p95_detection_delay_sec": 1.756666666666666,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "onset_fall_recall": 0.9473684210526315,
+        "false_adl_alert_episodes": 1,
+        "adl_exposure_sec": 195.13333333333333,
+        "false_alerts_per_hour_short_clip_proxy": 18.44892381277759,
+        "late_only_fall_videos": 0,
+        "pre_fall_alert_episodes": 0
+      },
+      "missed_onset_falls": [
+        "old:Fall_ke_belakang_3"
+      ],
+      "false_adl_videos": [
+        "old:ADL_Bangun_dari_lantai_10"
+      ],
+      "details_path": "results\\logs\\runtime_v2\\geometry_v2_090_regression.json"
+    },
+    "gap_v2_090": {
+      "profile": "gap_v2",
+      "threshold": 0.9,
+      "summary": {
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 0.9473684210526315,
+        "false_adl_videos": 1,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 0.7333333333333333,
+        "p95_detection_delay_sec": 1.756666666666666,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "onset_fall_recall": 0.9473684210526315,
+        "false_adl_alert_episodes": 1,
+        "adl_exposure_sec": 195.13333333333333,
+        "false_alerts_per_hour_short_clip_proxy": 18.44892381277759,
+        "late_only_fall_videos": 1,
+        "pre_fall_alert_episodes": 0
+      },
+      "missed_onset_falls": [
+        "old:Fall_ke_belakang_3"
+      ],
+      "false_adl_videos": [
+        "old:ADL_Bangun_dari_lantai_10"
+      ],
+      "details_path": "results\\logs\\runtime_v2\\gap_v2_090_regression.json"
+    },
+    "temporal_v2_090": {
+      "profile": "temporal_v2",
+      "threshold": 0.9,
+      "summary": {
+        "confusion_matrix": [
+          [
+            31,
+            0
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "fall_recall": 0.9473684210526315,
+        "fall_precision": 1.0,
+        "false_adl_videos": 0,
+        "fall_videos": 19,
+        "detected_falls": 18,
+        "median_detection_delay_sec": 0.8,
+        "p95_detection_delay_sec": 1.8899999999999992,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            31,
+            0
+          ],
+          [
+            1,
+            18
+          ]
+        ],
+        "onset_fall_recall": 0.9473684210526315,
+        "false_adl_alert_episodes": 0,
+        "adl_exposure_sec": 195.13333333333333,
+        "false_alerts_per_hour_short_clip_proxy": 0.0,
+        "late_only_fall_videos": 1,
+        "pre_fall_alert_episodes": 0
+      },
+      "missed_onset_falls": [
+        "old:Fall_ke_belakang_3"
+      ],
+      "false_adl_videos": [],
+      "details_path": "results\\logs\\runtime_v2\\temporal_v2_090_regression.json"
+    },
+    "validation_selected": {
+      "profile": "temporal_v2",
+      "threshold": 0.72,
+      "summary": {
+        "confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            0,
+            19
+          ]
+        ],
+        "fall_recall": 1.0,
+        "fall_precision": 0.95,
+        "false_adl_videos": 1,
+        "fall_videos": 19,
+        "detected_falls": 19,
+        "median_detection_delay_sec": 0.7333333333333333,
+        "p95_detection_delay_sec": 1.6666666666666667,
+        "pre_fall_alert_videos": 0,
+        "onset_confusion_matrix": [
+          [
+            30,
+            1
+          ],
+          [
+            0,
+            19
+          ]
+        ],
+        "onset_fall_recall": 1.0,
+        "false_adl_alert_episodes": 1,
+        "adl_exposure_sec": 195.13333333333333,
+        "false_alerts_per_hour_short_clip_proxy": 18.44892381277759,
+        "late_only_fall_videos": 0,
+        "pre_fall_alert_episodes": 0
+      },
+      "missed_onset_falls": [],
+      "false_adl_videos": [
+        "old:ADL_Bangun_dari_lantai_10"
+      ],
+      "details_path": "results\\logs\\runtime_v2\\validation_selected_regression.json"
+    }
+  },
+  "candidate_activated": false,
+  "limitations": [
+    "No clinical/field guarantee or 100% recall guarantee",
+    "Video-disjoint, not subject-disjoint",
+    "False alarms/hour is a short-clip proxy, not continuous ADL measurement",
+    "No camera/network latency, ego-motion compensation, motor/notification delivery evaluation",
+    "Image-plane geometry is not calibrated 3D/world geometry",
+    "Motion gate can be confounded by mobile-camera ego-motion",
+    "Gap center check is not person identity tracking; explicit target_changed is required for known switches",
+    "Unknown/partial posture is not upright evidence; it may still pass model confirmation",
+    "External server ESTOP/notifications are not measured by detector replay"
+  ]
+}
