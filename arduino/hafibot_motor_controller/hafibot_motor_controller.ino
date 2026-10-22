@@ -53,14 +53,14 @@ NewPing sonarRight(TRIG_RIGHT, ECHO_RIGHT, MAX_SONAR_DISTANCE);
 // Tunable motion and safety parameters.
 // ---------------------------------------------------------------------------
 // Tunable motion parameters calibrated for 3S LiPo (~11.1V - 12.6V) + dual L298N (star topology) + 1.7 kg 4WD
-const int SPEED_FORWARD_MIN = 180;  // High starting threshold to guarantee rotation under L298N Vdrop
-const int SPEED_FORWARD_MAX = 255;  // Full 100% duty cycle available for following
-const int SPEED_TURN_MIN = 140;     // Skid-steer rotational friction breakaway on 3S
-const int SPEED_TURN_MAX = 220;     // Responsive skid-steer turning limit
-const int SPEED_AVOID = 200;        // Active pivot avoidance speed
-const int PWM_RAMP_STEP = 25;       // Fast ramp-up (reaches full power in ~100ms)
-const int KICKSTART_FEEDFORWARD_PWM = 255; // 100% full-power initial kick to overcome stiction
-const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 150; // 150 ms stiction breakaway duration
+const int SPEED_FORWARD_MIN = 165;  // Reliable breakaway without charging forward
+const int SPEED_FORWARD_MAX = 205;  // Controlled cruising ceiling to prevent overshooting
+const int SPEED_TURN_MIN = 90;      // Soft baseline turn to prevent violent skid-steer spins
+const int SPEED_TURN_MAX = 150;     // Controlled turn limit to keep target in camera FOV
+const int SPEED_AVOID = 170;        // Safe obstacle avoidance pivot speed
+const int PWM_RAMP_STEP = 12;       // Smoothed ramp-up to eliminate wheel slip and skidding
+const int KICKSTART_FEEDFORWARD_PWM = 220; // Crisp initial breakaway pulse
+const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 90; // 90 ms stiction breakaway duration
 
 // Human following distance parameters:
 // Robot stays in range at 130-175 cm, moves forward when user is > 175 cm away,
@@ -75,8 +75,8 @@ const float TURN_KP = 150.0f;       // Proportional gain
 const float TURN_KI = 5.0f;         // Integral gain (steady state offset)
 const float TURN_KD = 30.0f;        // Derivative gain (anti-overshoot damping brake)
 const float TURN_INTEGRAL_LIMIT = 0.20f;
-const float CX_DEADBAND = 0.035f;   // Inside 0.465 - 0.535, keep wheels straight
-const float CX_PIVOT_ERROR = 0.25f; // Large error: slow pivot in place
+const float CX_DEADBAND = 0.060f;   // Stable straight-driving window (0.44 - 0.56) to filter detection jitter
+const float CX_PIVOT_ERROR = 0.20f; // Beyond 0.20 offset: pivot to re-center first before driving forward
 
 const int OA_TRIGGER_CM = 25;
 const int OA_CLEAR_CM = 35;
@@ -525,6 +525,13 @@ void updateFollowingControl(unsigned long now) {
     linearPower = 0;
   } else if (linearPower > 0 && abs(signedTurn) > (linearPower * 2) / 3) {
     signedTurn = (signedTurn > 0) ? (linearPower * 2) / 3 : -(linearPower * 2) / 3;
+  }
+
+  // Heading-aware forward speed attenuation:
+  // Scale down forward thrust when turning so the robot does not lunge forward and sweep past target
+  if (linearPower > 0 && turnActive) {
+    float turnFactor = 1.0f - min(0.60f, (fabs(horizontalError) - CX_DEADBAND) * 3.5f);
+    linearPower = max(SPEED_FORWARD_MIN, (int)(linearPower * turnFactor));
   }
 
   // 4. Asymmetric Arc Turn Power Allocation:
