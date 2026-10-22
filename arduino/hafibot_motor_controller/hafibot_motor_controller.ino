@@ -53,30 +53,29 @@ NewPing sonarRight(TRIG_RIGHT, ECHO_RIGHT, MAX_SONAR_DISTANCE);
 // Tunable motion and safety parameters.
 // ---------------------------------------------------------------------------
 // Tunable motion parameters calibrated for 3S LiPo (~11.1V - 12.6V) + dual L298N (star topology) + 1.7 kg 4WD
-const int SPEED_FORWARD_MIN = 160;  // Smooth rolling threshold
-const int SPEED_FORWARD_MAX = 195;  // Moderate cruising ceiling (prevents rushing forward)
-const int SPEED_TURN_MIN = 80;      // Gentle baseline turn to prevent violent skid-steer spins
-const int SPEED_TURN_MAX = 130;     // Controlled turn limit to keep target in camera FOV
-const int SPEED_AVOID = 150;        // Safe obstacle avoidance pivot speed
-const int PWM_RAMP_STEP = 10;       // Smooth acceleration, active braking
-const int KICKSTART_FEEDFORWARD_PWM = 200; // Crisp initial breakaway pulse
-const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 80; // 80 ms stiction breakaway duration
+const int SPEED_FORWARD_MIN = 145;  // Gentle rolling floor (smooth, quiet forward roll)
+const int SPEED_FORWARD_MAX = 185;  // Calm cruising ceiling (no aggressive surging)
+const int SPEED_TURN_MIN = 65;      // Soft initial steering torque
+const int SPEED_TURN_MAX = 110;     // Relaxed maximum turn rate to prevent FOV target loss
+const int SPEED_AVOID = 130;        // Gentle obstacle avoidance pivot speed
+const int PWM_RAMP_STEP = 6;        // Silky smooth acceleration ramp (gradual throttle)
+const int KICKSTART_FEEDFORWARD_PWM = 175; // Soft breakaway pulse (eliminates start jerk)
+const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 60; // Brief 60 ms stiction breakaway duration
 
 // Human following distance parameters:
-// Robot stays in range at 130-175 cm, moves forward when user is > 175 cm away,
-// stops approaching at 130 cm, and stops immediately if closer than 80 cm.
-const int DIST_TOO_CLOSE = 80;
-const int DIST_FORWARD_STOP = 130;
-const int DIST_FORWARD_START = 175;
-const int DIST_ESTIMATOR_MAX = 450;
+// Extended standby range: stays in standby up to 300 cm, glides to a stop at ~220 cm.
+const int DIST_TOO_CLOSE = 100;
+const int DIST_FORWARD_STOP = 220;
+const int DIST_FORWARD_START = 300;
+const int DIST_ESTIMATOR_MAX = 500;
 
 // Heading Alignment PID Controller Constants:
-const float TURN_KP = 80.0f;        // Softened proportional gain (smooth, non-jerky tracking)
+const float TURN_KP = 60.0f;        // Gentle proportional steering
 const float TURN_KI = 0.0f;         // Zero integral to eliminate windup overshoot
-const float TURN_KD = 12.0f;        // Gentle derivative damping against overshoot
+const float TURN_KD = 10.0f;        // Gentle derivative damping against overshoot
 const float TURN_INTEGRAL_LIMIT = 0.0f;
-const float CX_DEADBAND = 0.070f;   // Stable straight-driving window (0.43 - 0.57) to filter detection jitter
-const float CX_PIVOT_ERROR = 0.22f; // Beyond 0.22 offset: pivot to re-center first before driving forward
+const float CX_DEADBAND = 0.080f;   // Centered window (0.42 - 0.58, 102px comfort zone)
+const float CX_PIVOT_ERROR = 0.25f; // Beyond 0.25 offset: gentle pivot to re-center first
 
 const int OA_TRIGGER_CM = 25;
 const int OA_CLEAR_CM = 35;
