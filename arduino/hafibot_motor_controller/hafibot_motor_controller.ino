@@ -53,14 +53,14 @@ NewPing sonarRight(TRIG_RIGHT, ECHO_RIGHT, MAX_SONAR_DISTANCE);
 // Tunable motion and safety parameters.
 // ---------------------------------------------------------------------------
 // Tunable motion parameters calibrated for 3S LiPo (~11.1V - 12.6V) + dual L298N (star topology) + 1.7 kg 4WD
-const int SPEED_FORWARD_MIN = 85;   // 3S LiPo breakaway PWM (~3.1V effective, eliminates stall buzzing)
-const int SPEED_FORWARD_MAX = 140;  // Safe cruising max (~5.1V effective, protects 3-6V TT gearbox motors)
-const int SPEED_TURN_MIN = 50;      // Skid-steer rotational friction breakaway on 3S
-const int SPEED_TURN_MAX = 90;      // Controlled skid-steer turning limit
-const int SPEED_AVOID = 110;        // Obstacle avoidance pivot speed
-const int PWM_RAMP_STEP = 8;        // Smooth, non-jerky acceleration on high-voltage 3S
-const int KICKSTART_FEEDFORWARD_PWM = 110; // Instant 100ms stiction feedforward boost (~4.0V)
-const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 100; // 100 ms stiction breakaway duration
+const int SPEED_FORWARD_MIN = 180;  // High starting threshold to guarantee rotation under L298N Vdrop
+const int SPEED_FORWARD_MAX = 255;  // Full 100% duty cycle available for following
+const int SPEED_TURN_MIN = 140;     // Skid-steer rotational friction breakaway on 3S
+const int SPEED_TURN_MAX = 220;     // Responsive skid-steer turning limit
+const int SPEED_AVOID = 200;        // Active pivot avoidance speed
+const int PWM_RAMP_STEP = 25;       // Fast ramp-up (reaches full power in ~100ms)
+const int KICKSTART_FEEDFORWARD_PWM = 255; // 100% full-power initial kick to overcome stiction
+const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 150; // 150 ms stiction breakaway duration
 
 // Human following distance parameters:
 // Robot stays in range at 130-175 cm, moves forward when user is > 175 cm away,
@@ -211,6 +211,16 @@ void immediateStop() {
 }
 
 int rampPower(int currentPower, int requestedPower) {
+  if (requestedPower == 0) return 0; // Immediate cutoff when stopping
+
+  // When starting from complete stop, jump directly past deadband floor to eliminate stall buzzing
+  if (currentPower == 0 && requestedPower > 0) {
+    return max(SPEED_FORWARD_MIN, requestedPower);
+  }
+  if (currentPower == 0 && requestedPower < 0) {
+    return min(-SPEED_FORWARD_MIN, requestedPower);
+  }
+
   // Always pass through zero before reversing a motor side.
   if (currentPower > 0 && requestedPower < 0) {
     return max(0, currentPower - PWM_RAMP_STEP);

@@ -242,6 +242,7 @@ hafibot/
 5. **Motor Dynamics & Human Following Enhancements**:
    - Diagnosed 4WD 1.7 kg skid-steer static friction and L298N forward voltage drop (~2-3V) causing motor stalls.
    - Defined breakaway kick-start pulse (PWM 255 for 100 ms) and deadband floor remapping (180-255 PWM) in motor controller architecture.
+   - Implemented updated PWM thresholds in Arduino firmware (`hafibot_motor_controller.ino`): `SPEED_FORWARD_MIN = 180`, `SPEED_FORWARD_MAX = 255`, `KICKSTART_FEEDFORWARD_PWM = 255` (150 ms duration), and instant ramp deadband jump to eliminate in-air motor cogging/stalls.
 
 ### Recommended Next Steps
 - **Supervised Robot Trials**: Run live trials with the camera feed and robot using the opt-in variable to test natural interaction (sitting, walking, bending, floor transfers) before promoting the candidate.
