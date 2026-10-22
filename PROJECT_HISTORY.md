@@ -242,7 +242,7 @@ hafibot/
 5. **Motor Dynamics & Human Following Enhancements**:
    - Diagnosed 4WD 1.7 kg skid-steer static friction and L298N forward voltage drop (~2-3V) causing motor stalls.
    - Defined breakaway kick-start pulse (PWM 255 for 100 ms) and deadband floor remapping (180-255 PWM) in motor controller architecture.
-   - Refined motor controller firmware (`hafibot_motor_controller.ino`): balanced forward range (`SPEED_FORWARD_MIN = 165`, `SPEED_FORWARD_MAX = 205`), smoothed acceleration ramp (`PWM_RAMP_STEP = 12`), widened center deadband (`CX_DEADBAND = 0.060`), reduced turn range (`SPEED_TURN_MIN = 90`, `SPEED_TURN_MAX = 150`), and added heading-aware speed attenuation during arc turns to eliminate skid-steer overshoots and preserve visual target tracking.
+   - Refined motor controller firmware (`hafibot_motor_controller.ino`): balanced forward range (`SPEED_FORWARD_MIN = 160`, `SPEED_FORWARD_MAX = 195`), symmetrical differential split (`halfTurn = signedTurn / 2`) for smooth arc turns, eliminated integral windup (`TURN_KI = 0.0`), softened steering response (`TURN_KP = 80`, `TURN_KD = 12`), widened deadband (`CX_DEADBAND = 0.070`), added active deceleration on stop, and smooth deceleration approaching target distance to eliminate overshooting and target loss.
 
 ### Recommended Next Steps
 - **Supervised Robot Trials**: Run live trials with the camera feed and robot using the opt-in variable to test natural interaction (sitting, walking, bending, floor transfers) before promoting the candidate.

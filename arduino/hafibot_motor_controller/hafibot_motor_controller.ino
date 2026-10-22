@@ -53,14 +53,14 @@ NewPing sonarRight(TRIG_RIGHT, ECHO_RIGHT, MAX_SONAR_DISTANCE);
 // Tunable motion and safety parameters.
 // ---------------------------------------------------------------------------
 // Tunable motion parameters calibrated for 3S LiPo (~11.1V - 12.6V) + dual L298N (star topology) + 1.7 kg 4WD
-const int SPEED_FORWARD_MIN = 165;  // Reliable breakaway without charging forward
-const int SPEED_FORWARD_MAX = 205;  // Controlled cruising ceiling to prevent overshooting
-const int SPEED_TURN_MIN = 90;      // Soft baseline turn to prevent violent skid-steer spins
-const int SPEED_TURN_MAX = 150;     // Controlled turn limit to keep target in camera FOV
-const int SPEED_AVOID = 170;        // Safe obstacle avoidance pivot speed
-const int PWM_RAMP_STEP = 12;       // Smoothed ramp-up to eliminate wheel slip and skidding
-const int KICKSTART_FEEDFORWARD_PWM = 220; // Crisp initial breakaway pulse
-const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 90; // 90 ms stiction breakaway duration
+const int SPEED_FORWARD_MIN = 160;  // Smooth rolling threshold
+const int SPEED_FORWARD_MAX = 195;  // Moderate cruising ceiling (prevents rushing forward)
+const int SPEED_TURN_MIN = 80;      // Gentle baseline turn to prevent violent skid-steer spins
+const int SPEED_TURN_MAX = 130;     // Controlled turn limit to keep target in camera FOV
+const int SPEED_AVOID = 150;        // Safe obstacle avoidance pivot speed
+const int PWM_RAMP_STEP = 10;       // Smooth acceleration, active braking
+const int KICKSTART_FEEDFORWARD_PWM = 200; // Crisp initial breakaway pulse
+const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 80; // 80 ms stiction breakaway duration
 
 // Human following distance parameters:
 // Robot stays in range at 130-175 cm, moves forward when user is > 175 cm away,
@@ -71,12 +71,12 @@ const int DIST_FORWARD_START = 175;
 const int DIST_ESTIMATOR_MAX = 450;
 
 // Heading Alignment PID Controller Constants:
-const float TURN_KP = 150.0f;       // Proportional gain
-const float TURN_KI = 5.0f;         // Integral gain (steady state offset)
-const float TURN_KD = 30.0f;        // Derivative gain (anti-overshoot damping brake)
-const float TURN_INTEGRAL_LIMIT = 0.20f;
-const float CX_DEADBAND = 0.060f;   // Stable straight-driving window (0.44 - 0.56) to filter detection jitter
-const float CX_PIVOT_ERROR = 0.20f; // Beyond 0.20 offset: pivot to re-center first before driving forward
+const float TURN_KP = 80.0f;        // Softened proportional gain (smooth, non-jerky tracking)
+const float TURN_KI = 0.0f;         // Zero integral to eliminate windup overshoot
+const float TURN_KD = 12.0f;        // Gentle derivative damping against overshoot
+const float TURN_INTEGRAL_LIMIT = 0.0f;
+const float CX_DEADBAND = 0.070f;   // Stable straight-driving window (0.43 - 0.57) to filter detection jitter
+const float CX_PIVOT_ERROR = 0.22f; // Beyond 0.22 offset: pivot to re-center first before driving forward
 
 const int OA_TRIGGER_CM = 25;
 const int OA_CLEAR_CM = 35;
@@ -211,22 +211,23 @@ void immediateStop() {
 }
 
 int rampPower(int currentPower, int requestedPower) {
-  if (requestedPower == 0) return 0; // Immediate cutoff when stopping
-
-  // When starting from complete stop, jump directly past deadband floor to eliminate stall buzzing
-  if (currentPower == 0 && requestedPower > 0) {
-    return max(SPEED_FORWARD_MIN, requestedPower);
-  }
-  if (currentPower == 0 && requestedPower < 0) {
-    return min(-SPEED_FORWARD_MIN, requestedPower);
+  // Active dynamic deceleration when requested to stop
+  if (requestedPower == 0) {
+    if (abs(currentPower) <= PWM_RAMP_STEP * 2) return 0;
+    return (currentPower > 0) ? currentPower - PWM_RAMP_STEP * 2 : currentPower + PWM_RAMP_STEP * 2;
   }
 
-  // Always pass through zero before reversing a motor side.
+  // Always pass through zero before reversing direction
   if (currentPower > 0 && requestedPower < 0) {
-    return max(0, currentPower - PWM_RAMP_STEP);
+    return max(0, currentPower - PWM_RAMP_STEP * 2);
   }
   if (currentPower < 0 && requestedPower > 0) {
-    return min(0, currentPower + PWM_RAMP_STEP);
+    return min(0, currentPower + PWM_RAMP_STEP * 2);
+  }
+
+  // Starting from complete stop: jump straight to requestedPower
+  if (currentPower == 0) {
+    return requestedPower;
   }
   if (currentPower < requestedPower) {
     return min(requestedPower, currentPower + PWM_RAMP_STEP);
@@ -468,10 +469,10 @@ int calculateTurnPID(float error, unsigned long now) {
 
   float pidOutput = pTerm + iTerm + dTerm;
   float mag = fabs(pidOutput);
-  if (mag < 5.0f) return 0;
+  if (mag < 2.0f) return 0;
 
   // Smooth mapping to [SPEED_TURN_MIN, SPEED_TURN_MAX] with friction breakaway
-  int turnPower = SPEED_TURN_MIN + (int)((SPEED_TURN_MAX - SPEED_TURN_MIN) * min(1.0f, mag / 80.0f));
+  int turnPower = SPEED_TURN_MIN + (int)((SPEED_TURN_MAX - SPEED_TURN_MIN) * min(1.0f, mag / 30.0f));
   turnPower = min(SPEED_TURN_MAX, max(SPEED_TURN_MIN, turnPower));
 
   return pidOutput >= 0.0f ? turnPower : -turnPower;
@@ -513,7 +514,7 @@ void updateFollowingControl(unsigned long now) {
     } else {
       linearPower = proportionalPower(
           (float)targetDistance,
-          (float)DIST_FORWARD_START,
+          (float)DIST_FORWARD_STOP,
           (float)DIST_ESTIMATOR_MAX,
           SPEED_FORWARD_MIN,
           SPEED_FORWARD_MAX);
@@ -530,26 +531,28 @@ void updateFollowingControl(unsigned long now) {
   // Heading-aware forward speed attenuation:
   // Scale down forward thrust when turning so the robot does not lunge forward and sweep past target
   if (linearPower > 0 && turnActive) {
-    float turnFactor = 1.0f - min(0.60f, (fabs(horizontalError) - CX_DEADBAND) * 3.5f);
+    float turnFactor = 1.0f - min(0.50f, (fabs(horizontalError) - CX_DEADBAND) * 3.0f);
     linearPower = max(SPEED_FORWARD_MIN, (int)(linearPower * turnFactor));
   }
 
-  // 4. Asymmetric Arc Turn Power Allocation:
-  // When forward moving (arc turn), avoid dropping inner wheel below minimum drive power
-  // (which would cause the 1.7 kg chassis to drag and stall). Instead, boost outer wheel!
+  // 4. Balanced Differential Drive for Arc Turning:
+  // Adjust left and right symmetrically around linearPower so total forward momentum stays smooth
   int leftPower = 0;
   int rightPower = 0;
   if (linearPower > 0 && turnActive) {
-    if (signedTurn > 0) {
-      // Turn Right: left wheels drive faster, right wheels maintain at least base forward speed
-      leftPower = clampPower(linearPower + signedTurn);
-      rightPower = max(SPEED_FORWARD_MIN, linearPower - (signedTurn / 2));
-    } else {
-      // Turn Left: right wheels drive faster, left wheels maintain at least base forward speed
-      leftPower = max(SPEED_FORWARD_MIN, linearPower - (abs(signedTurn) / 2));
-      rightPower = clampPower(linearPower + abs(signedTurn));
-    }
-  } else {
+    int halfTurn = signedTurn / 2;
+    leftPower = clampPower(linearPower + halfTurn);
+    rightPower = clampPower(linearPower - halfTurn);
+
+    // Ensure inner wheel remains above rolling threshold to prevent drag/stall
+    const int MIN_ARC_ROLLING_PWM = 85;
+    if (leftPower > 0 && leftPower < MIN_ARC_ROLLING_PWM) leftPower = MIN_ARC_ROLLING_PWM;
+    if (rightPower > 0 && rightPower < MIN_ARC_ROLLING_PWM) rightPower = MIN_ARC_ROLLING_PWM;
+  } else if (linearPower > 0) {
+    leftPower = linearPower;
+    rightPower = linearPower;
+  } else if (turnActive) {
+    // Pure pivot in place
     leftPower = clampPower(linearPower + signedTurn);
     rightPower = clampPower(linearPower - signedTurn);
   }
