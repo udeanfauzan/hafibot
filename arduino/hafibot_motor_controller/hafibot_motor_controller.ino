@@ -15,6 +15,7 @@
  */
 
 #include <NewPing.h>
+#include <Servo.h>
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
@@ -48,6 +49,19 @@ const int MAX_SONAR_DISTANCE = 200;
 NewPing sonarLeft(TRIG_LEFT, ECHO_LEFT, MAX_SONAR_DISTANCE);
 NewPing sonarCenter(TRIG_CENTER, ECHO_CENTER, MAX_SONAR_DISTANCE);
 NewPing sonarRight(TRIG_RIGHT, ECHO_RIGHT, MAX_SONAR_DISTANCE);
+
+// ---------------------------------------------------------------------------
+// Camera Pan & Tilt Servos (Hardware Timer 5 PWM Pins on Arduino Mega)
+// Pin 44 = Pan Servo (Horizontal), Pin 45 = Tilt Servo (Vertical)
+// ---------------------------------------------------------------------------
+#define SERVO_PAN_PIN   44
+#define SERVO_TILT_PIN  45
+
+Servo panServo;
+Servo tiltServo;
+
+int currentPanAngle = 90;
+int currentTiltAngle = 90;
 
 // ---------------------------------------------------------------------------
 // Tunable motion and safety parameters.
@@ -255,6 +269,13 @@ void resetMotionIntent() {
   lastHorizontalError = 0.0f;
 }
 
+void setPanTilt(int pan, int tilt) {
+  currentPanAngle = constrain(pan, 10, 170);
+  currentTiltAngle = constrain(tilt, 20, 160);
+  panServo.write(currentPanAngle);
+  tiltServo.write(currentTiltAngle);
+}
+
 // ---------------------------------------------------------------------------
 // Ultrasonic sensing.
 // ---------------------------------------------------------------------------
@@ -302,11 +323,26 @@ bool parseData() {
   char *detectedToken = strtok_r(NULL, ",", &savePointer);
   char *extraToken = strtok_r(NULL, ",", &savePointer);
 
-  if (modeToken == NULL || strlen(modeToken) != 1 || extraToken != NULL) {
+  if (modeToken == NULL || strlen(modeToken) != 1) {
     return false;
   }
 
   char mode = modeToken[0];
+
+  // Pan-Tilt Camera Servo Command: <P,pan,tilt> or <P,pan,tilt,0>
+  if (mode == 'P') {
+    long panVal = 90;
+    long tiltVal = 90;
+    if (!parseLongStrict(distanceToken, 0, 180, panVal)) return false;
+    if (!parseLongStrict(centerToken, 0, 180, tiltVal)) return false;
+    setPanTilt((int)panVal, (int)tiltVal);
+    return true;
+  }
+
+  if (extraToken != NULL) {
+    return false;
+  }
+
   if (mode != 'F' && mode != 'S' && mode != 'E' && mode != 'R') {
     return false;
   }
@@ -646,6 +682,11 @@ void setup() {
   pinMode(TRIG_LEFT, OUTPUT); pinMode(ECHO_LEFT, INPUT);
   pinMode(TRIG_CENTER, OUTPUT); pinMode(ECHO_CENTER, INPUT);
   pinMode(TRIG_RIGHT, OUTPUT); pinMode(ECHO_RIGHT, INPUT);
+
+  panServo.attach(SERVO_PAN_PIN);
+  tiltServo.attach(SERVO_TILT_PIN);
+  panServo.write(currentPanAngle);
+  tiltServo.write(currentTiltAngle);
 
   immediateStop();
   lastDataTime = millis();

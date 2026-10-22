@@ -1731,6 +1731,44 @@ def index():
                     <button class="action-btn" id="resetEstopBtnManual" type="button" style="background: var(--amber-soft); color: var(--amber); border-color: var(--amber); font-weight: bold; font-size: 11px;">&#128275; Reset ESTOP</button>
                     <button class="action-btn" id="manualEstopBtnManual" type="button" style="background: var(--red-soft); color: var(--red-dark); border-color: var(--red); font-weight: bold; font-size: 11px;">&#9940; Rem E-STOP</button>
                   </div>
+
+                  <!-- Pan-Tilt Camera Gimbal Controls -->
+                  <div style="margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                      <span style="font-size: 11px; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 4px;">
+                        <span>&#128247;</span> Pan-Tilt Kamera
+                      </span>
+                      <span id="panTiltAnglesDisplay" style="font-size: 10px; font-weight: 800; color: var(--green); background: #eef3f1; padding: 2px 6px; border-radius: 6px;">Pan: 90° | Tilt: 90°</span>
+                    </div>
+
+                    <div class="pantilt-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 170px; margin: 0 auto;">
+                      <div></div>
+                      <button class="dpad-btn" id="btnTiltUp" type="button" title="Tilt Atas" style="padding: 7px 0; border: 1px solid var(--line); border-radius: 6px; background: #f0f4f2; font-weight: bold; cursor: pointer; font-size: 13px;">&#9650;</button>
+                      <div></div>
+                      
+                      <button class="dpad-btn" id="btnPanLeft" type="button" title="Pan Kiri" style="padding: 7px 0; border: 1px solid var(--line); border-radius: 6px; background: #f0f4f2; font-weight: bold; cursor: pointer; font-size: 13px;">&#9668;</button>
+                      <button class="dpad-btn" id="btnPanTiltCenter" type="button" title="Reset Tengah (90°, 90°)" style="padding: 7px 0; border: 1px solid var(--line); border-radius: 6px; background: var(--green-soft); color: var(--green); font-weight: bold; font-size: 11px; cursor: pointer;">&#9678;</button>
+                      <button class="dpad-btn" id="btnPanRight" type="button" title="Pan Kanan" style="padding: 7px 0; border: 1px solid var(--line); border-radius: 6px; background: #f0f4f2; font-weight: bold; cursor: pointer; font-size: 13px;">&#9658;</button>
+
+                      <div></div>
+                      <button class="dpad-btn" id="btnTiltDown" type="button" title="Tilt Bawah" style="padding: 7px 0; border: 1px solid var(--line); border-radius: 6px; background: #f0f4f2; font-weight: bold; cursor: pointer; font-size: 13px;">&#9660;</button>
+                      <div></div>
+                    </div>
+
+                    <div style="margin-top: 10px; font-size: 10px; color: var(--muted);">
+                      <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                        <span>Pan (Kiri/Kanan):</span>
+                        <span id="panSliderVal" style="font-weight: bold; color: var(--navy);">90°</span>
+                      </div>
+                      <input type="range" id="panSlider" min="10" max="170" value="90" style="width: 100%; accent-color: var(--green); height: 4px; cursor: pointer;">
+                      
+                      <div style="display: flex; justify-content: space-between; margin: 6px 0 2px 0;">
+                        <span>Tilt (Atas/Bawah):</span>
+                        <span id="tiltSliderVal" style="font-weight: bold; color: var(--navy);">90°</span>
+                      </div>
+                      <input type="range" id="tiltSlider" min="20" max="160" value="90" style="width: 100%; accent-color: var(--green); height: 4px; cursor: pointer;">
+                    </div>
+                  </div>
                 </div>
               </section>
             </aside>
@@ -2327,6 +2365,57 @@ def index():
 
           const dpadStop = document.getElementById('dpadStop');
           if (dpadStop) dpadStop.addEventListener('click', () => sendDrive('stop'));
+
+          // Pan-Tilt Camera Gimbal Controls
+          let curPan = 90;
+          let curTilt = 90;
+          let panTiltTimer = null;
+
+          function updatePanTiltUI() {
+            const disp = document.getElementById('panTiltAnglesDisplay');
+            if (disp) disp.textContent = 'Pan: ' + curPan + '° | Tilt: ' + curTilt + '°';
+            const pVal = document.getElementById('panSliderVal');
+            if (pVal) pVal.textContent = curPan + '°';
+            const tVal = document.getElementById('tiltSliderVal');
+            if (tVal) tVal.textContent = curTilt + '°';
+            const pSlider = document.getElementById('panSlider');
+            if (pSlider && parseInt(pSlider.value) !== curPan) pSlider.value = curPan;
+            const tSlider = document.getElementById('tiltSlider');
+            if (tSlider && parseInt(tSlider.value) !== curTilt) tSlider.value = curTilt;
+          }
+
+          async function setPanTilt(p, t) {
+            curPan = Math.max(10, Math.min(170, Math.round(p)));
+            curTilt = Math.max(20, Math.min(160, Math.round(t)));
+            updatePanTiltUI();
+
+            if (panTiltTimer) clearTimeout(panTiltTimer);
+            panTiltTimer = setTimeout(async () => {
+              try {
+                await fetch('/api/robot/camera_pan_tilt', {
+                  method: 'POST',
+                  headers: { 'X-CSRF-Token': csrfToken, 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ pan: curPan, tilt: curTilt })
+                });
+              } catch(e) {}
+            }, 60);
+          }
+
+          const btnPanL = document.getElementById('btnPanLeft');
+          if (btnPanL) btnPanL.addEventListener('click', () => setPanTilt(curPan + 10, curTilt));
+          const btnPanR = document.getElementById('btnPanRight');
+          if (btnPanR) btnPanR.addEventListener('click', () => setPanTilt(curPan - 10, curTilt));
+          const btnTiltU = document.getElementById('btnTiltUp');
+          if (btnTiltU) btnTiltU.addEventListener('click', () => setPanTilt(curPan, curTilt - 10));
+          const btnTiltD = document.getElementById('btnTiltDown');
+          if (btnTiltD) btnTiltD.addEventListener('click', () => setPanTilt(curPan, curTilt + 10));
+          const btnCenterPT = document.getElementById('btnPanTiltCenter');
+          if (btnCenterPT) btnCenterPT.addEventListener('click', () => setPanTilt(90, 90));
+
+          const panSliderEl = document.getElementById('panSlider');
+          if (panSliderEl) panSliderEl.addEventListener('input', (e) => setPanTilt(parseInt(e.target.value), curTilt));
+          const tiltSliderEl = document.getElementById('tiltSlider');
+          if (tiltSliderEl) tiltSliderEl.addEventListener('input', (e) => setPanTilt(curPan, parseInt(e.target.value)));
 
           // Toggle Voice Assistant Event Listener
           const toggleVoiceBtn = document.getElementById('toggleVoiceBtn');
@@ -3115,6 +3204,9 @@ robot_control_mode = 'auto'  # 'auto' or 'manual'
 manual_direction = 'stop'
 manual_direction_expires = 0.0
 reset_estop_pending = False
+camera_pan_angle = 90
+camera_tilt_angle = 90
+pending_pan_tilt_cmd = None
 robot_latest_telemetry = {'state': 'IDLE', 'us_left': 0.0, 'us_center': 0.0, 'us_right': 0.0}
 
 # Initialize Chatbot & Voice Assistant Service
@@ -3220,7 +3312,6 @@ def _process_robot_frame():
 
 
 
-    # probe
     if landmarks and len(landmarks) >= 13:
         target = target_filter.update(landmarks)
     else:
@@ -3298,6 +3389,10 @@ def _process_robot_frame():
         robot_state = 'FOLLOWING'
         
     motor_cmd = encode_command(cmd_mode, target_dist, target_cx, target_det).decode('ascii')
+    global pending_pan_tilt_cmd
+    if pending_pan_tilt_cmd:
+        motor_cmd = f"{motor_cmd}{pending_pan_tilt_cmd}"
+        pending_pan_tilt_cmd = None
     
     # Measure AI latency and throughput
     t_ai_end = time.perf_counter()
@@ -3396,6 +3491,30 @@ def api_manual_drive():
         manual_direction_expires = time.monotonic() + 0.6
         return jsonify({'success': True, 'direction': manual_direction})
     return jsonify({'success': False, 'error': 'Invalid direction'}), 400
+
+@app.route('/api/robot/camera_pan_tilt', methods=['POST'])
+def api_camera_pan_tilt():
+    global camera_pan_angle, camera_tilt_angle, pending_pan_tilt_cmd
+    data = request.get_json(silent=True) or {}
+    if 'pan' in data:
+        camera_pan_angle = int(max(10, min(170, int(data['pan']))))
+    if 'tilt' in data:
+        camera_tilt_angle = int(max(20, min(160, int(data['tilt']))))
+    pending_pan_tilt_cmd = f"<P,{camera_pan_angle},{camera_tilt_angle}>\n"
+    return jsonify({
+        'success': True,
+        'pan': camera_pan_angle,
+        'tilt': camera_tilt_angle,
+        'command': pending_pan_tilt_cmd.strip()
+    })
+
+@app.route('/api/robot/camera_pan_tilt', methods=['GET'])
+def api_get_camera_pan_tilt():
+    return jsonify({
+        'success': True,
+        'pan': camera_pan_angle,
+        'tilt': camera_tilt_angle
+    })
 
 @app.route('/api/robot/calibration/shoulder', methods=['GET'])
 @login_required
