@@ -196,8 +196,8 @@ class MecanumHolonomicFollowingTests(unittest.TestCase):
     def setUp(self):
         self.controller = MecanumFollowingController(
             dist_too_close=100,
-            dist_forward_stop=220,
-            dist_forward_start=300,
+            dist_forward_stop=150,
+            dist_forward_start=200,
             dist_estimator_max=500,
             speed_forward_min=145,
             speed_forward_max=185,
@@ -239,15 +239,15 @@ class MecanumHolonomicFollowingTests(unittest.TestCase):
         self.assertGreater(res["omega"], 0)  # Turn right PID active
 
     def test_in_range_standby_and_lateral_centering(self):
-        # cx = 0.50, dist = 150 (IN_RANGE) -> vx = 0, vy = 0, omega = 0
-        res_center = self.controller.update(distance_cm=150, center_x=0.50)
+        # cx = 0.50, dist = 175 (in standby window 150-200 cm) -> vx = 0, vy = 0, omega = 0
+        res_center = self.controller.update(distance_cm=175, center_x=0.50)
         self.assertEqual(res_center["state"], "IN_RANGE")
         self.assertEqual(res_center["vx"], 0)
         self.assertEqual(res_center["vy"], 0)
         self.assertEqual(res_center["omega"], 0)
 
-        # cx = 0.65, dist = 150 (IN_RANGE) -> vx = 0, but vy > 0 to center person without driving forward!
-        res_strafe = self.controller.update(distance_cm=150, center_x=0.65)
+        # cx = 0.65, dist = 175 (IN_RANGE) -> vx = 0, but vy > 0 to center person without driving forward!
+        res_strafe = self.controller.update(distance_cm=175, center_x=0.65)
         self.assertEqual(res_strafe["state"], "STRAFE_RIGHT")
         self.assertEqual(res_strafe["vx"], 0)
         self.assertGreater(res_strafe["vy"], 0)

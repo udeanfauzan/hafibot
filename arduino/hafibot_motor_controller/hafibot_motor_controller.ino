@@ -71,10 +71,11 @@ const int STRAFE_SIGN = 1;
 const float MECANUM_GEOMETRY_FACTOR = 1.0f;
 
 // Human following distance parameters:
-// Extended standby range: stays in standby up to 300 cm, glides to a stop at ~220 cm.
+// Following active when user > 200 cm: standby zone 150-200 cm, stops approaching at 150 cm,
+// and safety stops if user is closer than 100 cm.
 const int DIST_TOO_CLOSE = 100;
-const int DIST_FORWARD_STOP = 220;
-const int DIST_FORWARD_START = 300;
+const int DIST_FORWARD_STOP = 150;
+const int DIST_FORWARD_START = 200;
 const int DIST_ESTIMATOR_MAX = 500;
 
 // Heading Alignment PID Controller Constants:

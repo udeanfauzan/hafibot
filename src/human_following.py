@@ -281,8 +281,8 @@ class MecanumFollowingController:
     def __init__(
         self,
         dist_too_close=100,
-        dist_forward_stop=220,
-        dist_forward_start=300,
+        dist_forward_stop=150,
+        dist_forward_start=200,
         dist_estimator_max=500,
         speed_forward_min=145,
         speed_forward_max=185,
