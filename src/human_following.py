@@ -265,3 +265,220 @@ class ShoulderTargetFilter:
             "fusion_mode": observation.get("fusion_mode", "shoulder_only"),
         }
 
+
+class MecanumFollowingController:
+    """Hybrid holonomic following kinematics and state machine controller.
+
+    Matches the firmware implementation in hafibot_motor_controller.ino.
+    Handles:
+    - Deadband (|error| <= CX_DEADBAND): pure forward vx, vy=0, omega=0
+    - Holonomic strafe (CX_DEADBAND < |error| < CX_PIVOT_ERROR): vy proportional, omega=0
+    - Arc / Pivot (|error| >= CX_PIVOT_ERROR): vy=0, omega from PID
+    - Mecanum inverse kinematics and proportional normalization
+    - Full safety interlocks (DIST_TOO_CLOSE, obstacle danger, ESTOP, link timeout, disabled)
+    """
+
+    def __init__(
+        self,
+        dist_too_close=100,
+        dist_forward_stop=220,
+        dist_forward_start=300,
+        dist_estimator_max=500,
+        speed_forward_min=145,
+        speed_forward_max=185,
+        speed_strafe_min=130,
+        speed_strafe_max=155,
+        speed_turn_min=65,
+        speed_turn_max=110,
+        cx_deadband=0.080,
+        cx_pivot_error=0.25,
+        turn_kp=60.0,
+        turn_ki=0.0,
+        turn_kd=10.0,
+        strafe_sign=1,
+        mecanum_geometry_factor=1.0,
+        oa_trigger_cm=25,
+    ):
+        self.dist_too_close = int(dist_too_close)
+        self.dist_forward_stop = int(dist_forward_stop)
+        self.dist_forward_start = int(dist_forward_start)
+        self.dist_estimator_max = int(dist_estimator_max)
+        self.speed_forward_min = int(speed_forward_min)
+        self.speed_forward_max = int(speed_forward_max)
+        self.speed_strafe_min = int(speed_strafe_min)
+        self.speed_strafe_max = int(speed_strafe_max)
+        self.speed_turn_min = int(speed_turn_min)
+        self.speed_turn_max = int(speed_turn_max)
+        self.cx_deadband = float(cx_deadband)
+        self.cx_pivot_error = float(cx_pivot_error)
+        self.turn_kp = float(turn_kp)
+        self.turn_ki = float(turn_ki)
+        self.turn_kd = float(turn_kd)
+        self.strafe_sign = int(strafe_sign)
+        self.mecanum_geometry_factor = float(mecanum_geometry_factor)
+        self.oa_trigger_cm = int(oa_trigger_cm)
+
+        self.forward_active = False
+        self.last_horizontal_error = 0.0
+        self.turn_integral = 0.0
+
+    def reset(self):
+        self.forward_active = False
+        self.last_horizontal_error = 0.0
+        self.turn_integral = 0.0
+
+    def calculate_turn_pid(self, error, dt=0.05):
+        abs_error = abs(error)
+        if abs_error < self.cx_deadband:
+            self.turn_integral = 0.0
+            self.last_horizontal_error = error
+            return 0
+
+        if dt <= 0.0 or dt > 0.5:
+            dt = 0.05
+
+        p_term = self.turn_kp * error
+        self.turn_integral += error * dt
+        if self.turn_integral > 0.20:
+            self.turn_integral = 0.20
+        elif self.turn_integral < -0.20:
+            self.turn_integral = -0.20
+        i_term = self.turn_ki * self.turn_integral
+
+        derivative = (error - self.last_horizontal_error) / dt
+        self.last_horizontal_error = error
+        d_term = self.turn_kd * derivative
+
+        pid_output = p_term + i_term + d_term
+        mag = abs(pid_output)
+        if mag < 2.0:
+            return 0
+
+        ratio = min(1.0, mag / 30.0)
+        turn_power = self.speed_turn_min + int((self.speed_turn_max - self.speed_turn_min) * ratio)
+        turn_power = max(self.speed_turn_min, min(self.speed_turn_max, turn_power))
+        return turn_power if pid_output >= 0.0 else -turn_power
+
+    def compute_mecanum_speeds(self, vx, vy, omega):
+        fl = float(vx) + float(self.strafe_sign * vy) + float(omega) * self.mecanum_geometry_factor
+        fr = float(vx) - float(self.strafe_sign * vy) - float(omega) * self.mecanum_geometry_factor
+        rl = float(vx) - float(self.strafe_sign * vy) + float(omega) * self.mecanum_geometry_factor
+        rr = float(vx) + float(self.strafe_sign * vy) - float(omega) * self.mecanum_geometry_factor
+
+        max_val = max(abs(fl), abs(fr), abs(rl), abs(rr))
+        if max_val > 255.0:
+            scale = 255.0 / max_val
+            fl *= scale
+            fr *= scale
+            rl *= scale
+            rr *= scale
+
+        def _clamp(v):
+            return int(round(max(-255, min(255, v))))
+
+        return {
+            "FL": _clamp(fl),
+            "FR": _clamp(fr),
+            "RL": _clamp(rl),
+            "RR": _clamp(rr),
+        }
+
+    def update(
+        self,
+        distance_cm,
+        center_x,
+        detected=True,
+        obstacle_distance=999,
+        estop=False,
+        mode="F",
+        dt=0.05,
+    ):
+        # Rule 1: Safety interlocks -> All speeds zero
+        if (
+            estop
+            or mode != "F"
+            or not detected
+            or distance_cm <= 0
+            or distance_cm <= self.dist_too_close
+            or obstacle_distance <= self.oa_trigger_cm
+        ):
+            if distance_cm <= self.dist_too_close and detected and distance_cm > 0:
+                state = "TOO_CLOSE"
+            elif obstacle_distance <= self.oa_trigger_cm:
+                state = "OBSTACLE_STOP"
+            elif estop:
+                state = "FALL_ESTOP"
+            elif mode != "F":
+                state = "DISABLED"
+            else:
+                state = "IDLE"
+            self.reset()
+            return {
+                "state": state,
+                "vx": 0,
+                "vy": 0,
+                "omega": 0,
+                "wheels": {"FL": 0, "FR": 0, "RL": 0, "RR": 0},
+            }
+
+        # Following state distance hysteresis
+        if self.forward_active:
+            if distance_cm <= self.dist_forward_stop:
+                self.forward_active = False
+        elif distance_cm >= self.dist_forward_start:
+            self.forward_active = True
+
+        # Longitudinal speed vx
+        vx = 0
+        if self.forward_active:
+            span = max(1.0, float(self.dist_estimator_max - self.dist_forward_stop))
+            ratio = min(1.0, max(0.0, (distance_cm - self.dist_forward_stop) / span))
+            vx = self.speed_forward_min + int(
+                (self.speed_forward_max - self.speed_forward_min) * ratio
+            )
+
+        # Lateral error
+        center_error = center_x - 0.50
+        abs_error = abs(center_error)
+
+        vy = 0
+        omega = 0
+
+        # Rule 2:
+        # a. |center_error| <= CX_DEADBAND: vy=0, omega=0 (pure forward / in range)
+        if abs_error <= self.cx_deadband:
+            state = "FORWARD" if vx > 0 else "IN_RANGE"
+
+        # b. CX_DEADBAND < |center_error| < CX_PIVOT_ERROR: Holonomic Strafing
+        elif abs_error < self.cx_pivot_error:
+            span_e = max(0.001, self.cx_pivot_error - self.cx_deadband)
+            strafe_ratio = min(1.0, max(0.0, (abs_error - self.cx_deadband) / span_e))
+            strafe_mag = self.speed_strafe_min + int(
+                (self.speed_strafe_max - self.speed_strafe_min) * strafe_ratio
+            )
+            vy = strafe_mag if center_error > 0.0 else -strafe_mag
+            omega = 0
+            if vx > 0:
+                state = "DIAG_RIGHT" if center_error > 0.0 else "DIAG_LEFT"
+            else:
+                state = "STRAFE_RIGHT" if center_error > 0.0 else "STRAFE_LEFT"
+
+        # c. |center_error| >= CX_PIVOT_ERROR (0.25): Arc / Pivot
+        else:
+            vy = 0
+            omega = self.calculate_turn_pid(center_error, dt=dt)
+            if abs_error >= self.cx_pivot_error:
+                vx = 0
+                state = "TURN_RIGHT" if omega > 0 else "TURN_LEFT"
+            else:
+                state = "ARC_RIGHT" if omega > 0 else "ARC_LEFT"
+
+        wheels = self.compute_mecanum_speeds(vx, vy, omega)
+        return {
+            "state": state,
+            "vx": vx,
+            "vy": vy,
+            "omega": omega,
+            "wheels": wheels,
+        }
+

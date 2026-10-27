@@ -9,7 +9,7 @@ from src.hafibot_protocol import (
     FallEStopLatch,
     encode_command,
 )
-from src.human_following import ShoulderTargetFilter
+from src.human_following import MecanumFollowingController, ShoulderTargetFilter
 
 
 class Landmark:
@@ -190,6 +190,94 @@ class HumanFollowingSafetyTests(unittest.TestCase):
         self.assertTrue(result["detected"])
         self.assertEqual(result["fusion_mode"], "fused_facing")
         self.assertAlmostEqual(result["effective_px"], 64.0, delta=0.5)
+
+
+class MecanumHolonomicFollowingTests(unittest.TestCase):
+    def setUp(self):
+        self.controller = MecanumFollowingController(
+            dist_too_close=100,
+            dist_forward_stop=220,
+            dist_forward_start=300,
+            dist_estimator_max=500,
+            speed_forward_min=145,
+            speed_forward_max=185,
+            speed_strafe_min=130,
+            speed_strafe_max=155,
+            cx_deadband=0.080,
+            cx_pivot_error=0.25,
+            strafe_sign=1,
+        )
+
+    def test_straight_forward_deadband(self):
+        # cx = 0.50 (deadband), dist = 350 (forward active) -> vx > 0, vy = 0, omega = 0
+        res = self.controller.update(distance_cm=350, center_x=0.50)
+        self.assertEqual(res["state"], "FORWARD")
+        self.assertGreater(res["vx"], 0)
+        self.assertEqual(res["vy"], 0)
+        self.assertEqual(res["omega"], 0)
+        # All wheels drive forward equally
+        self.assertEqual(res["wheels"]["FL"], res["wheels"]["FR"])
+        self.assertEqual(res["wheels"]["RL"], res["wheels"]["RR"])
+        self.assertEqual(res["wheels"]["FL"], res["wheels"]["RL"])
+
+    def test_strafing_moderate_offset(self):
+        # cx = 0.65 (|error|=0.15, in strafe zone 0.08 - 0.25), dist = 350 -> vx > 0, vy > 0, omega = 0
+        res = self.controller.update(distance_cm=350, center_x=0.65)
+        self.assertEqual(res["state"], "DIAG_RIGHT")
+        self.assertGreater(res["vx"], 0)
+        self.assertGreater(res["vy"], 0)  # Strafe right towards target
+        self.assertEqual(res["omega"], 0)  # No yaw rotation during pure strafe!
+        # Mecanum diagonal: FL and RR are higher than FR and RL when strafing right
+        self.assertGreater(res["wheels"]["FL"], res["wheels"]["FR"])
+        self.assertGreater(res["wheels"]["RR"], res["wheels"]["RL"])
+
+    def test_arc_pivot_large_offset(self):
+        # cx = 0.85 (|error|=0.35 >= 0.25), dist = 350 -> arc/pivot, vy = 0, omega != 0
+        res = self.controller.update(distance_cm=350, center_x=0.85)
+        self.assertIn(res["state"], ("TURN_RIGHT", "ARC_RIGHT"))
+        self.assertEqual(res["vy"], 0)  # Lateral strafe is zeroed at large angle
+        self.assertGreater(res["omega"], 0)  # Turn right PID active
+
+    def test_in_range_standby_and_lateral_centering(self):
+        # cx = 0.50, dist = 150 (IN_RANGE) -> vx = 0, vy = 0, omega = 0
+        res_center = self.controller.update(distance_cm=150, center_x=0.50)
+        self.assertEqual(res_center["state"], "IN_RANGE")
+        self.assertEqual(res_center["vx"], 0)
+        self.assertEqual(res_center["vy"], 0)
+        self.assertEqual(res_center["omega"], 0)
+
+        # cx = 0.65, dist = 150 (IN_RANGE) -> vx = 0, but vy > 0 to center person without driving forward!
+        res_strafe = self.controller.update(distance_cm=150, center_x=0.65)
+        self.assertEqual(res_strafe["state"], "STRAFE_RIGHT")
+        self.assertEqual(res_strafe["vx"], 0)
+        self.assertGreater(res_strafe["vy"], 0)
+        self.assertEqual(res_strafe["omega"], 0)
+
+    def test_safety_interlocks_all_wheels_zero(self):
+        # Too close: dist <= DIST_TOO_CLOSE (100) -> all wheels 0
+        res_close = self.controller.update(distance_cm=80, center_x=0.65)
+        self.assertEqual(res_close["state"], "TOO_CLOSE")
+        for w in res_close["wheels"].values():
+            self.assertEqual(w, 0)
+
+        # Obstacle danger: sonar <= 25 -> all wheels 0
+        res_sonar = self.controller.update(distance_cm=350, center_x=0.65, obstacle_distance=20)
+        self.assertEqual(res_sonar["state"], "OBSTACLE_STOP")
+        for w in res_sonar["wheels"].values():
+            self.assertEqual(w, 0)
+
+        # ESTOP active -> all wheels 0
+        res_estop = self.controller.update(distance_cm=350, center_x=0.65, estop=True)
+        self.assertEqual(res_estop["state"], "FALL_ESTOP")
+        for w in res_estop["wheels"].values():
+            self.assertEqual(w, 0)
+
+    def test_extreme_kinematics_normalization_caps_at_255(self):
+        # Extreme combination: vx=250, vy=200, omega=150
+        speeds = self.controller.compute_mecanum_speeds(vx=250, vy=200, omega=150)
+        for name, pwm in speeds.items():
+            self.assertLessEqual(pwm, 255, f"Wheel {name} exceeded max 255 PWM: {pwm}")
+            self.assertGreaterEqual(pwm, -255, f"Wheel {name} exceeded min -255 PWM: {pwm}")
 
 
 if __name__ == '__main__':

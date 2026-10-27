@@ -55,12 +55,20 @@ NewPing sonarRight(TRIG_RIGHT, ECHO_RIGHT, MAX_SONAR_DISTANCE);
 // Tunable motion parameters calibrated for 3S LiPo (~11.1V - 12.6V) + dual L298N (star topology) + 1.7 kg 4WD
 const int SPEED_FORWARD_MIN = 145;  // Gentle rolling floor (smooth, quiet forward roll)
 const int SPEED_FORWARD_MAX = 185;  // Calm cruising ceiling (no aggressive surging)
+const int SPEED_STRAFE_MIN = 130;   // Minimum lateral strafe PWM (breaks 45-deg roller stiction)
+const int SPEED_STRAFE_MAX = 155;   // Maximum lateral strafe PWM (~70-80% of forward max)
 const int SPEED_TURN_MIN = 65;      // Soft initial steering torque
 const int SPEED_TURN_MAX = 110;     // Relaxed maximum turn rate to prevent FOV target loss
 const int SPEED_AVOID = 130;        // Gentle obstacle avoidance pivot speed
 const int PWM_RAMP_STEP = 6;        // Silky smooth acceleration ramp (gradual throttle)
 const int KICKSTART_FEEDFORWARD_PWM = 175; // Soft breakaway pulse (eliminates start jerk)
 const unsigned long KICKSTART_FEEDFORWARD_DURATION_MS = 60; // Brief 60 ms stiction breakaway duration
+
+// Mecanum Holonomic Geometry & Kinematic Configurations:
+// Invert STRAFE_SIGN (-1) if lateral strafing moves opposite to target direction.
+const int STRAFE_SIGN = 1;
+// Geometry factor: (wheelbase_L + track_width_W) / 2 scale factor for yaw rotation (calibrate per chassis)
+const float MECANUM_GEOMETRY_FACTOR = 1.0f;
 
 // Human following distance parameters:
 // Extended standby range: stays in standby up to 300 cm, glides to a stop at ~220 cm.
@@ -96,6 +104,10 @@ enum RobotState {
   STATE_ARC_RIGHT,
   STATE_TURN_LEFT,
   STATE_TURN_RIGHT,
+  STATE_STRAFE_LEFT,
+  STATE_STRAFE_RIGHT,
+  STATE_DIAG_LEFT,
+  STATE_DIAG_RIGHT,
   STATE_IN_RANGE,
   STATE_TOO_CLOSE,
   STATE_AVOID_LEFT,
@@ -120,10 +132,15 @@ int usCenter = MAX_SONAR_DISTANCE + 1;
 int usRight = MAX_SONAR_DISTANCE + 1;
 
 // Smoothed drive commands, signed: positive=forward, negative=reverse.
-int targetLeftPower = 0;
-int targetRightPower = 0;
-int currentLeftPower = 0;
-int currentRightPower = 0;
+int targetFL = 0;
+int targetFR = 0;
+int targetRL = 0;
+int targetRR = 0;
+
+int currentFL = 0;
+int currentFR = 0;
+int currentRL = 0;
+int currentRR = 0;
 
 bool forwardActive = false;
 bool prevForwardActive = false;
@@ -179,6 +196,68 @@ void writeLeftMotors(int signedPower) {
   }
 }
 
+void writeMotorFL(int signedPower) {
+  int power = abs(clampPower(signedPower));
+  analogWrite(ENA_L, power);
+  if (signedPower > 0) {
+    digitalWrite(IN1_LF, HIGH); digitalWrite(IN2_LF, LOW);
+  } else if (signedPower < 0) {
+    digitalWrite(IN1_LF, LOW); digitalWrite(IN2_LF, HIGH);
+  } else {
+    digitalWrite(IN1_LF, LOW); digitalWrite(IN2_LF, LOW);
+  }
+}
+
+void writeMotorRL(int signedPower) {
+  int power = abs(clampPower(signedPower));
+  analogWrite(ENB_L, power);
+  if (signedPower > 0) {
+    digitalWrite(IN3_LR, HIGH); digitalWrite(IN4_LR, LOW);
+  } else if (signedPower < 0) {
+    digitalWrite(IN3_LR, LOW); digitalWrite(IN4_LR, HIGH);
+  } else {
+    digitalWrite(IN3_LR, LOW); digitalWrite(IN4_LR, LOW);
+  }
+}
+
+void writeMotorFR(int signedPower) {
+  int power = abs(clampPower(signedPower));
+  analogWrite(ENA_R, power);
+  if (signedPower > 0) {
+    digitalWrite(IN1_RF, HIGH); digitalWrite(IN2_RF, LOW);
+  } else if (signedPower < 0) {
+    digitalWrite(IN1_RF, LOW); digitalWrite(IN2_RF, HIGH);
+  } else {
+    digitalWrite(IN1_RF, LOW); digitalWrite(IN2_RF, LOW);
+  }
+}
+
+void writeMotorRR(int signedPower) {
+  int power = abs(clampPower(signedPower));
+  analogWrite(ENB_R, power);
+  if (signedPower > 0) {
+    digitalWrite(IN3_RR, HIGH); digitalWrite(IN4_RR, LOW);
+  } else if (signedPower < 0) {
+    digitalWrite(IN3_RR, LOW); digitalWrite(IN4_RR, HIGH);
+  } else {
+    digitalWrite(IN3_RR, LOW); digitalWrite(IN4_RR, LOW);
+  }
+}
+
+void writeMecanumMotors(int fl, int fr, int rl, int rr) {
+  writeMotorFL(fl);
+  writeMotorFR(fr);
+  writeMotorRL(rl);
+  writeMotorRR(rr);
+}
+
+void setMecanumDriveTarget(int fl, int fr, int rl, int rr) {
+  targetFL = clampPower(fl);
+  targetFR = clampPower(fr);
+  targetRL = clampPower(rl);
+  targetRR = clampPower(rr);
+}
+
 void writeRightMotors(int signedPower) {
   int power = abs(clampPower(signedPower));
   analogWrite(ENA_R, power);
@@ -196,17 +275,13 @@ void writeRightMotors(int signedPower) {
 }
 
 void setDriveTarget(int leftPower, int rightPower) {
-  targetLeftPower = clampPower(leftPower);
-  targetRightPower = clampPower(rightPower);
+  setMecanumDriveTarget(leftPower, rightPower, leftPower, rightPower);
 }
 
 void immediateStop() {
-  targetLeftPower = 0;
-  targetRightPower = 0;
-  currentLeftPower = 0;
-  currentRightPower = 0;
-  writeLeftMotors(0);
-  writeRightMotors(0);
+  targetFL = targetFR = targetRL = targetRR = 0;
+  currentFL = currentFR = currentRL = currentRR = 0;
+  writeMecanumMotors(0, 0, 0, 0);
 }
 
 int rampPower(int currentPower, int requestedPower) {
@@ -238,10 +313,11 @@ int rampPower(int currentPower, int requestedPower) {
 }
 
 void serviceMotorRamp() {
-  currentLeftPower = rampPower(currentLeftPower, targetLeftPower);
-  currentRightPower = rampPower(currentRightPower, targetRightPower);
-  writeLeftMotors(currentLeftPower);
-  writeRightMotors(currentRightPower);
+  currentFL = rampPower(currentFL, targetFL);
+  currentFR = rampPower(currentFR, targetFR);
+  currentRL = rampPower(currentRL, targetRL);
+  currentRR = rampPower(currentRR, targetRR);
+  writeMecanumMotors(currentFL, currentFR, currentRL, currentRR);
 }
 
 void resetMotionIntent() {
@@ -477,7 +553,28 @@ int calculateTurnPID(float error, unsigned long now) {
   return pidOutput >= 0.0f ? turnPower : -turnPower;
 }
 
+void computeMecanumKinematics(int vx, int vy, int omega) {
+  // Mecanum inverse kinematics for 4-wheel independent drive:
+  float fl = (float)vx + (float)(STRAFE_SIGN * vy) + (float)omega * MECANUM_GEOMETRY_FACTOR;
+  float fr = (float)vx - (float)(STRAFE_SIGN * vy) - (float)omega * MECANUM_GEOMETRY_FACTOR;
+  float rl = (float)vx - (float)(STRAFE_SIGN * vy) + (float)omega * MECANUM_GEOMETRY_FACTOR;
+  float rr = (float)vx + (float)(STRAFE_SIGN * vy) - (float)omega * MECANUM_GEOMETRY_FACTOR;
+
+  // Proportional vector normalization: preserves vx:vy:omega velocity ratio if any wheel > 255
+  float maxVal = max(max(fabs(fl), fabs(fr)), max(fabs(rl), fabs(rr)));
+  if (maxVal > 255.0f) {
+    float scale = 255.0f / maxVal;
+    fl *= scale;
+    fr *= scale;
+    rl *= scale;
+    rr *= scale;
+  }
+
+  setMecanumDriveTarget((int)round(fl), (int)round(fr), (int)round(rl), (int)round(rr));
+}
+
 void updateFollowingControl(unsigned long now) {
+  // Rule 1: Distance too close safety interlock -> All speeds 0
   if (targetDistance <= DIST_TOO_CLOSE) {
     // No rear sonar: stop rather than reversing blind.
     currentState = STATE_TOO_CLOSE;
@@ -494,8 +591,7 @@ void updateFollowingControl(unsigned long now) {
   }
 
   float horizontalError = targetCenterX - 0.5f;
-  int signedTurn = calculateTurnPID(horizontalError, now);
-  turnActive = (signedTurn != 0);
+  float absError = fabs(horizontalError);
 
   // Detect rising edge of forwardActive to trigger feedforward kickstart
   if (forwardActive && !prevForwardActive) {
@@ -503,15 +599,15 @@ void updateFollowingControl(unsigned long now) {
   }
   prevForwardActive = forwardActive;
 
-  int linearPower = 0;
+  int vx = 0;
   if (forwardActive) {
     // 3. Stiction Feedforward Kickstart:
     // When starting motion from rest with a 1.7 kg chassis, provide a brief feedforward boost
     // to instantly overcome static friction without waiting for PWM ramping.
     if (now - forwardStartedAt < KICKSTART_FEEDFORWARD_DURATION_MS) {
-      linearPower = KICKSTART_FEEDFORWARD_PWM;
+      vx = KICKSTART_FEEDFORWARD_PWM;
     } else {
-      linearPower = proportionalPower(
+      vx = proportionalPower(
           (float)targetDistance,
           (float)DIST_FORWARD_STOP,
           (float)DIST_ESTIMATOR_MAX,
@@ -520,56 +616,38 @@ void updateFollowingControl(unsigned long now) {
     }
   }
 
-  // Large heading errors pivot in place slowly; smaller errors create gentle forward arc
-  if (turnActive && fabs(horizontalError) >= CX_PIVOT_ERROR) {
-    linearPower = 0;
-  } else if (linearPower > 0 && abs(signedTurn) > (linearPower * 2) / 3) {
-    signedTurn = (signedTurn > 0) ? (linearPower * 2) / 3 : -(linearPower * 2) / 3;
+  int vy = 0;
+  int omega = 0;
+
+  // Rule 2a: Deadband -> vy = 0, omega = 0. Pure longitudinal motion.
+  if (absError <= CX_DEADBAND) {
+    vy = 0;
+    omega = 0;
+    currentState = (vx > 0) ? STATE_FORWARD : STATE_IN_RANGE;
+  }
+  // Rule 2b: Holonomic Strafing (CX_DEADBAND < |error| < CX_PIVOT_ERROR)
+  else if (absError < CX_PIVOT_ERROR) {
+    float spanError = max(0.001f, CX_PIVOT_ERROR - CX_DEADBAND);
+    float strafeRatio = min(1.0f, max(0.0f, (absError - CX_DEADBAND) / spanError));
+    int strafeSpeed = SPEED_STRAFE_MIN + (int)((SPEED_STRAFE_MAX - SPEED_STRAFE_MIN) * strafeRatio);
+    vy = (horizontalError > 0.0f) ? strafeSpeed : -strafeSpeed;
+    omega = 0;
+
+    if (vx > 0) {
+      currentState = (horizontalError > 0.0f) ? STATE_DIAG_RIGHT : STATE_DIAG_LEFT;
+    } else {
+      currentState = (horizontalError > 0.0f) ? STATE_STRAFE_RIGHT : STATE_STRAFE_LEFT;
+    }
+  }
+  // Rule 2c: Large offset (|error| >= CX_PIVOT_ERROR, default 0.25) -> Arc/Pivot
+  else {
+    vy = 0;
+    omega = calculateTurnPID(horizontalError, now);
+    vx = 0; // Pivot in place to center person first
+    currentState = (omega > 0) ? STATE_TURN_RIGHT : STATE_TURN_LEFT;
   }
 
-  // Heading-aware forward speed attenuation:
-  // Scale down forward thrust when turning so the robot does not lunge forward and sweep past target
-  if (linearPower > 0 && turnActive) {
-    float turnFactor = 1.0f - min(0.50f, (fabs(horizontalError) - CX_DEADBAND) * 3.0f);
-    linearPower = max(SPEED_FORWARD_MIN, (int)(linearPower * turnFactor));
-  }
-
-  // 4. Balanced Differential Drive for Arc Turning:
-  // Adjust left and right symmetrically around linearPower so total forward momentum stays smooth
-  int leftPower = 0;
-  int rightPower = 0;
-  if (linearPower > 0 && turnActive) {
-    int halfTurn = signedTurn / 2;
-    leftPower = clampPower(linearPower + halfTurn);
-    rightPower = clampPower(linearPower - halfTurn);
-
-    // Ensure inner wheel remains above rolling threshold to prevent drag/stall
-    const int MIN_ARC_ROLLING_PWM = 85;
-    if (leftPower > 0 && leftPower < MIN_ARC_ROLLING_PWM) leftPower = MIN_ARC_ROLLING_PWM;
-    if (rightPower > 0 && rightPower < MIN_ARC_ROLLING_PWM) rightPower = MIN_ARC_ROLLING_PWM;
-  } else if (linearPower > 0) {
-    leftPower = linearPower;
-    rightPower = linearPower;
-  } else if (turnActive) {
-    // Pure pivot in place
-    leftPower = clampPower(linearPower + signedTurn);
-    rightPower = clampPower(linearPower - signedTurn);
-  }
-  setDriveTarget(leftPower, rightPower);
-
-  if (linearPower == 0 && signedTurn == 0) {
-    currentState = STATE_IN_RANGE;
-  } else if (linearPower == 0 && signedTurn < 0) {
-    currentState = STATE_TURN_LEFT;
-  } else if (linearPower == 0 && signedTurn > 0) {
-    currentState = STATE_TURN_RIGHT;
-  } else if (signedTurn < 0) {
-    currentState = STATE_ARC_LEFT;
-  } else if (signedTurn > 0) {
-    currentState = STATE_ARC_RIGHT;
-  } else {
-    currentState = STATE_FORWARD;
-  }
+  computeMecanumKinematics(vx, vy, omega);
 }
 
 void updateStateMachine(unsigned long now) {
@@ -610,6 +688,10 @@ const char *stateName(RobotState state) {
     case STATE_ARC_RIGHT: return "ARC_R";
     case STATE_TURN_LEFT: return "TURN_L";
     case STATE_TURN_RIGHT: return "TURN_R";
+    case STATE_STRAFE_LEFT: return "STRF_L";
+    case STATE_STRAFE_RIGHT: return "STRF_R";
+    case STATE_DIAG_LEFT: return "DIAG_L";
+    case STATE_DIAG_RIGHT: return "DIAG_R";
     case STATE_IN_RANGE: return "IN_RANGE";
     case STATE_TOO_CLOSE: return "TOO_CLOSE";
     case STATE_AVOID_LEFT: return "AVOID_L";
