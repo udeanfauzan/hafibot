@@ -98,6 +98,24 @@ class YOLOExtractionTests(unittest.TestCase):
         pose = detector.detect(frame)
         self.assertGreater(pose[0].x, 0.5)
 
+    def test_assistant_target_lock_prefers_matching_profile_over_nearer_person(self):
+        # Candidate 0: nearer to previous center (100, 100), but has different profile
+        # Candidate 1: slightly farther, but matches locked target profile
+        detector = detector_with_results([
+            result([[40, 20, 140, 220], [280, 5, 630, 470]]),
+        ])
+        frame = np.zeros((480, 640, 3), dtype=np.uint8)
+        detector.last_target_center = (455.0, 237.5)
+        detector.locked_profile = {'mean_cr': 145.0, 'mean_cb': 110.0, 'mean_y': 160.0}
+        # Mock _extract_skin_profile: cand 0 gives wrong skin, cand 1 gives exact matching skin
+        detector._extract_skin_profile = mock.Mock(side_effect=[
+            {'cr': 120.0, 'cb': 90.0, 'y': 100.0},
+            {'cr': 145.0, 'cb': 110.0, 'y': 160.0},
+        ])
+        pose = detector.detect(frame)
+        # Candidate 1 was selected (index 1 -> x = 0.2 + 0.5 = 0.7)
+        self.assertGreater(pose[0].x, 0.5)
+
     def test_extraction_preserves_missing_frames_and_final_partial_batch(self):
         frames = [np.zeros((480, 640, 3), dtype=np.uint8)] * 3
         cap = mock.Mock()

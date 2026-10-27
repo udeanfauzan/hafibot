@@ -1846,6 +1846,17 @@ def index():
               </div>
             </div>
           </section>
+
+          <!-- Bottom Subtle Pre-Demo Lock Assistant Bar -->
+          <div style="margin-top: 36px; padding: 12px 18px; border-top: 1px dashed var(--line); display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); opacity: 0.85;">
+            <span>Demo Session Lock:</span>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <span id="targetLockBadge" style="font-size: 11px; padding: 3px 8px; border-radius: 6px; background: #eef2f6; color: var(--muted);">Target Bebas</span>
+              <button type="button" class="action-btn" id="btnLockAssistant" onclick="toggleAssistantLock()" style="font-size: 11px; padding: 5px 12px; cursor: pointer; border: 1px solid var(--line); background: #ffffff;">
+                &#128274; Kunci Asisten Demo
+              </button>
+            </div>
+          </div>
         </main>
 
         <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -2665,6 +2676,52 @@ def index():
               }
             });
           }
+
+          // Assistant Lock Toggle
+          let isAssistantLocked = false;
+          async function updateAssistantLockUI() {
+            try {
+              const res = await fetch('/api/robot/target_lock_status', {
+                headers: { 'X-CSRF-Token': csrfToken }
+              });
+              const data = await res.json();
+              if (data && data.success) {
+                isAssistantLocked = Boolean(data.locked);
+                const badge = document.getElementById('targetLockBadge');
+                const btn = document.getElementById('btnLockAssistant');
+                if (badge) {
+                  badge.textContent = isAssistantLocked ? 'Asisten Terkunci' : 'Target Bebas';
+                  badge.style.background = isAssistantLocked ? 'var(--green-soft)' : '#eef2f6';
+                  badge.style.color = isAssistantLocked ? 'var(--green-dark)' : 'var(--muted)';
+                }
+                if (btn) {
+                  btn.innerHTML = isAssistantLocked ? '&#128275; Lepas Kuncian' : '&#128274; Kunci Asisten Demo';
+                  btn.style.color = isAssistantLocked ? 'var(--red)' : 'var(--ink)';
+                }
+              }
+            } catch (e) {}
+          }
+
+          async function toggleAssistantLock() {
+            const btn = document.getElementById('btnLockAssistant');
+            if (btn) btn.disabled = true;
+            try {
+              const endpoint = isAssistantLocked ? '/api/robot/unlock_assistant' : '/api/robot/lock_assistant';
+              const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'X-CSRF-Token': csrfToken, 'Content-Type': 'application/json' }
+              });
+              const data = await res.json();
+              showToast(data.message || (isAssistantLocked ? 'Kuncian dilepas' : 'Asisten berhasil dikunci'));
+              await updateAssistantLockUI();
+            } catch (e) {
+              showToast('Gagal mengubah kuncian asisten.');
+            } finally {
+              if (btn) btn.disabled = false;
+            }
+          }
+          updateAssistantLockUI();
+
           initPush();
           pollStatus();
         </script>
@@ -3196,7 +3253,8 @@ def _process_robot_frame():
     if frame is None:
         return jsonify({'success': False, 'error': 'Decode failed'}), 400
         
-    global _last_frame_recv_time, _stream_fps_history, _proc_latency_history
+    global _last_frame_recv_time, _stream_fps_history, _proc_latency_history, latest_raw_bgr_frame
+    latest_raw_bgr_frame = frame
     t_ai_start = time.perf_counter()
     t_now = time.monotonic()
     dt_frame = t_now - _last_frame_recv_time
@@ -3351,6 +3409,10 @@ def _process_robot_frame():
     # 5. Draw HUD Overlay
     annotated = fall_detector.draw_overlay(frame, fall_res, landmarks, fps=real_stream_fps)
     
+    # Overlay locked assistant indicator if active
+    if pose_detector.locked_profile is not None:
+        cv2.putText(annotated, "[TARGET: ASISTEN TERKUNCI]", (12, 55), cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 128), 2, cv2.LINE_AA)
+
     # Draw sonar telemetry overlay at bottom
     h_img, w_img = annotated.shape[:2]
     status_tag = 'LOCKED' if target_det else ('NO POSE' if not landmarks else 'CONFIRMING...')
@@ -3421,6 +3483,30 @@ def api_set_control_mode():
         manual_direction = 'stop'
         return jsonify({'success': True, 'control_mode': robot_control_mode})
     return jsonify({'success': False, 'error': 'Invalid mode'}), 400
+
+@app.route('/api/robot/lock_assistant', methods=['POST'])
+@login_required
+def api_lock_assistant():
+    global latest_raw_bgr_frame
+    if 'latest_raw_bgr_frame' not in globals() or latest_raw_bgr_frame is None:
+        return jsonify({'success': False, 'message': 'Belum ada frame kamera diterima'}), 400
+    res = pose_detector.lock_assistant_target(latest_raw_bgr_frame)
+    # Return minimal boolean status without exposing raw biometric values
+    return jsonify({'success': res['success'], 'message': res['message'], 'locked': pose_detector.locked_profile is not None})
+
+@app.route('/api/robot/unlock_assistant', methods=['POST'])
+@login_required
+def api_unlock_assistant():
+    res = pose_detector.unlock_assistant_target()
+    return jsonify({'success': True, 'message': res['message'], 'locked': False})
+
+@app.route('/api/robot/target_lock_status', methods=['GET'])
+@login_required
+def api_target_lock_status():
+    return jsonify({
+        'success': True,
+        'locked': pose_detector.locked_profile is not None,
+    })
 
 @app.route('/api/robot/manual_drive', methods=['POST'])
 def api_manual_drive():

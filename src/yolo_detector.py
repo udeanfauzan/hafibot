@@ -90,6 +90,7 @@ class YOLOPoseDetector:
         self.device = device
         self.backend = backend
         self.last_target_center = None
+        self.locked_profile = None  # Biometric and skin profile of locked assistant
         self.target_lost_frames = 0
         self._init_backend()
 
@@ -168,14 +169,14 @@ class YOLOPoseDetector:
             return None
 
         if self.backend == 'ultralytics':
-            return self._detect_ultralytics(frame)
+            return self._detect_ultralytics(frame, raw_frame=frame)
         elif self.backend == 'onnx':
             return self._detect_onnx(frame)
         elif self.backend == 'tensorrt':
             return self._detect_tensorrt(frame)
         return None
 
-    def _detect_ultralytics(self, frame: np.ndarray) -> Optional[List[PoseKeypoint]]:
+    def _detect_ultralytics(self, frame: np.ndarray, raw_frame: Optional[np.ndarray] = None) -> Optional[List[PoseKeypoint]]:
         results = self.model(
             frame, verbose=False, conf=self.conf_threshold, device=self.device,
             imgsz=(self.input_size[1], self.input_size[0]), rect=True,
@@ -183,11 +184,12 @@ class YOLOPoseDetector:
         if not results or len(results) == 0:
             self.target_lost_frames += 1
             return None
-        return self._keypoints_from_ultralytics_result(results[0])
+        return self._keypoints_from_ultralytics_result(results[0], raw_frame=raw_frame if raw_frame is not None else frame)
 
     def reset_tracking(self):
         """Start each independent source video without a previous target."""
         self.last_target_center = None
+        self.locked_profile = None
         self.target_lost_frames = 0
 
     def detect_batch(self, frames):
@@ -202,22 +204,58 @@ class YOLOPoseDetector:
         )
         if len(results) != len(frames):
             raise ValueError('Pose inference did not return one result per frame')
-        return [self._keypoints_from_ultralytics_result(r) for r in results]
+        return [self._keypoints_from_ultralytics_result(r, raw_frame=frames[i]) for i, r in enumerate(results)]
 
-    def _keypoints_from_ultralytics_result(self, r):
+    def _keypoints_from_ultralytics_result(self, r, raw_frame: Optional[np.ndarray] = None):
         """Shared selection, normalization, confidence and anatomical checks."""
         if r.keypoints is None or len(r.keypoints.data) == 0:
             self.target_lost_frames += 1
             return None
 
         boxes = r.boxes
-        if len(boxes) > 1:
+        num_candidates = len(boxes) if boxes is not None else 0
+        best_idx = 0
+
+        if num_candidates > 1:
             try:
                 xyxy = boxes.xyxy.cpu().numpy()
                 areas = (xyxy[:, 2] - xyxy[:, 0]) * (xyxy[:, 3] - xyxy[:, 1])
                 cxs = (xyxy[:, 0] + xyxy[:, 2]) * 0.5
                 cys = (xyxy[:, 1] + xyxy[:, 3]) * 0.5
-                if self.last_target_center is not None and self.target_lost_frames < 15:
+
+                # If assistant target is locked, score candidates by skin tone and spatial continuity
+                if self.locked_profile is not None:
+                    best_score = -999.0
+                    matched_idx = 0
+                    for idx in range(num_candidates):
+                        cand_kpts = r.keypoints.xyn[idx].cpu().numpy()
+                        score = 0.0
+
+                        # 1. Skin tone similarity (YCrCb color space: Cr and Cb channels)
+                        if raw_frame is not None and 'mean_cr' in self.locked_profile:
+                            cand_skin = self._extract_skin_profile(raw_frame, cand_kpts)
+                            if cand_skin is not None:
+                                d_cr = abs(cand_skin['cr'] - self.locked_profile['mean_cr'])
+                                d_cb = abs(cand_skin['cb'] - self.locked_profile['mean_cb'])
+                                d_y = abs(cand_skin['y'] - self.locked_profile['mean_y'])
+                                # Lower color distance = higher score
+                                skin_score = max(0.0, 100.0 - (d_cr * 3.0 + d_cb * 3.0 + d_y * 0.5))
+                                score += skin_score
+
+                        # 2. Spatial proximity to last known assistant location
+                        if self.last_target_center is not None and self.target_lost_frames < 20:
+                            dist = math.hypot(cxs[idx] - self.last_target_center[0], cys[idx] - self.last_target_center[1])
+                            spatial_score = max(0.0, 60.0 - (dist / 10.0))
+                            score += spatial_score
+
+                        # 3. Area consistency
+                        score += min(20.0, (areas[idx] / 15000.0))
+
+                        if score > best_score:
+                            best_score = score
+                            matched_idx = idx
+                    best_idx = matched_idx
+                elif self.last_target_center is not None and self.target_lost_frames < 15:
                     dist_sq = (cxs - self.last_target_center[0])**2 + (cys - self.last_target_center[1])**2
                     min_dist_idx = int(np.argmin(dist_sq))
                     if np.sqrt(dist_sq[min_dist_idx]) < 220.0:
@@ -226,11 +264,12 @@ class YOLOPoseDetector:
                         best_idx = int(np.argmax(areas))
                 else:
                     best_idx = int(np.argmax(areas))
+
                 self.last_target_center = (float(cxs[best_idx]), float(cys[best_idx]))
                 self.target_lost_frames = 0
             except Exception:
                 best_idx = 0
-        else:
+        elif num_candidates == 1:
             best_idx = 0
             try:
                 xyxy = boxes.xyxy.cpu().numpy()
@@ -258,6 +297,82 @@ class YOLOPoseDetector:
             return None
 
         return keypoints
+
+    def _extract_skin_profile(self, frame: np.ndarray, xyn: np.ndarray) -> Optional[dict]:
+        """Extract mean skin color in YCrCb space from facial keypoints."""
+        if frame is None or frame.size == 0 or xyn is None:
+            return None
+        h, w = frame.shape[:2]
+        ycrcb = cv2.cvtColor(frame, cv2.COLOR_BGR2YCrCb)
+        # Standard human skin range in YCrCb
+        skin_mask = cv2.inRange(ycrcb, np.array([0, 133, 77]), np.array([255, 173, 127]))
+        # Sample around nose (idx 0), left ear (idx 3), right ear (idx 4)
+        sampled_pixels = []
+        radius = max(6, int(min(w, h) * 0.035))
+        for k_idx in (0, 3, 4):
+            if k_idx < len(xyn):
+                kx, ky = int(xyn[k_idx, 0] * w), int(xyn[k_idx, 1] * h)
+                x1, x2 = max(0, kx - radius), min(w, kx + radius)
+                y1, y2 = max(0, ky - radius), min(h, ky + radius)
+                if x2 > x1 and y2 > y1:
+                    patch_mask = skin_mask[y1:y2, x1:x2]
+                    patch_ycrcb = ycrcb[y1:y2, x1:x2]
+                    pts = patch_ycrcb[patch_mask > 0]
+                    if len(pts) > 0:
+                        sampled_pixels.append(pts)
+        if sampled_pixels:
+            all_pts = np.vstack(sampled_pixels)
+            if len(all_pts) >= 15:
+                return {
+                    'mean_y': float(np.mean(all_pts[:, 0])),
+                    'mean_cr': float(np.mean(all_pts[:, 1])),
+                    'mean_cb': float(np.mean(all_pts[:, 2])),
+                    'count': len(all_pts),
+                }
+        return None
+
+    def lock_assistant_target(self, frame: np.ndarray) -> dict:
+        """Register and lock the assistant currently in front of the camera."""
+        if frame is None:
+            return {'success': False, 'message': 'Frame kamera tidak tersedia'}
+        results = self.model(
+            frame, verbose=False, conf=self.conf_threshold, device=self.device,
+            imgsz=(self.input_size[1], self.input_size[0]), rect=True,
+        )
+        if not results or len(results[0].boxes) == 0:
+            return {'success': False, 'message': 'Tidak ada orang terdeteksi di depan kamera'}
+
+        # Pick the most central, largest person
+        boxes = results[0].boxes
+        xyxy = boxes.xyxy.cpu().numpy()
+        areas = (xyxy[:, 2] - xyxy[:, 0]) * (xyxy[:, 3] - xyxy[:, 1])
+        best_idx = int(np.argmax(areas))
+        kpts = results[0].keypoints.xyn[best_idx].cpu().numpy()
+
+        skin = self._extract_skin_profile(frame, kpts)
+        cx = float((xyxy[best_idx, 0] + xyxy[best_idx, 2]) * 0.5)
+        cy = float((xyxy[best_idx, 1] + xyxy[best_idx, 3]) * 0.5)
+        self.last_target_center = (cx, cy)
+        self.target_lost_frames = 0
+
+        profile = {
+            'center': (cx, cy),
+            'area': float(areas[best_idx]),
+            'locked_at': time.time(),
+        }
+        if skin is not None:
+            profile.update(skin)
+            desc = f"Skin Tone YCrCb [{skin['mean_y']:.0f}, {skin['mean_cr']:.0f}, {skin['mean_cb']:.0f}]"
+        else:
+            desc = "Spatial Position Locked"
+
+        self.locked_profile = profile
+        return {'success': True, 'message': f'Berhasil mengunci asisten ({desc})', 'profile': profile}
+
+    def unlock_assistant_target(self):
+        """Clear locked target."""
+        self.locked_profile = None
+        return {'success': True, 'message': 'Kuncian target dilepas (mode deteksi bebas)'}
 
     def _detect_onnx(self, frame: np.ndarray) -> Optional[List[PoseKeypoint]]:
         h0, w0 = frame.shape[:2]
