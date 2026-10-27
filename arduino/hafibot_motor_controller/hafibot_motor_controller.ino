@@ -55,8 +55,8 @@ NewPing sonarRight(TRIG_RIGHT, ECHO_RIGHT, MAX_SONAR_DISTANCE);
 // Tunable motion parameters calibrated for 3S LiPo (~11.1V - 12.6V) + dual L298N (star topology) + 1.7 kg 4WD
 const int SPEED_FORWARD_MIN = 145;  // Gentle rolling floor (smooth, quiet forward roll)
 const int SPEED_FORWARD_MAX = 185;  // Calm cruising ceiling (no aggressive surging)
-const int SPEED_STRAFE_MIN = 130;   // Minimum lateral strafe PWM (breaks 45-deg roller stiction)
-const int SPEED_STRAFE_MAX = 155;   // Maximum lateral strafe PWM (~70-80% of forward max)
+const int SPEED_STRAFE_MIN = 145;   // Boosted lateral floor to break 45-deg roller stiction without stall
+const int SPEED_STRAFE_MAX = 170;   // Controlled lateral ceiling (~90% forward max) for smooth sideways slide
 const int SPEED_TURN_MIN = 65;      // Soft initial steering torque
 const int SPEED_TURN_MAX = 110;     // Relaxed maximum turn rate to prevent FOV target loss
 const int SPEED_AVOID = 130;        // Gentle obstacle avoidance pivot speed
