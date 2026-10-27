@@ -158,8 +158,8 @@ class FallDetector:
                  min_upright_torso_angle: float = DEFAULT_MIN_UPRIGHT_TORSO_ANGLE,
                  min_upright_aspect_ratio: float = DEFAULT_MIN_UPRIGHT_ASPECT_RATIO,
                  min_dy_torso: float = DEFAULT_MIN_DY_TORSO,
-                 min_valid_keypoints: int = 6,
-                 min_keypoint_confidence: float = 0.4,
+                 min_valid_keypoints: int = 3,
+                 min_keypoint_confidence: float = 0.30,
                  require_torso_anchors: bool = True,
                  checkpoint_path=None):
         """
@@ -415,8 +415,8 @@ class FallDetector:
         if not points:
             return False, "unparseable_landmarks"
 
-        min_conf = getattr(self, "min_keypoint_confidence", 0.4)
-        min_kpts = getattr(self, "min_valid_keypoints", 6)
+        min_conf = getattr(self, "min_keypoint_confidence", 0.30)
+        min_kpts = getattr(self, "min_valid_keypoints", 3)
         require_torso = getattr(self, "require_torso_anchors", True)
 
         # Petakan indeks kunci untuk 13 landmarks (standar CNN-LSTM) vs 33 (MediaPipe)
@@ -463,9 +463,9 @@ class FallDetector:
             dy_t = mid_hy - mid_sy
             torso_h = math.hypot(dx_t, dy_t)
 
-            if sh_w > 10.0 and torso_h > 10.0:
+            if sh_w > 15.0 and torso_h > 15.0:
                 ratio = torso_h / sh_w
-                if ratio < 0.10 or ratio > 8.5:
+                if ratio < 0.08 or ratio > 12.0:
                     return False, f"unnatural_torso_ratio_{ratio:.2f}"
 
         return True, "valid"

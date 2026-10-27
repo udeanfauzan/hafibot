@@ -241,13 +241,12 @@ class PoseLossHandlingTests(unittest.TestCase):
         self.assertEqual(result['prediction'], 'ADL (Postur Tegak)')
 
     def test_low_keypoint_count_is_rejected_at_entry_gate(self):
-        # Pose with only 3 keypoints visible (under minimum 6)
+        # Pose with only 2 keypoints visible (under minimum 3)
         sparse_pose = [_Landmark() for _ in range(33)]
         for lm in sparse_pose:
             lm.visibility = 0.1
         sparse_pose[0].visibility = 0.9
         sparse_pose[11].visibility = 0.9
-        sparse_pose[12].visibility = 0.9
 
         detector = make_detector(
             prediction=(1, 0.99, np.array([0.01, 0.99], dtype=np.float32))

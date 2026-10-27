@@ -3249,12 +3249,17 @@ def _process_robot_frame():
         fall_detector.reset_buffer()
 
     posture_data = fall_res.get('posture') or {}
-    is_plausible_pose = bool(
+    # Torso-centric validity: as long as the torso is visible and reliable,
+    # it is confirmed as a valid human pose. Do NOT require human-following target confirmation
+    # because a fallen/lying person naturally loses standing target lock (distance=0 cm).
+    # An alert is only downgraded to doubtful if torso anchors are missing or
+    # an obstacle is right against the bumper (< 18 cm) with no valid torso detected.
+    has_reliable_torso = bool(
         fall_res.get('pose_valid', True)
         and posture_data.get('is_torso_reliable', True)
-        and (target_det or target_dist > 0)
-        and not (min_sonar_cm < 25.0 and target_dist == 0)
     )
+    extreme_sonar_blindspot = bool(min_sonar_cm < 18.0 and not has_reliable_torso)
+    is_plausible_pose = bool(has_reliable_torso and not extreme_sonar_blindspot)
 
     # Action branching: Confirmed Plausible vs Doubtful (Uncertain)
     doubtful_fall = False
