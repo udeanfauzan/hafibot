@@ -240,6 +240,68 @@ class PoseLossHandlingTests(unittest.TestCase):
         self.assertFalse(result['is_fall'])
         self.assertEqual(result['prediction'], 'ADL (Postur Tegak)')
 
+    def test_low_keypoint_count_is_rejected_at_entry_gate(self):
+        # Pose with only 3 keypoints visible (under minimum 6)
+        sparse_pose = [_Landmark() for _ in range(33)]
+        for lm in sparse_pose:
+            lm.visibility = 0.1
+        sparse_pose[0].visibility = 0.9
+        sparse_pose[11].visibility = 0.9
+        sparse_pose[12].visibility = 0.9
+
+        detector = make_detector(
+            prediction=(1, 0.99, np.array([0.01, 0.99], dtype=np.float32))
+        )
+        result = detector.process_frame(sparse_pose)
+        self.assertFalse(result['pose_valid'])
+        self.assertFalse(result['pose_detected'])
+        self.assertFalse(result['model_evaluated'])
+        self.assertFalse(result['is_fall'])
+        self.assertIn('too_few_valid_keypoints', result['pose_gate_reason'])
+
+    def test_missing_torso_anchors_rejected_at_entry_gate(self):
+        # Pose with 8 keypoints visible, but hips missing
+        no_hip_pose = [_Landmark() for _ in range(33)]
+        for lm in no_hip_pose:
+            lm.visibility = 0.9
+        no_hip_pose[23].visibility = 0.1
+        no_hip_pose[24].visibility = 0.1
+
+        detector = make_detector(
+            prediction=(1, 0.99, np.array([0.01, 0.99], dtype=np.float32))
+        )
+        result = detector.process_frame(no_hip_pose)
+        self.assertFalse(result['pose_valid'])
+        self.assertFalse(result['pose_detected'])
+        self.assertFalse(result['model_evaluated'])
+        self.assertFalse(result['is_fall'])
+        self.assertEqual(result['pose_gate_reason'], 'missing_torso_anchors')
+
+    def test_unnatural_torso_shoulder_ratio_rejected_at_entry_gate(self):
+        # Torso height extremely disproportionate to shoulder width
+        abnormal_pose = [_Landmark() for _ in range(33)]
+        for lm in abnormal_pose:
+            lm.visibility = 0.9
+        # Shoulders width 0.03 * 640 = 19.2 px, hips far (dy=0.8 * 480 = 384 px) -> ratio = 20.0 > 8.5
+        abnormal_pose[11].x = 0.500
+        abnormal_pose[11].y = 0.100
+        abnormal_pose[12].x = 0.530
+        abnormal_pose[12].y = 0.100
+        abnormal_pose[23].x = 0.500
+        abnormal_pose[23].y = 0.900
+        abnormal_pose[24].x = 0.530
+        abnormal_pose[24].y = 0.900
+
+        detector = make_detector(
+            prediction=(1, 0.99, np.array([0.01, 0.99], dtype=np.float32))
+        )
+        result = detector.process_frame(abnormal_pose)
+        self.assertFalse(result['pose_valid'])
+        self.assertFalse(result['pose_detected'])
+        self.assertFalse(result['model_evaluated'])
+        self.assertFalse(result['is_fall'])
+        self.assertIn('unnatural_torso_ratio', result['pose_gate_reason'])
+
 
 if __name__ == "__main__":
     unittest.main()

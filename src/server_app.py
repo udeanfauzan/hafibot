@@ -3207,6 +3207,13 @@ def _process_robot_frame():
             _stream_fps_history.pop(0)
     real_stream_fps = float(sum(_stream_fps_history) / max(1, len(_stream_fps_history))) if _stream_fps_history else 15.0
     
+    # Sonar telemetry for cross-checking
+    us_l = float(telem.get('us_left', 0.0))
+    us_c = float(telem.get('us_center', 0.0))
+    us_r = float(telem.get('us_right', 0.0))
+    valid_sonars = [v for v in (us_l, us_c, us_r) if v > 0.0]
+    min_sonar_cm = min(valid_sonars) if valid_sonars else 999.0
+
     # 1. Pose estimation on GPU
     landmarks = pose_detector.detect(frame)
 
@@ -3233,6 +3240,29 @@ def _process_robot_frame():
     latest_target_distance_cm = target_dist
     latest_target_detected = target_det
 
+    # Cross-check: Target / Sonar / Occlusion consistency
+    # 1. Target not confirmed or distance 0 cm while following
+    # 2. Sonar indicates very close object (< 25 cm) but target distance 0 cm or target inconsistent
+    # 3. Target discontinuity resets fall detector buffer so static objects suddenly appearing don't latch fall
+    target_reason = str(target.get('reason', ''))
+    if target_reason == 'target_discontinuity':
+        fall_detector.reset_buffer()
+
+    posture_data = fall_res.get('posture') or {}
+    is_plausible_pose = bool(
+        fall_res.get('pose_valid', True)
+        and posture_data.get('is_torso_reliable', True)
+        and (target_det or target_dist > 0)
+        and not (min_sonar_cm < 25.0 and target_dist == 0)
+    )
+
+    # Action branching: Confirmed Plausible vs Doubtful (Uncertain)
+    doubtful_fall = False
+    if is_fall and not is_plausible_pose:
+        # Downgrade to uncertain: log snapshot, ask via voice, do not latch ESTOP or push
+        doubtful_fall = True
+        is_fall = False
+
     global latest_shoulder_px, latest_effective_px, last_valid_shoulder_px
     spx = float(target.get('shoulder_px', 0.0))
     eff_px = float(target.get('effective_px', spx))
@@ -3250,6 +3280,11 @@ def _process_robot_frame():
         robot_state = 'FALL_ESTOP_LATCHED'
         if not was_latched:
             chatbot_service.trigger_fall_alert_voice()
+    elif doubtful_fall:
+        # Uncertain alert mode: ask user gently via voice without locking motors in ESTOP
+        cmd_mode = STOP
+        robot_state = 'UNCERTAIN_FALL_INQUIRY'
+        chatbot_service.trigger_fall_inquiry_voice()
     elif reset_estop_pending:
         cmd_mode = RESET_ESTOP
         target_dist, target_cx, target_det = 0, 0.500, False
@@ -3313,9 +3348,6 @@ def _process_robot_frame():
     
     # Draw sonar telemetry overlay at bottom
     h_img, w_img = annotated.shape[:2]
-    us_l = telem.get('us_left', 0.0)
-    us_c = telem.get('us_center', 0.0)
-    us_r = telem.get('us_right', 0.0)
     status_tag = 'LOCKED' if target_det else ('NO POSE' if not landmarks else 'CONFIRMING...')
     telem_str = f'Target: {target_dist}cm ({status_tag}) | Sonar: [{us_l:.0f}, {us_c:.0f}, {us_r:.0f}]cm | State: {robot_state}'
     color_tag = (0, 255, 0) if target_det else ((0, 0, 255) if fall_safety_latch.latched else (0, 255, 255))

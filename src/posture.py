@@ -195,6 +195,10 @@ def analyze_posture(
     w = max(xs) - min(xs)
     h = max(ys) - min(ys)
     aspect_ratio = float(h / (w + 1e-6))
+    has_torso_anchors = bool(
+        (parsed['left_shoulder'] or parsed['right_shoulder'])
+        and (parsed['left_hip'] or parsed['right_hip'])
+    )
 
     # 2. Mid-Shoulder & Mid-Hip Calculation
     ls, rs = parsed['left_shoulder'], parsed['right_shoulder']
@@ -231,19 +235,24 @@ def analyze_posture(
         dy_torso = 0.0
 
     # 4. Posture Classification
+    is_torso_reliable = bool(has_torso_anchors)
     is_upright = bool(
-        torso_angle_deg >= 45.0 and dy_torso >= min_dy_torso
+        has_torso_anchors and torso_angle_deg >= 45.0 and dy_torso >= min_dy_torso
     )
 
     is_lying = bool(
-        torso_angle_deg <= max_lying_torso_angle
-        or aspect_ratio <= max_lying_aspect_ratio
+        has_torso_anchors and (
+            torso_angle_deg <= max_lying_torso_angle
+            or aspect_ratio <= max_lying_aspect_ratio
+        )
     )
 
     is_fall_consistent = bool(not is_upright)
 
     if is_upright:
         posture_label = 'upright'
+    elif not has_torso_anchors:
+        posture_label = 'unknown'
     elif is_lying:
         posture_label = 'lying'
     elif aspect_ratio < 1.1 or torso_angle_deg < 40.0:
@@ -259,6 +268,7 @@ def analyze_posture(
         'is_upright': is_upright,
         'is_lying': is_lying,
         'is_fall_consistent': is_fall_consistent,
+        'is_torso_reliable': is_torso_reliable,
         'posture_label': posture_label,
     }
 

@@ -113,6 +113,19 @@ class PostureAnalysisTests(unittest.TestCase):
         self.assertFalse(analysis['valid'])
         self.assertFalse(analysis['is_upright'])
 
+    def test_missing_torso_anchors_is_unknown_and_not_upright_nor_lying(self):
+        # Pose with valid nose, knee, and ankle, but NO shoulder and NO hip
+        landmarks = [DummyLandmark(0.5, 0.5, visibility=0.0) for _ in range(33)]
+        landmarks[0] = DummyLandmark(0.5, 0.10, visibility=1.0)    # nose
+        landmarks[25] = DummyLandmark(0.47, 0.75, visibility=1.0)  # left knee
+        landmarks[27] = DummyLandmark(0.47, 0.95, visibility=1.0)  # left ankle
+        analysis = analyze_posture(landmarks)
+        self.assertTrue(analysis['valid'])
+        self.assertFalse(analysis['is_torso_reliable'])
+        self.assertFalse(analysis['is_upright'])
+        self.assertFalse(analysis['is_lying'])
+        self.assertEqual(analysis['posture_label'], 'unknown')
+
 
 if __name__ == '__main__':
     unittest.main()

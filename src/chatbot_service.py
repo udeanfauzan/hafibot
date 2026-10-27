@@ -681,6 +681,10 @@ class ChatbotService:
         prompt = "Perhatian! Terdeteksi Anda terjatuh. Apakah Anda baik-baik saja? Katakan 'Saya tidak apa-apa' untuk mematikan alarm, atau 'Tolong' untuk bantuan."
         self.queue_proactive_speech(prompt, priority='high', reason='fall_confirmation')
 
+    def trigger_fall_inquiry_voice(self):
+        prompt = "Apakah Anda baik-baik saja? Tolong bersuara jika Anda membutuhkan bantuan."
+        self.queue_proactive_speech(prompt, priority='high', reason='fall_inquiry')
+
     def process_voice_interaction(self, wav_bytes: bytes) -> Dict[str, Any]:
         if not self.is_enabled():
             return self._disabled_result()

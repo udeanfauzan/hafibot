@@ -18,6 +18,7 @@ Kontrol keyboard:
 """
 
 import sys
+import math
 import time
 import argparse
 import numpy as np
@@ -157,6 +158,9 @@ class FallDetector:
                  min_upright_torso_angle: float = DEFAULT_MIN_UPRIGHT_TORSO_ANGLE,
                  min_upright_aspect_ratio: float = DEFAULT_MIN_UPRIGHT_ASPECT_RATIO,
                  min_dy_torso: float = DEFAULT_MIN_DY_TORSO,
+                 min_valid_keypoints: int = 6,
+                 min_keypoint_confidence: float = 0.4,
+                 require_torso_anchors: bool = True,
                  checkpoint_path=None):
         """
         Inisialisasi FallDetector.
@@ -187,6 +191,9 @@ class FallDetector:
         self.min_upright_torso_angle = float(min_upright_torso_angle)
         self.min_upright_aspect_ratio = float(min_upright_aspect_ratio)
         self.min_dy_torso = float(min_dy_torso)
+        self.min_valid_keypoints = max(1, int(min_valid_keypoints))
+        self.min_keypoint_confidence = max(0.0, min(1.0, float(min_keypoint_confidence)))
+        self.require_torso_anchors = bool(require_torso_anchors)
         self.device = torch.device(DEVICE if torch.cuda.is_available() else "cpu")
 
         # State
@@ -376,6 +383,93 @@ class FallDetector:
             min_dy_torso=self.min_dy_torso,
         )
 
+    def validate_person_pose(self, landmarks) -> Tuple[bool, str]:
+        """
+        Gerbang 'orang valid' dan pemeriksaan anatomi sebelum model dievaluasi:
+        1. Jumlah titik valid (confidence >= min_keypoint_confidence) harus >= min_valid_keypoints.
+        2. Jangkar torso harus ada: minimal 1 bahu dan 1 hip terdeteksi.
+        3. Rasio torso terhadap lebar bahu harus masuk akal (0.10 <= ratio <= 8.5).
+        """
+        if landmarks is None:
+            return False, "no_pose"
+
+        # Ekstrak koordinat dan confidence
+        points = []
+        if isinstance(landmarks, np.ndarray):
+            if landmarks.size in (52, 132):
+                reshaped = landmarks.reshape(-1, 4)
+                for row in reshaped:
+                    points.append((float(row[0]), float(row[1]), float(row[3])))
+        elif hasattr(landmarks, '__len__'):
+            for lm in landmarks:
+                if hasattr(lm, 'x') and hasattr(lm, 'y'):
+                    v = float(getattr(lm, 'visibility', getattr(lm, 'presence', 1.0)))
+                    points.append((float(lm.x), float(lm.y), v))
+                elif isinstance(lm, dict):
+                    v = float(lm.get('v', lm.get('visibility', 1.0)))
+                    points.append((float(lm.get('x', 0.0)), float(lm.get('y', 0.0)), v))
+                elif isinstance(lm, (list, tuple)) and len(lm) >= 2:
+                    v = float(lm[3]) if len(lm) >= 4 else 1.0
+                    points.append((float(lm[0]), float(lm[1]), v))
+
+        if not points:
+            return False, "unparseable_landmarks"
+
+        min_conf = getattr(self, "min_keypoint_confidence", 0.4)
+        min_kpts = getattr(self, "min_valid_keypoints", 6)
+        require_torso = getattr(self, "require_torso_anchors", True)
+
+        # Petakan indeks kunci untuk 13 landmarks (standar CNN-LSTM) vs 33 (MediaPipe)
+        if len(points) == 13:
+            idx_ls, idx_rs = 1, 2
+            idx_lh, idx_rh = 7, 8
+        else:
+            idx_ls, idx_rs = 11, 12
+            idx_lh, idx_rh = 23, 24
+
+        valid_kpts = [p for p in points if p[2] >= min_conf]
+        if len(valid_kpts) < min_kpts:
+            return False, f"too_few_valid_keypoints_{len(valid_kpts)}"
+
+        if require_torso:
+            has_shoulder = (points[idx_ls][2] >= min_conf) or (points[idx_rs][2] >= min_conf)
+            has_hip = (points[idx_lh][2] >= min_conf) or (points[idx_rh][2] >= min_conf)
+            if not (has_shoulder and has_hip):
+                return False, "missing_torso_anchors"
+
+        # Pemeriksaan anatomi: rasio torso vs lebar bahu
+        ls, rs = points[idx_ls], points[idx_rs]
+        lh, rh = points[idx_lh], points[idx_rh]
+        both_shoulders = (ls[2] >= min_conf and rs[2] >= min_conf)
+        any_hip = (lh[2] >= min_conf or rh[2] >= min_conf)
+        if both_shoulders and any_hip:
+            dx_sh = (rs[0] - ls[0]) * 640.0
+            dy_sh = (rs[1] - ls[1]) * 480.0
+            sh_w = math.hypot(dx_sh, dy_sh)
+            mid_sx = (ls[0] + rs[0]) * 0.5 * 640.0
+            mid_sy = (ls[1] + rs[1]) * 0.5 * 480.0
+
+            if lh[2] >= min_conf and rh[2] >= min_conf:
+                mid_hx = (lh[0] + rh[0]) * 0.5 * 640.0
+                mid_hy = (lh[1] + rh[1]) * 0.5 * 480.0
+            elif lh[2] >= min_conf:
+                mid_hx = lh[0] * 640.0
+                mid_hy = lh[1] * 480.0
+            else:
+                mid_hx = rh[0] * 640.0
+                mid_hy = rh[1] * 480.0
+
+            dx_t = mid_hx - mid_sx
+            dy_t = mid_hy - mid_sy
+            torso_h = math.hypot(dx_t, dy_t)
+
+            if sh_w > 10.0 and torso_h > 10.0:
+                ratio = torso_h / sh_w
+                if ratio < 0.10 or ratio > 8.5:
+                    return False, f"unnatural_torso_ratio_{ratio:.2f}"
+
+        return True, "valid"
+
     def process_frame(self, landmarks, frame_size=None) -> dict:
         """
         Proses satu frame: update buffer, predict jika buffer penuh.
@@ -387,7 +481,8 @@ class FallDetector:
             dict dengan keys: prediction, confidence, is_fall, buffer_status, fall_prob
         """
         now = time.monotonic()
-        person_detected = landmarks is not None
+        pose_valid, pose_gate_reason = self.validate_person_pose(landmarks)
+        person_detected = bool(landmarks is not None and pose_valid)
         was_fall = self.is_fall
         missing_frames_before_current = self.pose_missing_frames
         pose_loss_age_before_current = (
@@ -412,7 +507,8 @@ class FallDetector:
                     target_jumped = True
             self.last_hip_center = current_hip
 
-            if missing_frames_before_current > 0 or target_jumped:
+            if missing_frames_before_current > 0 or target_jumped or getattr(self, "_reset_buffer_requested", False):
+                self._reset_buffer_requested = False
                 self.frame_buffer.clear()
                 self.frame_buffer.extend(
                     features.copy() for _ in range(SEQUENCE_LENGTH)
@@ -558,6 +654,9 @@ class FallDetector:
         elif self.is_fall:
             self.current_prediction = "Fall (pose hilang)"
             self.current_confidence = 0.0
+        elif landmarks is not None and not pose_valid:
+            self.current_prediction = f"Pose Tidak Valid ({pose_gate_reason})"
+            self.current_confidence = 0.0
         else:
             self.current_prediction = "Tidak Terdeteksi"
             self.current_confidence = 0.0
@@ -580,6 +679,8 @@ class FallDetector:
             "fall_latched": bool(self.is_fall and not confirmed_fall),
             "posture": posture_info,
             "posture_gated": posture_gated,
+            "pose_valid": pose_valid,
+            "pose_gate_reason": pose_gate_reason,
         }
 
         return result
@@ -613,6 +714,7 @@ class FallDetector:
         self.last_hip_center = None
         self.last_pose_monotonic = None
         self.fall_hold_until = 0.0
+        self._reset_buffer_requested = True
         print("  [INFO] Buffer direset.")
 
     # ========================================================
