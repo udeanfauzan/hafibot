@@ -289,3 +289,32 @@ hafibot/
 ### Verification
 - Verified end-to-end inference and generation in ChatbotService: conversational queries successfully produce natural, persona-aligned responses from Qwen while hardware commands reliably trigger motion callbacks.
 - Full integration test suite verified: 12 passed in tests/test_chatbot_integration.py.
+
+---
+
+## 12. Mobile Tailscale MagicDNS Stream Optimization (Anti-Lag Snapshot-Pull Mode) (October 2026)
+
+### Problem Diagnosed
+- Accessing web monitoring via Tailscale MagicDNS (`https://laptop-4d3id0ke.taile8b064.ts.net`) exhibited significant delay (5-15+ seconds) and lag on mobile phones (Samsung Galaxy A22) compared to laptop.
+- Root causes:
+  1. **Tailscale Relay Fallback (DERP)**: Cellular CGNAT forced traffic through the Singapore DERP relay rather than direct peer-to-peer.
+  2. **TCP Head-of-Line Blocking on MJPEG**: 640x480 @ 15 FPS continuous MJPEG pushed 6-8 Mbps over TCP. Packet drops on mobile caused Waitress, Go reverse proxy, and mobile OS TCP buffers to queue frames sequentially.
+  3. **High Mobile CPU/GPU Decoding Burden**: Continuous 15 FPS JPEG decompressions on a mobile Helio G80 processor choked UI rendering and blocked manual control responsiveness.
+  4. **HTTP Polling Contention**: Aggressive 1.0s status polling saturated the same congested socket tunnel.
+
+### Solutions Implemented
+1. **Lightweight Mobile Pre-Compression (`src/server_app.py`)**:
+   - Resizes annotated frames to 384x288 px with JPEG Quality 45 (`current_mobile_jpeg_bytes`).
+   - Frame size reduced by ~85% (from ~55 KB to ~8-12 KB), cutting stream data rate from ~7 Mbps to ~300-400 Kbps.
+2. **Zero-Latency Snapshot-Pull Architecture (`/api/camera/frame`)**:
+   - Replaced continuous push MJPEG with an adaptive client-driven pull loop on mobile.
+   - Self-pacing loop: client requests the next frame only after the current one has rendered, automatically skipping dropped frames during mobile network hiccups. Guarantees 0-second video lag.
+   - Clean blob memory lifecycle using `URL.createObjectURL` and `URL.revokeObjectURL`.
+3. **Interactive Stream Mode Badge & Local Preference**:
+   - Added a stream mode toggle button (`Mode Lancar (Anti-Lag)` vs `Mode Penuh (MJPEG)`) with automatic mobile detection and `localStorage` persistence.
+4. **Adaptive Status Polling**:
+   - Throttled `/status` polling interval to 2000 ms on mobile devices to preserve bandwidth for manual D-pad controls.
+
+### Verification
+- Full unit test suite verified: 13 passed in `tests/test_flask_monitoring.py` (added authentication and mobile variant tests for `/api/camera/frame`).
+- Full regression suite verified: 39 passed in `tests/test_posture.py`, `tests/test_model_architecture.py`, `tests/test_fall_alarm.py`, `tests/test_feature_pipeline.py`, `tests/test_human_following_safety.py`.

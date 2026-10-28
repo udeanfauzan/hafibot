@@ -2,7 +2,7 @@
     {
         "uuid": "299c3a41-010d-46f7-bff8-9e8a4afb59b2",
         "task": "Waktu Solat Subuh",
-        "startdate": "2026-09-14T04:45:00",
+        "startdate": "2026-10-29T04:45:00",
         "repeat_type": 1,
         "called_upon": false,
         "is_prayer": true
@@ -10,7 +10,7 @@
     {
         "uuid": "ebebfc5c-3c3a-446d-9ab9-89951bd8ecd3",
         "task": "Waktu Solat Dzuhur",
-        "startdate": "2026-09-14T12:00:00",
+        "startdate": "2026-10-29T12:00:00",
         "repeat_type": 1,
         "called_upon": false,
         "is_prayer": true
@@ -18,7 +18,7 @@
     {
         "uuid": "493388bc-1714-4137-bd6e-7ab7083db9d2",
         "task": "Waktu Solat Ashar",
-        "startdate": "2026-09-14T15:15:00",
+        "startdate": "2026-10-29T15:15:00",
         "repeat_type": 1,
         "called_upon": false,
         "is_prayer": true
@@ -26,7 +26,7 @@
     {
         "uuid": "bb8c6d44-8058-41cc-8c92-9ebd2fdc2bc5",
         "task": "Waktu Solat Maghrib",
-        "startdate": "2026-09-14T18:05:00",
+        "startdate": "2026-10-28T18:05:00",
         "repeat_type": 1,
         "called_upon": false,
         "is_prayer": true
@@ -34,7 +34,7 @@
     {
         "uuid": "0f79b751-17bd-42ce-9982-b1d33721bada",
         "task": "Waktu Solat Isya",
-        "startdate": "2026-09-14T19:15:00",
+        "startdate": "2026-10-28T19:15:00",
         "repeat_type": 1,
         "called_upon": false,
         "is_prayer": true
@@ -85,6 +85,14 @@
         "startdate": "2026-09-10T16:00:00+07:00",
         "repeat_type": null,
         "called_upon": false,
+        "is_prayer": false
+    },
+    {
+        "uuid": "945d856d-3890-4690-9c7b-778c920672ef",
+        "task": "untuk meminum obat 2 menit ke depan",
+        "startdate": "2026-10-28T08:15:48.860717+07:00",
+        "repeat_type": null,
+        "called_upon": true,
         "is_prayer": false
     }
 ]

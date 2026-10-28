@@ -1,61 +1,5 @@
 [
   {
-    "id": "20260827T053937Z-fe6f9e2e",
-    "detected_at": "2026-08-27T05:39:37.629071Z",
-    "detector_cleared_at": "2026-08-27T05:39:38.951266Z",
-    "acknowledged_at": "2026-08-27T05:39:44.334004Z",
-    "acknowledged_by": "caregiver",
-    "snapshot_filename": "20260827T053937Z-fe6f9e2e.jpg"
-  },
-  {
-    "id": "20260827T054006Z-efeb770a",
-    "detected_at": "2026-08-27T05:40:06.603059Z",
-    "detector_cleared_at": "2026-08-27T05:40:06.826243Z",
-    "acknowledged_at": "2026-08-27T05:40:20.969864Z",
-    "acknowledged_by": "caregiver",
-    "snapshot_filename": "20260827T054006Z-efeb770a.jpg"
-  },
-  {
-    "id": "20260827T054012Z-80ec302d",
-    "detected_at": "2026-08-27T05:40:12.867124Z",
-    "detector_cleared_at": "2026-08-27T05:40:17.910642Z",
-    "acknowledged_at": "2026-08-27T05:40:16.989973Z",
-    "acknowledged_by": "caregiver",
-    "snapshot_filename": "20260827T054012Z-80ec302d.jpg"
-  },
-  {
-    "id": "20260827T054033Z-51c5b7ae",
-    "detected_at": "2026-08-27T05:40:33.902013Z",
-    "detector_cleared_at": "2026-08-27T05:40:35.236846Z",
-    "acknowledged_at": "2026-08-27T05:45:51.229303Z",
-    "acknowledged_by": "caregiver",
-    "snapshot_filename": "20260827T054033Z-51c5b7ae.jpg"
-  },
-  {
-    "id": "20260827T054037Z-b4b0b259",
-    "detected_at": "2026-08-27T05:40:37.961690Z",
-    "detector_cleared_at": "2026-08-27T05:40:43.129112Z",
-    "acknowledged_at": "2026-08-27T05:40:41.477414Z",
-    "acknowledged_by": "caregiver",
-    "snapshot_filename": "20260827T054037Z-b4b0b259.jpg"
-  },
-  {
-    "id": "20260827T062554Z-7f684d99",
-    "detected_at": "2026-08-27T06:25:54.052643Z",
-    "detector_cleared_at": "2026-08-27T06:26:11.934465Z",
-    "acknowledged_at": "2026-08-27T06:25:58.542576Z",
-    "acknowledged_by": "caregiver",
-    "snapshot_filename": "20260827T062554Z-7f684d99.jpg"
-  },
-  {
-    "id": "20260827T062612Z-6d77503c",
-    "detected_at": "2026-08-27T06:26:12.012642Z",
-    "detector_cleared_at": "2026-08-27T06:26:12.460571Z",
-    "acknowledged_at": "2026-08-27T06:26:26.604800Z",
-    "acknowledged_by": "caregiver",
-    "snapshot_filename": "20260827T062612Z-6d77503c.jpg"
-  },
-  {
     "id": "20260827T062612Z-ad01a889",
     "detected_at": "2026-08-27T06:26:12.694620Z",
     "detector_cleared_at": "2026-08-27T06:26:12.923954Z",
@@ -798,5 +742,61 @@
     "acknowledged_at": "2026-09-11T08:44:05.144631Z",
     "acknowledged_by": "caregiver",
     "snapshot_filename": "20260911T084342Z-fefa7cb1.jpg"
+  },
+  {
+    "id": "20261028T012103Z-9275f78d",
+    "detected_at": "2026-10-28T01:21:03.503035Z",
+    "detector_cleared_at": "2026-10-28T01:21:13.641626Z",
+    "acknowledged_at": "2026-10-28T01:21:05.943182Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20261028T012103Z-9275f78d.jpg"
+  },
+  {
+    "id": "20261028T012313Z-6a3accb1",
+    "detected_at": "2026-10-28T01:23:13.122809Z",
+    "detector_cleared_at": "2026-10-28T01:23:23.235700Z",
+    "acknowledged_at": "2026-10-28T01:23:17.573193Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20261028T012313Z-6a3accb1.jpg"
+  },
+  {
+    "id": "20261028T012328Z-15ed7cb4",
+    "detected_at": "2026-10-28T01:23:28.337859Z",
+    "detector_cleared_at": "2026-10-28T01:23:39.669942Z",
+    "acknowledged_at": "2026-10-28T01:23:32.957346Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20261028T012328Z-15ed7cb4.jpg"
+  },
+  {
+    "id": "20261028T033305Z-3cdf76b8",
+    "detected_at": "2026-10-28T03:33:06.001851Z",
+    "detector_cleared_at": "2026-10-28T03:33:16.186260Z",
+    "acknowledged_at": "2026-10-28T03:33:16.789286Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20261028T033305Z-3cdf76b8.jpg"
+  },
+  {
+    "id": "20261028T033342Z-2538a0e4",
+    "detected_at": "2026-10-28T03:33:42.418564Z",
+    "detector_cleared_at": "2026-10-28T03:33:53.616739Z",
+    "acknowledged_at": "2026-10-28T03:34:02.687805Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20261028T033342Z-2538a0e4.jpg"
+  },
+  {
+    "id": "20261028T033456Z-0fcf44c5",
+    "detected_at": "2026-10-28T03:34:56.856723Z",
+    "detector_cleared_at": "2026-10-28T03:35:07.231279Z",
+    "acknowledged_at": "2026-10-28T03:35:07.639587Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20261028T033456Z-0fcf44c5.jpg"
+  },
+  {
+    "id": "20261028T091130Z-f128a324",
+    "detected_at": "2026-10-28T09:11:30.600739Z",
+    "detector_cleared_at": "2026-10-28T09:12:02.731204Z",
+    "acknowledged_at": "2026-10-28T09:12:13.348274Z",
+    "acknowledged_by": "caregiver",
+    "snapshot_filename": "20261028T091130Z-f128a324.jpg"
   }
 ]

@@ -72,6 +72,7 @@ class FlaskMonitoringTests(unittest.TestCase):
         tmp_path = Path(self.tmp_dir)
         monitor.app.config.update(TESTING=True, SESSION_COOKIE_SECURE=False)
         monitor.current_jpeg_bytes = None
+        monitor.current_mobile_jpeg_bytes = None
         monitor.latest_status = None
         monitor._current_frame_id = 0
         monitor._current_frame_source_stamp = 0.0
@@ -244,6 +245,65 @@ class FlaskMonitoringTests(unittest.TestCase):
         self._authenticate(client)
         response = client.post('/api/incidents/{}/acknowledge'.format(incident_id))
         self.assertEqual(response.status_code, 403)
+
+    def test_camera_frame_endpoint_requires_authentication(self):
+        client = monitor.app.test_client()
+        response = client.get('/api/camera/frame')
+        self.assertEqual(response.status_code, 401)
+
+    def test_camera_frame_endpoint_returns_latest_frame_and_mobile_variant(self):
+        monitor.current_jpeg_bytes = b'\xff\xd8test-desktop-jpeg\xff\xd9'
+        monitor.current_mobile_jpeg_bytes = b'\xff\xd8test-mobile-jpeg\xff\xd9'
+        monitor._current_frame_id = 42
+        client = monitor.app.test_client()
+        self._authenticate(client)
+
+        resp = client.get('/api/camera/frame')
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.mimetype, 'image/jpeg')
+        self.assertEqual(resp.data, b'\xff\xd8test-desktop-jpeg\xff\xd9')
+        self.assertIn('no-store', resp.headers.get('Cache-Control', ''))
+        self.assertEqual(resp.headers.get('X-Frame-Id'), '42')
+
+        resp_m = client.get('/api/camera/frame?mobile=1')
+        self.assertEqual(resp_m.status_code, 200)
+        self.assertEqual(resp_m.data, b'\xff\xd8test-mobile-jpeg\xff\xd9')
+        self.assertEqual(resp_m.headers.get('X-Frame-Id'), '42')
+
+    def test_two_click_following_range_workflow(self):
+        client = monitor.app.test_client()
+        csrf = self._authenticate(client)
+        headers = {'X-CSRF-Token': csrf}
+
+        # 1. Check default range
+        get_res = client.get('/api/robot/following/range')
+        self.assertEqual(get_res.status_code, 200)
+        data = get_res.get_json()
+        self.assertTrue(data['success'])
+        self.assertIn('stop_cm', data)
+        self.assertIn('start_cm', data)
+
+        # 2. Simulate target at 140 cm and click Stop threshold
+        monitor.latest_target_distance_cm = 140
+        stop_res = client.post('/api/robot/following/set_stop_threshold', headers=headers)
+        self.assertEqual(stop_res.status_code, 200)
+        stop_data = stop_res.get_json()
+        self.assertEqual(stop_data['stop_cm'], 140)
+        self.assertEqual(monitor.follow_stop_dist_cm, 140)
+
+        # 3. Simulate target at 220 cm and click Start threshold
+        monitor.latest_target_distance_cm = 220
+        start_res = client.post('/api/robot/following/set_start_threshold', headers=headers)
+        self.assertEqual(start_res.status_code, 200)
+        start_data = start_res.get_json()
+        self.assertEqual(start_data['start_cm'], 220)
+        self.assertEqual(monitor.follow_start_dist_cm, 220)
+
+        # 4. Reset range
+        reset_res = client.post('/api/robot/following/reset_range', headers=headers)
+        self.assertEqual(reset_res.status_code, 200)
+        self.assertEqual(monitor.follow_stop_dist_cm, monitor.DEFAULT_FOLLOW_STOP_CM)
+        self.assertEqual(monitor.follow_start_dist_cm, monitor.DEFAULT_FOLLOW_START_CM)
 
 if __name__ == '__main__':
     unittest.main()

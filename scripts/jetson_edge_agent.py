@@ -718,7 +718,7 @@ class JetsonEdgeAgent:
                     'telemetry': json.dumps(telemetry),
                     'capture_stamp': str(capture_stamp),
                 }
-                resp = session.post(self.frame_endpoint, files=files, data=data, timeout=(0.5, 2.0))
+                resp = session.post(self.frame_endpoint, files=files, data=data, timeout=(1.5, 2.0))
                 if resp.status_code == 200:
                     self.last_video_error = ''
                     return resp.json()

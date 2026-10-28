@@ -82,6 +82,13 @@ IMG_DIR = ""
 INCIDENTS_FILE = ""
 SNAPSHOTS_DIR = ""
 CALIBRATION_FILE = str(Path(__file__).resolve().parent.parent / 'data' / 'monitoring' / 'shoulder_calibration.json')
+FOLLOWING_DIST_FILE = str(Path(__file__).resolve().parent.parent / 'data' / 'monitoring' / 'following_distance.json')
+
+DEFAULT_FOLLOW_STOP_CM = 150
+DEFAULT_FOLLOW_START_CM = 210
+follow_stop_dist_cm = DEFAULT_FOLLOW_STOP_CM
+follow_start_dist_cm = DEFAULT_FOLLOW_START_CM
+follow_forward_active = False
 
 DEFAULT_FOCAL_CONSTANT = 22000.0
 current_focal_constant = DEFAULT_FOCAL_CONSTANT
@@ -97,6 +104,7 @@ last_calibration_info = {
 
 # Global variables untuk web server
 current_jpeg_bytes = None
+current_mobile_jpeg_bytes = None
 latest_status = None
 _current_frame_id = 0
 _current_frame_source_stamp = 0.0
@@ -259,6 +267,35 @@ def _save_calibration():
     except Exception as error:
         rospy.logerr(f'Gagal save shoulder calibration: {error}')
 
+def _load_following_distance():
+    global follow_stop_dist_cm, follow_start_dist_cm
+    if not FOLLOWING_DIST_FILE or not os.path.exists(FOLLOWING_DIST_FILE):
+        return
+    try:
+        with open(FOLLOWING_DIST_FILE, 'r', encoding='utf-8') as handle:
+            data = json.load(handle)
+        if isinstance(data, dict):
+            stop_val = int(data.get('stop_cm', DEFAULT_FOLLOW_STOP_CM))
+            start_val = int(data.get('start_cm', DEFAULT_FOLLOW_START_CM))
+            if 30 <= stop_val < start_val <= 500:
+                follow_stop_dist_cm = stop_val
+                follow_start_dist_cm = start_val
+                rospy.loginfo(f'Loaded following range: stop={follow_stop_dist_cm}cm, start={follow_start_dist_cm}cm')
+    except Exception as error:
+        rospy.logerr(f'Gagal load following distance: {error}')
+
+def _save_following_distance():
+    if not FOLLOWING_DIST_FILE:
+        return
+    try:
+        payload = {
+            'stop_cm': int(follow_stop_dist_cm),
+            'start_cm': int(follow_start_dist_cm),
+            'updated_at': _utc_now_string(),
+        }
+        _write_json_atomic(FOLLOWING_DIST_FILE, payload)
+    except Exception as error:
+        rospy.logerr(f'Gagal save following distance: {error}')
 
 def _save_incidents_locked():
     if not INCIDENTS_FILE:
@@ -732,7 +769,7 @@ def add_security_headers(response):
 # ============================================================
 # STREAM GENERATOR
 # ============================================================
-def encode_frame():
+def encode_frame(mobile=False, max_fps=None):
     """Yield each new ROS frame once and skip frames for slow clients.
 
     The previous 30 FPS polling loop repeatedly queued the same 15 FPS source
@@ -740,6 +777,8 @@ def encode_frame():
     making a numerically smooth stream appear seconds behind real time.
     """
     last_frame_id = -1
+    min_interval = (1.0 / max_fps) if (max_fps and max_fps > 0) else 0.0
+    last_yield_time = 0.0
 
     while True:
         with _frame_condition:
@@ -768,9 +807,20 @@ def encode_frame():
                 # Copy references while holding the lock. If this client was
                 # blocked by the network, this is the newest frame, not the
                 # next old frame in a server-side queue.
-                frame_bytes = current_jpeg_bytes
+                target_bytes = (
+                    current_mobile_jpeg_bytes if (mobile and current_mobile_jpeg_bytes is not None)
+                    else current_jpeg_bytes
+                )
+                frame_bytes = target_bytes
                 frame_id = _current_frame_id
                 source_stamp = _current_frame_source_stamp
+
+        if min_interval > 0.0:
+            now = time.monotonic()
+            elapsed = now - last_yield_time
+            if elapsed < min_interval:
+                time.sleep(min_interval - elapsed)
+            last_yield_time = time.monotonic()
 
         last_frame_id = frame_id
         source_age_ms = (
@@ -1528,6 +1578,30 @@ def index():
           .live-label { display: inline-flex; align-items: center; gap: 7px; color: var(--ink); }
           .live-dot { width: 9px; height: 9px; border-radius: 50%; background: #aab5b1; }
           .live-dot.online { background: #20a775; box-shadow: 0 0 0 4px rgba(32,167,117,0.13); }
+          .stream-mode-badge {
+            background: #eef5f2;
+            color: var(--green-dark);
+            border: 1px solid rgba(32, 167, 117, 0.35);
+            border-radius: 999px;
+            padding: 3px 10px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+          }
+          .stream-mode-badge:hover {
+            background: #dcf1e7;
+            transform: translateY(-1px);
+          }
+          .stream-mode-badge.desktop {
+            background: #f0f2f5;
+            color: var(--muted);
+            border-color: #d1d5db;
+          }
 
           .side-stack { display: grid; gap: 18px; }
           .card-section { padding: 18px; }
@@ -1633,7 +1707,7 @@ def index():
           <div class="dashboard-grid">
             <section class="card video-card" aria-label="Kamera langsung">
               <div class="video-container">
-                <img class="video-feed" id="videoFeed" src="/video_feed" alt="Siaran kamera Hafibot secara langsung">
+                <img class="video-feed" id="videoFeed" alt="Siaran kamera Hafibot secara langsung">
                 <div class="stream-overlay" id="streamOverlay">
                   <div>
                     <strong id="streamOverlayTitle">Kamera tidak tersedia</strong>
@@ -1651,6 +1725,7 @@ def index():
               <div class="video-meta">
                 <span class="live-label"><span class="live-dot" id="liveDot"></span><span id="cameraMeta">Menunggu kamera</span></span>
                 <span id="frameAge">Frame belum tersedia</span>
+                <button type="button" id="streamModeBtn" class="stream-mode-badge" title="Klik untuk beralih mode siaran (Lancar / Penuh)">&#9889; Mode Lancar (Anti-Lag)</button>
               </div>
             </section>
 
@@ -1813,6 +1888,32 @@ def index():
                 <div style="font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;">Konstanta Fokal Aktif</div>
                 <div style="font-size: 20px; font-weight: 900; color: var(--orange); margin-top: 4px;" id="liveFocalConst">22000.0</div>
                 <div style="font-size: 11px; color: var(--muted); margin-top: 2px;" id="lastCalibTime">Default bawaan</div>
+              </div>
+            </div>
+
+            <!-- 2-Click Live Following Range Setup -->
+            <div style="background: #f4f8fc; border: 1.5px solid #d0e4f7; border-radius: 14px; padding: 16px; margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
+                <div style="font-size: 14px; font-weight: 800; color: var(--navy); display: flex; align-items: center; gap: 6px;">
+                  <span>&#128099;</span> 2-Click Setup Jarak Following (Standby &amp; Ikuti)
+                </div>
+                <span id="followRangeBadge" style="font-size: 12px; font-weight: 700; background: #e2f0fd; color: #0263b3; padding: 4px 10px; border-radius: 8px;">
+                  Standby: 150 cm &bull; Mulai Ikuti: 210 cm
+                </span>
+              </div>
+              <p style="font-size: 12px; color: var(--muted); margin: 0 0 12px; line-height: 1.45;">
+                Cukup 2 kali klik tanpa perlu mengetik: minta asisten berdiri di jarak berhenti lalu tekan <strong>Tombol 1</strong>, kemudian mundur ke jarak mulai ikuti lalu tekan <strong>Tombol 2</strong>.
+              </p>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <button type="button" class="action-btn" id="btnSetStopDist" onclick="setFollowThreshold('stop')" style="flex: 1; min-width: 170px; background: #ffffff; border: 1.5px solid #f87171; color: #b91c1c; font-weight: 700; padding: 9px 12px; font-size: 12px;">
+                  &#128721; 1. Kunci Jarak Berhenti (<span id="lblStopDist">150</span> cm)
+                </button>
+                <button type="button" class="action-btn" id="btnSetStartDist" onclick="setFollowThreshold('start')" style="flex: 1; min-width: 170px; background: #ffffff; border: 1.5px solid var(--green); color: var(--green-dark); font-weight: 700; padding: 9px 12px; font-size: 12px;">
+                  &#128640; 2. Kunci Jarak Mulai Ikuti (<span id="lblStartDist">210</span> cm)
+                </button>
+                <button type="button" class="action-btn" onclick="resetFollowThreshold()" style="font-size: 11px; padding: 9px 12px; color: var(--muted); border-color: var(--line);">
+                  &#128260; Reset Default
+                </button>
               </div>
             </div>
 
@@ -2189,17 +2290,112 @@ def index():
               renderDisconnected('Server tidak dapat dihubungi. Hafibot mencoba menyambungkan kembali.');
             } finally {
               clearTimeout(timeout);
-              window.setTimeout(pollStatus, 1000);
+              const pollInterval = (isMobileDevice || currentStreamMode === 'pull') ? 2000 : 1000;
+              window.setTimeout(pollStatus, pollInterval);
             }
+          }
+
+          // ===== ADAPTIVE STREAM CONTROLLER (ANTI-LAG FOR MOBILE) =====
+          const isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || (window.innerWidth <= 768 && ('ontouchstart' in window || navigator.maxTouchPoints > 0));
+          let storedStreamMode = null;
+          try { storedStreamMode = localStorage.getItem('hafibot_stream_mode'); } catch (e) {}
+          let currentStreamMode = storedStreamMode || (isMobileDevice ? 'pull' : 'mjpeg');
+
+          let pullActive = false;
+          let pullTimer = null;
+          let lastObjectUrl = null;
+          let pullInFlight = false;
+
+          function updateStreamModeUI() {
+            const btn = document.getElementById('streamModeBtn');
+            if (!btn) return;
+            if (currentStreamMode === 'pull') {
+              btn.innerHTML = '&#9889; Mode Lancar (Anti-Lag)';
+              btn.className = 'stream-mode-badge';
+              btn.title = 'Mode adaptif aktif untuk koneksi seluler/Tailscale. Klik untuk beralih ke Mode Penuh.';
+            } else {
+              btn.innerHTML = '&#128249; Mode Penuh (MJPEG)';
+              btn.className = 'stream-mode-badge desktop';
+              btn.title = 'Mode stream langsung resolusi penuh. Klik untuk beralih ke Mode Lancar.';
+            }
+          }
+
+          async function pullNextFrame() {
+            if (!pullActive) return;
+            if (pullInFlight) return;
+            pullInFlight = true;
+            try {
+              const url = `/api/camera/frame?mobile=1&t=${Date.now()}`;
+              const resp = await fetch(url, { cache: 'no-store' });
+              if (resp.status === 401) {
+                window.location.assign('/login');
+                return;
+              }
+              if (resp.ok && resp.status === 200) {
+                const blob = await resp.blob();
+                if (pullActive && blob.size > 0) {
+                  const objUrl = URL.createObjectURL(blob);
+                  videoFeed.src = objUrl;
+                  if (lastObjectUrl) {
+                    URL.revokeObjectURL(lastObjectUrl);
+                  }
+                  lastObjectUrl = objUrl;
+                  videoErrored = false;
+                }
+              }
+            } catch (err) {
+              // Network transient hiccup
+            } finally {
+              pullInFlight = false;
+              if (pullActive) {
+                pullTimer = setTimeout(pullNextFrame, 100);
+              }
+            }
+          }
+
+          function startStreamMode(mode) {
+            currentStreamMode = mode;
+            try { localStorage.setItem('hafibot_stream_mode', mode); } catch (e) {}
+            updateStreamModeUI();
+
+            if (mode === 'pull') {
+              videoFeed.removeAttribute('src');
+              pullActive = true;
+              if (pullTimer) clearTimeout(pullTimer);
+              pullNextFrame();
+            } else {
+              pullActive = false;
+              if (pullTimer) clearTimeout(pullTimer);
+              if (lastObjectUrl) {
+                URL.revokeObjectURL(lastObjectUrl);
+                lastObjectUrl = null;
+              }
+              videoFeed.src = `/video_feed?reconnect=${Date.now()}`;
+            }
+          }
+
+          function toggleStreamMode() {
+            const nextMode = currentStreamMode === 'pull' ? 'mjpeg' : 'pull';
+            startStreamMode(nextMode);
+            showToast(nextMode === 'pull' ? 'Mode Lancar diaktifkan (Anti-Lag)' : 'Mode Penuh diaktifkan (MJPEG)');
+          }
+
+          const streamModeBtn = document.getElementById('streamModeBtn');
+          if (streamModeBtn) {
+            streamModeBtn.addEventListener('click', toggleStreamMode);
           }
 
           videoFeed.addEventListener('load', () => { videoErrored = false; });
           videoFeed.addEventListener('error', () => {
-            videoErrored = true;
-            renderDisconnected('Siaran kamera berhenti. Mencoba menyambungkan kembali.');
-            window.setTimeout(() => {
-              videoFeed.src = `/video_feed?reconnect=${Date.now()}`;
-            }, 2500);
+            if (currentStreamMode === 'mjpeg') {
+              videoErrored = true;
+              renderDisconnected('Siaran kamera berhenti. Mencoba menyambungkan kembali.');
+              window.setTimeout(() => {
+                if (currentStreamMode === 'mjpeg') {
+                  videoFeed.src = `/video_feed?reconnect=${Date.now()}`;
+                }
+              }, 2500);
+            }
           });
 
           document.getElementById('ackBtn').addEventListener('click', async () => {
@@ -2722,7 +2918,58 @@ def index():
           }
           updateAssistantLockUI();
 
+            // 2-Click Live Following Range Setup Handlers
+            async function fetchFollowRange() {
+              try {
+                const res = await fetch('/api/robot/following/range', {
+                  headers: { 'X-CSRF-Token': csrfToken }
+                });
+                const d = await res.json();
+                if (d && d.success) {
+                  const badge = document.getElementById('followRangeBadge');
+                  const stopLbl = document.getElementById('lblStopDist');
+                  const startLbl = document.getElementById('lblStartDist');
+                  if (badge) badge.innerHTML = 'Standby: <strong>' + d.stop_cm + ' cm</strong> &bull; Mulai Ikuti: <strong>' + d.start_cm + ' cm</strong>';
+                  if (stopLbl) stopLbl.textContent = d.stop_cm;
+                  if (startLbl) startLbl.textContent = d.start_cm;
+                }
+              } catch (e) {}
+            }
+
+            async function setFollowThreshold(type) {
+              const endpoint = type === 'stop'
+                ? '/api/robot/following/set_stop_threshold'
+                : '/api/robot/following/set_start_threshold';
+              try {
+                const res = await fetch(endpoint, {
+                  method: 'POST',
+                  headers: { 'X-CSRF-Token': csrfToken, 'Content-Type': 'application/json' }
+                });
+                const d = await res.json();
+                showToast(d.message || 'Batas jarak berhasil dikunci');
+                await fetchFollowRange();
+              } catch (e) {
+                showToast('Gagal mengunci batas jarak');
+              }
+            }
+
+            async function resetFollowThreshold() {
+              try {
+                const res = await fetch('/api/robot/following/reset_range', {
+                  method: 'POST',
+                  headers: { 'X-CSRF-Token': csrfToken, 'Content-Type': 'application/json' }
+                });
+                const d = await res.json();
+                showToast(d.message || 'Jarak following berhasil di-reset');
+                await fetchFollowRange();
+              } catch (e) {
+                showToast('Gagal me-reset jarak');
+              }
+            }
+            fetchFollowRange();
+
           initPush();
+          startStreamMode(currentStreamMode);
           pollStatus();
         </script>
       </body>
@@ -2732,8 +2979,10 @@ def index():
 @app.route('/video_feed')
 @login_required
 def video_feed():
+    mobile = request.args.get('mobile', '0') in ('1', 'true', 'yes')
+    fps_limit = request.args.get('fps', type=float)
     response = Response(
-        encode_frame(),
+        encode_frame(mobile=mobile, max_fps=fps_limit),
         content_type='multipart/x-mixed-replace; boundary=frame',
     )
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
@@ -2741,6 +2990,41 @@ def video_feed():
     response.headers['Expires'] = '0'
     response.headers['X-Accel-Buffering'] = 'no'
     return response
+
+
+@app.route('/api/camera/frame')
+@login_required
+def api_camera_frame():
+    """Return the latest single JPEG frame for zero-latency pull streaming.
+
+    Skipping buffered frames on slow mobile networks prevents lag accumulation.
+    """
+    mobile = request.args.get('mobile', '0') in ('1', 'true', 'yes')
+    with _frame_condition:
+        if mobile and current_mobile_jpeg_bytes is not None:
+            frame_bytes = current_mobile_jpeg_bytes
+        else:
+            frame_bytes = current_jpeg_bytes
+        frame_id = _current_frame_id
+        source_stamp = _current_frame_source_stamp
+
+    if frame_bytes is None:
+        frame_bytes = _blank_bytes
+        frame_id = 0
+        source_stamp = 0.0
+
+    source_age_ms = (
+        max(0.0, (time.time() - source_stamp) * 1000.0)
+        if source_stamp > 0.0 else -1.0
+    )
+    response = Response(frame_bytes, mimetype='image/jpeg')
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    response.headers['X-Frame-Id'] = str(frame_id)
+    response.headers['X-Source-Age-Ms'] = '{:.1f}'.format(source_age_ms)
+    return response
+
 
 @app.route('/status')
 @login_required
@@ -3071,14 +3355,15 @@ def fall_snapshot():
 # ============================================================
 # ROS CALLBACKS
 # ============================================================
-def image_callback(msg):
-    global current_jpeg_bytes, _current_frame_id, _current_frame_source_stamp
+def image_callback(msg, mobile_bytes=None):
+    global current_jpeg_bytes, current_mobile_jpeg_bytes, _current_frame_id, _current_frame_source_stamp
     global _current_frame_received_monotonic
     try:
         frame_bytes = bytes(msg.data)
         source_stamp = msg.header.stamp.to_sec()
         with _frame_condition:
             current_jpeg_bytes = frame_bytes
+            current_mobile_jpeg_bytes = mobile_bytes
             _current_frame_id += 1
             _current_frame_source_stamp = source_stamp
             _current_frame_received_monotonic = time.monotonic()
@@ -3166,6 +3451,7 @@ pose_detector = YOLOPoseDetector(model_path=pose_model_file, device='cuda' if to
 fall_detector = create_server_fall_detector(os.environ.get('HAFIBOT_FALL_RUNTIME_CALIBRATION'))
 target_filter = ShoulderTargetFilter(coefficients=[DEFAULT_FOCAL_CONSTANT], confirmation_frames=2, min_visibility=0.35)
 _load_calibration()
+_load_following_distance()
 fall_safety_latch = FallEStopLatch()
 following_enabled = True
 robot_control_mode = 'auto'  # 'auto' or 'manual'
@@ -3230,7 +3516,7 @@ def api_robot_frame():
 def _process_robot_frame():
     # Receives frame + telemetry from Jetson Nano Edge Agent and returns motor commands.
     global following_enabled, robot_latest_telemetry, latest_target_distance_cm, latest_target_detected
-    global robot_control_mode, manual_direction, manual_direction_expires
+    global robot_control_mode, manual_direction, manual_direction_expires, follow_forward_active
     
     file = request.files.get('frame')
     if file:
@@ -3388,12 +3674,26 @@ def _process_robot_frame():
     elif not following_enabled:
         cmd_mode = STOP
         robot_state = 'DISABLED'
+        follow_forward_active = False
     elif not target_det:
         cmd_mode = STOP
         robot_state = 'NO_TARGET'
+        follow_forward_active = False
     else:
-        cmd_mode = FOLLOW
-        robot_state = 'FOLLOWING'
+        # Dynamic 2-Click Standby / Following Hysteresis Zone
+        if follow_forward_active:
+            if target_dist <= follow_stop_dist_cm:
+                follow_forward_active = False
+        else:
+            if target_dist >= follow_start_dist_cm:
+                follow_forward_active = True
+
+        if follow_forward_active:
+            cmd_mode = FOLLOW
+            robot_state = 'FOLLOWING'
+        else:
+            cmd_mode = STOP
+            robot_state = 'STANDBY_ZONE'
         
     motor_cmd = encode_command(cmd_mode, target_dist, target_cx, target_det).decode('ascii')
     
@@ -3423,8 +3723,16 @@ def _process_robot_frame():
     # 6. Compress and notify Flask stream callbacks
     _, buf = cv2.imencode('.jpg', annotated, [cv2.IMWRITE_JPEG_QUALITY, 60])
     annotated_jpeg = buf.tobytes()
-    
-    image_callback(FakeCompressedImageMsg(annotated_jpeg, time.time()))
+
+    # Pre-encode lightweight mobile frame (384x288, quality 45) for ultra-low latency & zero-lag
+    h_ann, w_ann = annotated.shape[:2]
+    mobile_w = 384
+    mobile_h = int(384 * h_ann / max(1, w_ann))
+    small_annotated = cv2.resize(annotated, (mobile_w, mobile_h), interpolation=cv2.INTER_AREA)
+    _, m_buf = cv2.imencode('.jpg', small_annotated, [cv2.IMWRITE_JPEG_QUALITY, 45])
+    mobile_jpeg = m_buf.tobytes()
+
+    image_callback(FakeCompressedImageMsg(annotated_jpeg, time.time()), mobile_bytes=mobile_jpeg)
     alert_callback(FakeBoolMsg(is_fall))
     
     stats_payload = {
@@ -3508,6 +3816,67 @@ def api_target_lock_status():
         'locked': pose_detector.locked_profile is not None,
     })
 
+@app.route('/api/robot/following/range', methods=['GET'])
+@login_required
+def api_get_following_range():
+    return jsonify({
+        'success': True,
+        'stop_cm': int(follow_stop_dist_cm),
+        'start_cm': int(follow_start_dist_cm),
+        'current_dist_cm': int(globals().get('latest_target_distance_cm', 0)),
+        'target_detected': bool(globals().get('latest_target_detected', False)),
+    })
+
+@app.route('/api/robot/following/set_stop_threshold', methods=['POST'])
+@login_required
+def api_set_stop_threshold():
+    global follow_stop_dist_cm, follow_start_dist_cm
+    current_dist = int(globals().get('latest_target_distance_cm', 0))
+    if current_dist < 40 or current_dist > 450:
+        return jsonify({'success': False, 'message': f'Jarak target ({current_dist} cm) di luar jangkauan aman (40-450 cm)'}), 400
+    if current_dist >= follow_start_dist_cm:
+        # Automatically push start_cm higher to maintain valid interval
+        follow_start_dist_cm = current_dist + 40
+    follow_stop_dist_cm = current_dist
+    _save_following_distance()
+    return jsonify({
+        'success': True,
+        'message': f'Jarak Berhenti (Stop) berhasil dikunci di {follow_stop_dist_cm} cm',
+        'stop_cm': follow_stop_dist_cm,
+        'start_cm': follow_start_dist_cm,
+    })
+
+@app.route('/api/robot/following/set_start_threshold', methods=['POST'])
+@login_required
+def api_set_start_threshold():
+    global follow_start_dist_cm
+    current_dist = int(globals().get('latest_target_distance_cm', 0))
+    if current_dist < 60 or current_dist > 500:
+        return jsonify({'success': False, 'message': f'Jarak target ({current_dist} cm) di luar jangkauan aman (60-500 cm)'}), 400
+    if current_dist <= follow_stop_dist_cm:
+        return jsonify({'success': False, 'message': f'Jarak Mulai Ikuti ({current_dist} cm) harus lebih besar dari Jarak Berhenti ({follow_stop_dist_cm} cm)'}), 400
+    follow_start_dist_cm = current_dist
+    _save_following_distance()
+    return jsonify({
+        'success': True,
+        'message': f'Jarak Mulai Ikuti (Start) berhasil dikunci di {follow_start_dist_cm} cm',
+        'stop_cm': follow_stop_dist_cm,
+        'start_cm': follow_start_dist_cm,
+    })
+
+@app.route('/api/robot/following/reset_range', methods=['POST'])
+@login_required
+def api_reset_following_range():
+    global follow_stop_dist_cm, follow_start_dist_cm
+    follow_stop_dist_cm = DEFAULT_FOLLOW_STOP_CM
+    follow_start_dist_cm = DEFAULT_FOLLOW_START_CM
+    _save_following_distance()
+    return jsonify({
+        'success': True,
+        'message': f'Jarak following di-reset ke default ({follow_stop_dist_cm} cm - {follow_start_dist_cm} cm)',
+        'stop_cm': follow_stop_dist_cm,
+        'start_cm': follow_start_dist_cm,
+    })
 @app.route('/api/robot/manual_drive', methods=['POST'])
 def api_manual_drive():
     global manual_direction, manual_direction_expires
@@ -3749,12 +4118,14 @@ def main():
     INCIDENTS_FILE = str(PROJECT_ROOT / 'data' / 'monitoring' / 'incidents.json')
     SNAPSHOTS_DIR = str(PROJECT_ROOT / 'data' / 'monitoring' / 'snapshots')
     CALIBRATION_FILE = str(PROJECT_ROOT / 'data' / 'monitoring' / 'shoulder_calibration.json')
+    FOLLOWING_DIST_FILE = str(PROJECT_ROOT / 'data' / 'monitoring' / 'following_distance.json')
     
     _ensure_private_directory(SNAPSHOTS_DIR)
     _init_vapid()
     _load_subscriptions()
     _load_incidents()
     _load_calibration()
+    _load_following_distance()
     
     print('=' * 60)
     print('  HAFIBOT LAPTOP AI SERVER ACTIVE (NVIDIA GPU ACCELERATED)')
