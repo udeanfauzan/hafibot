@@ -5,6 +5,7 @@ venv/
 __pycache__/
 *.pyc
 .pytest_cache/
+.hf_cache/
 
 # Credentials & secrets
 Vapid Keys.txt

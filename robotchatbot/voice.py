@@ -153,7 +153,11 @@ class AutoTTS:
     def speak(self, text):
         if not text:
             return
-        tts = gTTS(text=text, lang='id')
+        speech_text = re.sub(r'[*_#~]', '', text)
+        speech_text = re.sub(r'^\s*[-+*]\s+', '', speech_text, flags=re.MULTILINE)
+        speech_text = re.sub(r'[\U00010000-\U0010ffff]', '', speech_text)
+        speech_text = re.sub(r'\s+', ' ', speech_text).strip() or text
+        tts = gTTS(text=speech_text, lang='id')
         audio_buffer = io.BytesIO()
         tts.write_to_fp(audio_buffer)
         audio_buffer.seek(0)

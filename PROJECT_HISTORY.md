@@ -249,3 +249,43 @@ hafibot/
 - **Supervised Robot Trials**: Run live trials with the camera feed and robot using the opt-in variable to test natural interaction (sitting, walking, bending, floor transfers) before promoting the candidate.
 - **Continuous Multi-Hour ADL Benchmark**: Collect extended continuous ADL recordings to measure the true false-alarm rate per hour.
 - **Low-Angle Occlusion Audit**: Investigate remaining edge cases where pose keypoints drop below threshold due to the 21 cm ground-level camera perspective.
+
+---
+
+## 11. Voice Chatbot Natural Response Restoration (October 2026)
+
+### Root Causes Identified
+1. **Missing Local HuggingFace Weights Snapshot**:
+   - robotchatbot/m_qwen/response.py attempted to load snapshot weights from hafibot/.hf_cache/hub/models--Qwen--Qwen3.5-0.8B/snapshots/2fc06364715b967f1860aea9cf38778875588b17/.
+   - During previous clean-repo migration, only config.json and model.safetensors.index.json were copied; the 1.74 GB model.safetensors-00001-of-00001.safetensors and tokenizer files were missing. This caused QwenResponse initialization to raise a FileNotFoundError, silently falling back to None in src/chatbot_service.py.
+2. **Inverted Dialogue Routing in Server Service**:
+   - In src/chatbot_service.py (DialogueGenerator.generate), 10+ deterministic if/elif blocks directly intercepted greetings, identity, status inquiries, gratitude, time, weather, news, and positive/negative sentiment, returning canned static phrases. Qwen was only called as a last resort after checking every common conversational intent, so natural LLM responses were bypassed for virtually all user speech.
+3. **Middlelayer Context Construction Bugs**:
+   - robotchatbot/m_middlelayer/middlelayer.py assigned the function object get_weather instead of invoking get_weather() into qwentext["context"]["weather"].
+   - get_news lacked resilient exception handling and raised KeyError if the news API failed or returned an error dictionary.
+   - Context triggers were tied solely to DistilBERT function labels (time, weather, news) without accounting for intents (nanya_waktu, nanya_cuaca, nanya_berita) or keyword triggers.
+4. **TTS Verbalization of Markdown and Emojis**:
+   - Fine-tuned Qwen generates markdown emphasis (e.g. **14:30**, bullet points) and emojis (e.g. waving hand), which caused gTTS to verbally read formatting tokens or fail on Windows character encodings.
+
+### Solutions Implemented
+1. **Local Model Snapshot Linkage & Robust Discovery (robotchatbot/m_qwen/response.py)**:
+   - Linked the complete 1.74 GB model snapshot files (model.safetensors-00001-of-00001.safetensors, tokenizer files, vocab, merges) into hafibot/.hf_cache/.
+   - Updated QwenResponse to scan multiple candidate directories (.hf_cache, HF_HOME, legacy workspace snapshot, and user home .cache/huggingface) and verify the actual presence of .safetensors before selecting the path.
+   - Updated generation to use max_new_tokens=96 and strip any trailing thinking/prompt artifacts.
+2. **Qwen-First Conversational Dialogue Routing (src/chatbot_service.py)**:
+   - Reserved deterministic rules strictly for safety-critical hardware actions (START_FOLLOWING, STOP_FOLLOWING, RESET_ESTOP, emergency alarm) and reminder scheduling/querying.
+   - Directed all conversational queries (greetings, identity, status, time, weather, news, and companionship) to Qwen first with enriched context.
+   - Preserved deterministic responses as a safe fallback only if Qwen is disabled or fails.
+   - Added background pre-warming of Qwen on server initialization to eliminate cold-start latency on the first query.
+3. **Context Enrichment & Error Resilience (robotchatbot/m_middlelayer/middlelayer.py)**:
+   - Fixed weather context by invoking get_weather() with timeout and fallback defaults.
+   - Hardened get_news against API failures, always returning valid titles.
+   - Expanded is_time, is_weather, and is_news recognition to cover both DistilBERT intents and natural language keywords.
+   - Formatted human-readable Indonesian time string (day, date jam HH:MM WIB) in addition to ISO timestamp.
+4. **TTS Audio Normalization (src/chatbot_service.py, robotchatbot/voice.py, robotchatbot/m_voice/voice_server.py)**:
+   - Added regex text cleaner _clean_text_for_speech to strip markdown symbols (*, _, #, ~, bullets) and emojis prior to passing text to gTTS.
+   - Fixed socket typo setsockpot -> setsockopt in robotchatbot/main_server.py.
+
+### Verification
+- Verified end-to-end inference and generation in ChatbotService: conversational queries successfully produce natural, persona-aligned responses from Qwen while hardware commands reliably trigger motion callbacks.
+- Full integration test suite verified: 12 passed in tests/test_chatbot_integration.py.

@@ -328,9 +328,11 @@ class DialogueGenerator:
         self.qwen_enabled = os.getenv('HAFIBOT_QWEN_ENABLED', 'true').strip().lower() not in {
             '0', 'false', 'no', 'off'
         }
+        if self.qwen_enabled:
+            threading.Thread(target=self._init_qwen, daemon=True, name="qwen_preload").start()
 
     def _init_qwen(self):
-        if self._qwen_attempted or not self.qwen_enabled:
+        if not self.qwen_enabled:
             return
         with self._qwen_init_lock:
             if self._qwen_attempted:
@@ -339,9 +341,9 @@ class DialogueGenerator:
             try:
                 from m_qwen.response import QwenResponse
                 self.qwen = QwenResponse()
-                logger.info("QwenResponse initialized lazily with QwenModel2.")
+                logger.info("QwenResponse initialized successfully with QwenModel2.")
             except Exception as e:
-                logger.info("QwenResponse not loaded (using deterministic companion dialogue): %s", e)
+                logger.warning("QwenResponse not loaded (using deterministic companion dialogue): %s", e)
 
     def _generate_qwen(self, qwentext: Optional[dict]) -> str:
         if not qwentext or not self.qwen_enabled:
@@ -373,7 +375,12 @@ class DialogueGenerator:
         if any(w in t for w in ['tolong', 'sakit', 'jatuh', 'darurat', 'panggil bantuan']):
             return 'Peringatan darurat diaktifkan! Saya segera menghubungi pengasuh Anda.'
 
-        # 3. Function & Intent Specific Rules
+        # 3. Primary: Generate natural response via fine-tuned Qwen model
+        qwen_resp = self._generate_qwen(qwentext)
+        if qwen_resp and qwen_resp.strip():
+            return qwen_resp.strip()
+
+        # 4. Fallback: Contextual deterministic responses if Qwen is disabled or unavailable
         if function_label == 'time' or 'jam berapa' in t or 'waktu' in t:
             jt = get_jakarta_time()
             return f'Sekarang adalah hari {jt.get("day", "")}, tanggal {jt.get("date", "")} pukul {jt.get("time", "")[:5]} WIB.'
@@ -402,10 +409,6 @@ class DialogueGenerator:
             return 'Senang sekali mendengarnya! Tetap semangat ya.'
         elif sentiment == 'negative':
             return 'Saya mengerti perasaan Anda. Istirahatlah sejenak, saya akan selalu menjaga Anda di sini.'
-
-        qwen_resp = self._generate_qwen(qwentext)
-        if qwen_resp:
-            return qwen_resp
 
         return 'Baik, saya mengerti. Ada hal lain yang ingin Anda sampaikan atau tanyakan?'
 
@@ -512,13 +515,24 @@ class AudioEngine:
             logger.warning("Google ASR unavailable: %s", e)
             return ''
 
+    @staticmethod
+    def _clean_text_for_speech(text: str) -> str:
+        # Remove markdown formatting (*, _, #, ~, bullet points)
+        cleaned = re.sub(r'[*_#~]', '', text)
+        cleaned = re.sub(r'^\s*[-+*]\s+', '', cleaned, flags=re.MULTILINE)
+        # Remove emoji characters that confuse TTS pronunciation
+        cleaned = re.sub(r'[\U00010000-\U0010ffff]', '', cleaned)
+        cleaned = re.sub(r'\s+', ' ', cleaned).strip()
+        return cleaned
+
     def synthesize_wav(self, text: str) -> bytes:
         if not text or not text.strip():
             return b''
         try:
             from gtts import gTTS
             from pydub import AudioSegment
-            tts = gTTS(text=text, lang='id')
+            speech_text = self._clean_text_for_speech(text) or text
+            tts = gTTS(text=speech_text, lang='id')
             mp3_buf = io.BytesIO()
             tts.write_to_fp(mp3_buf)
             mp3_buf.seek(0)
