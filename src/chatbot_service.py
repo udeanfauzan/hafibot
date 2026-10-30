@@ -413,8 +413,16 @@ class DialogueGenerator:
         return 'Baik, saya mengerti. Ada hal lain yang ingin Anda sampaikan atau tanyakan?'
 
 class AudioEngine:
-    def __init__(self, root_dir=None):
+    def __init__(self, root_dir=None, volume_boost_ratio: Optional[float] = None):
         self.root_dir = root_dir or Path(__file__).resolve().parent.parent
+        if volume_boost_ratio is None:
+            env_val = os.getenv('HAFIBOT_VOICE_VOLUME_BOOST', '1.30')
+            try:
+                self.volume_boost_ratio = float(env_val)
+            except ValueError:
+                self.volume_boost_ratio = 1.30
+        else:
+            self.volume_boost_ratio = float(volume_boost_ratio)
         import speech_recognition as sr
         self.sr_recognizer = sr.Recognizer()
 
@@ -538,6 +546,9 @@ class AudioEngine:
             mp3_buf.seek(0)
             audio = AudioSegment.from_file(mp3_buf, format='mp3')
             audio = audio.set_frame_rate(16000).set_channels(1).set_sample_width(2)
+            if self.volume_boost_ratio > 0 and self.volume_boost_ratio != 1.0:
+                gain_db = 20.0 * math.log10(self.volume_boost_ratio)
+                audio = audio + gain_db
             wav_buf = io.BytesIO()
             audio.export(wav_buf, format='wav')
             return wav_buf.getvalue()
@@ -552,11 +563,13 @@ class AudioEngine:
         frames = bytearray()
         tone_samples = int(sample_rate * 0.10)
         gap_samples = int(sample_rate * 0.04)
+        base_amplitude = int(14000 * max(0.1, min(2.0, self.volume_boost_ratio)))
         for i in range(num_beeps):
             freq = freqs[i % len(freqs)]
             for s in range(tone_samples):
                 env = 1.0 - (s / tone_samples)
-                val = int(14000 * env * math.sin(2.0 * math.pi * freq * s / sample_rate))
+                val = int(base_amplitude * env * math.sin(2.0 * math.pi * freq * s / sample_rate))
+                val = max(-32768, min(32767, val))
                 frames.extend(struct.pack('<h', val))
             frames.extend(b'\x00\x00' * gap_samples)
         wav_buf = io.BytesIO()

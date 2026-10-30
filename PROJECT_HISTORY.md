@@ -318,3 +318,26 @@ hafibot/
 ### Verification
 - Full unit test suite verified: 13 passed in `tests/test_flask_monitoring.py` (added authentication and mobile variant tests for `/api/camera/frame`).
 - Full regression suite verified: 39 passed in `tests/test_posture.py`, `tests/test_model_architecture.py`, `tests/test_fall_alarm.py`, `tests/test_feature_pipeline.py`, `tests/test_human_following_safety.py`.
+---
+
+## 13. Voice Chatbot Volume Amplification & Edge Digital Gain (October 2026)
+
+### Problem Diagnosed
+- Output audio from the Jetson Nano Developer Kit played through the MAX98357A I2S Class-D amplifier was noticeably quiet during live chatbot interactions, proactive fall confirmations, and alarm announcements.
+- Root causes:
+  1. **gTTS Master Level Headroom**: Standard `gTTS` speech generation is mastered at approximately -18 to -20 dBFS, leaving extensive unused dynamic range before clipping.
+  2. **No Hardware Mixer Registers on MAX98357A**: The MAX98357A I2S amplifier has no I2C control interface or hardware volume registers; its gain is fixed by the breakout board's GAIN pin wiring unless adjusted via software digital scaling.
+  3. **Conservative Offline Tone Amplitude**: `_synthesize_offline_tone_wav` used a base amplitude of 14,000 out of a maximum 32,767 (only ~42% full-scale 16-bit range).
+
+### Solutions Implemented
+1. **Server Audio Pre-Amplification (`src/chatbot_service.py`)**:
+   - Added `volume_boost_ratio` (default `1.30`, or configured via `HAFIBOT_VOICE_VOLUME_BOOST`) to `AudioEngine`.
+   - In `synthesize_wav`, applies +2.28 dB digital gain to the 16 kHz mono WAV output via `pydub`, increasing conversational volume by 30% in linear amplitude without clipping.
+   - In `_synthesize_offline_tone_wav`, boosted base chime amplitude by 30% (from 14,000 to 18,200) with hard-clipping guards (`[-32768, 32767]`).
+2. **Edge Playback Gain Control (`scripts/jetson_edge_agent.py`)**:
+   - Added `--speaker-volume` CLI flag (default `1.0`, configurable e.g. `--speaker-volume 1.3`).
+   - In `_play_wav_bytes`, implemented real-time 16-bit PCM scaling and clipping on incoming WAV chunks before dispatching to ALSA `aplay`.
+
+### Verification
+- Verified with unit test `test_volume_boost_ratio` in `tests/test_chatbot_integration.py` confirming the 1.30x amplitude ratio.
+- Verified test suite: `TestAudioEngine` passes completely with all assertions satisfied.

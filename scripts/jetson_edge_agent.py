@@ -80,6 +80,7 @@ class JetsonEdgeAgent:
         enable_voice: bool = True,
         mic_device: Optional[str] = None,
         speaker_device: str = 'default',
+        speaker_volume: float = 1.0,
         vad_threshold: float = 0.030,
         silence_timeout: float = 0.8,
     ):
@@ -104,6 +105,7 @@ class JetsonEdgeAgent:
         self.enable_voice = enable_voice
         self.mic_device = mic_device
         self.speaker_device = speaker_device
+        self.speaker_volume = max(0.1, min(5.0, float(speaker_volume)))
         self.vad_threshold = float(vad_threshold)
         self.silence_timeout = float(silence_timeout)
 
@@ -160,7 +162,7 @@ class JetsonEdgeAgent:
         print(f'  Stream Config : {self.output_width}x{self.output_height} @ {self.target_fps:.1f} FPS (JPEG Q={self.jpeg_quality})')
         print(f'  Voice Support : {"ENABLED (USB Mic + I2S Speaker)" if self.enable_voice else "DISABLED"}')
         if self.enable_voice:
-            print(f'    Speaker ALSA: {self.speaker_device}')
+            print(f'    Speaker ALSA: {self.speaker_device} (Volume Gain: {self.speaker_volume:.2f}x)')
             print(f'    VAD Sens.   : Threshold={self.vad_threshold:.4f}, Silence={self.silence_timeout:.1f}s')
         print(f'  HTTP Engine   : {"Requests Session (HTTP Keep-Alive)" if HAS_REQUESTS else "Urllib (Legacy)"}')
         print('=' * 65)
@@ -383,6 +385,23 @@ class JetsonEdgeAgent:
         """Plays WAV audio bytes on I2S ALSA hardware or sounddevice."""
         if not self.remote_voice_enabled or not wav_bytes or len(wav_bytes) < 100:
             return
+
+        if self.speaker_volume != 1.0:
+            try:
+                bio_in = io.BytesIO(wav_bytes)
+                with wave.open(bio_in, 'rb') as wf_in:
+                    params = wf_in.getparams()
+                    raw_frames = wf_in.readframes(wf_in.getnframes())
+                    if params.sampwidth == 2:
+                        samples = np.frombuffer(raw_frames, dtype=np.int16).astype(np.float32)
+                        samples = np.clip(samples * self.speaker_volume, -32768, 32767).astype(np.int16)
+                        bio_out = io.BytesIO()
+                        with wave.open(bio_out, 'wb') as wf_out:
+                            wf_out.setparams(params)
+                            wf_out.writeframes(samples.tobytes())
+                        wav_bytes = bio_out.getvalue()
+            except Exception as e:
+                print(f'  [SPEAKER GAIN ERROR] {e}')
 
         self.is_speaking.set()  # Enable echo suppression
         try:
@@ -865,6 +884,7 @@ def main():
     parser.add_argument('--no-voice', dest='enable_voice', action='store_false', help='Disable voice subsystem')
     parser.add_argument('--mic-device', type=str, default=None, help='Microphone device name or index in sounddevice (default: auto-detect USB mic)')
     parser.add_argument('--speaker-device', type=str, default='default', help='ALSA speaker device (e.g. plughw:tegrasndt210ref,0 or default)')
+    parser.add_argument('--speaker-volume', type=float, default=1.0, help='Speaker digital volume scale multiplier (e.g. 1.3 for +30%% volume)')
     parser.add_argument('--vad-threshold', type=float, default=0.030, help='Mic VAD RMS energy threshold (default: 0.030)')
     parser.add_argument('--silence-timeout', type=float, default=0.8, help='VAD silence timeout in seconds (default: 0.8)')
     args = parser.parse_args()
@@ -878,6 +898,7 @@ def main():
         enable_voice=args.enable_voice,
         mic_device=args.mic_device,
         speaker_device=args.speaker_device,
+        speaker_volume=args.speaker_volume,
         vad_threshold=args.vad_threshold,
         silence_timeout=args.silence_timeout,
     )

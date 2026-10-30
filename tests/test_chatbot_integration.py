@@ -125,6 +125,20 @@ class TestAudioEngine:
             assert wf.getframerate() == 16000
             assert wf.getsampwidth() == 2
 
+    def test_volume_boost_ratio(self):
+        import numpy as np
+        base_engine = AudioEngine(volume_boost_ratio=1.0)
+        boosted_engine = AudioEngine(volume_boost_ratio=1.30)
+        assert boosted_engine.volume_boost_ratio == 1.30
+        wav_base = base_engine._synthesize_offline_tone_wav("halo")
+        wav_boosted = boosted_engine._synthesize_offline_tone_wav("halo")
+        with wave.open(io.BytesIO(wav_base), "rb") as wf:
+            samples_base = np.frombuffer(wf.readframes(wf.getnframes()), dtype=np.int16)
+        with wave.open(io.BytesIO(wav_boosted), "rb") as wf:
+            samples_boosted = np.frombuffer(wf.readframes(wf.getnframes()), dtype=np.int16)
+        ratio = float(np.max(samples_boosted)) / float(np.max(samples_base))
+        assert 1.28 <= ratio <= 1.32
+
 
 class TestChatbotServiceIntegration:
     """Tests end-to-end ChatbotService orchestrator and robot action hooks."""
