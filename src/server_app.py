@@ -475,6 +475,9 @@ def _status_payload():
             'state': globals().get('robot_latest_telemetry', {}).get('state', 'IDLE') if not globals().get('fall_safety_latch', FallEStopLatch()).latched else 'FALL_ESTOP_LATCHED',
             'target_distance_cm': globals().get('latest_target_distance_cm', 0),
             'target_detected': globals().get('latest_target_detected', False),
+            'target_center_x': round(float(globals().get('latest_target_center_x', 0.5)), 3),
+            'horizontal_error': round(float(globals().get('latest_target_center_x', 0.5)) - 0.5, 3),
+            'motor_command': str(globals().get('latest_motor_cmd', '<S,0,0.500,0>')),
             'sonar_left_cm': globals().get('robot_latest_telemetry', {}).get('us_left', 0.0),
             'sonar_center_cm': globals().get('robot_latest_telemetry', {}).get('us_center', 0.0),
             'sonar_right_cm': globals().get('robot_latest_telemetry', {}).get('us_right', 0.0),
@@ -3517,6 +3520,7 @@ def _process_robot_frame():
     # Receives frame + telemetry from Jetson Nano Edge Agent and returns motor commands.
     global following_enabled, robot_latest_telemetry, latest_target_distance_cm, latest_target_detected
     global robot_control_mode, manual_direction, manual_direction_expires, follow_forward_active
+    global latest_target_center_x, latest_motor_cmd
     
     file = request.files.get('frame')
     if file:
@@ -3583,6 +3587,7 @@ def _process_robot_frame():
     target_det = bool(target['detected'])
     latest_target_distance_cm = target_dist
     latest_target_detected = target_det
+    latest_target_center_x = target_cx
 
     # Cross-check: Target / Sonar / Occlusion consistency
     # 1. Target not confirmed or distance 0 cm while following
@@ -3696,6 +3701,7 @@ def _process_robot_frame():
             robot_state = 'STANDBY_ZONE'
         
     motor_cmd = encode_command(cmd_mode, target_dist, target_cx, target_det).decode('ascii')
+    latest_motor_cmd = motor_cmd
     
     # Measure AI latency and throughput
     t_ai_end = time.perf_counter()
