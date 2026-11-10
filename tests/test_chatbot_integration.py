@@ -212,6 +212,19 @@ class TestServerAppVoiceEndpoints:
         assert "success" in data
         assert "response_text" in data
 
+    def test_voice_interact_with_10s_audio_does_not_413(self, client):
+        # 10s of 16kHz 16-bit mono WAV (~320KB), previously rejected by 128KB limit
+        mock_wav = create_mock_wav(10.0)
+        assert len(mock_wav) > 300 * 1024
+        resp = client.post(
+            "/api/voice/interact",
+            data=mock_wav,
+            headers={"Content-Type": "audio/wav"},
+        )
+        assert resp.status_code == 200
+        data = resp.get_json()
+        assert "success" in data
+
     def test_voice_status_endpoint(self, client):
         resp = client.get("/api/voice/status")
         assert resp.status_code == 200

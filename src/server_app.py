@@ -64,7 +64,7 @@ app.config.update(
     PERMANENT_SESSION_LIFETIME=timedelta(
         hours=_env_float('HAFIBOT_SESSION_HOURS', 12.0)
     ),
-    MAX_CONTENT_LENGTH=128 * 1024,
+    MAX_CONTENT_LENGTH=int(_env_float('HAFIBOT_MAX_CONTENT_LENGTH_MB', 8.0) * 1024 * 1024),
 )
 
 FRAME_STALE_SEC = max(0.5, _env_float('HAFIBOT_FRAME_STALE_SEC', 3.0))
