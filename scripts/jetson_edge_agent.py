@@ -732,12 +732,16 @@ class JetsonEdgeAgent:
                          session=None) -> Optional[dict]:
         if HAS_REQUESTS and session is not None:
             try:
+                t_send_start = time.perf_counter()
                 files = {'frame': ('camera.jpg', jpeg_bytes, 'image/jpeg')}
                 data = {
                     'telemetry': json.dumps(telemetry),
                     'capture_stamp': str(capture_stamp),
                 }
                 resp = session.post(self.frame_endpoint, files=files, data=data, timeout=(1.5, 2.0))
+                rtt_ms = (time.perf_counter() - t_send_start) * 1000.0
+                with self.telemetry_lock:
+                    self.latest_telemetry['net_rtt_ms'] = round(rtt_ms, 1)
                 if resp.status_code == 200:
                     self.last_video_error = ''
                     return resp.json()
@@ -880,6 +884,7 @@ def main():
     parser.add_argument('--baud', type=int, default=115200, help='Serial baudrate (default: 115200)')
     parser.add_argument('--fps', type=float, default=15.0, help='Target streaming FPS (default: 15.0)')
     parser.add_argument('--quality', type=int, default=60, help='JPEG compression quality 30-95 (default: 60)')
+    parser.add_argument('--resolution', type=str, default='640x480', help='Camera output resolution WxH, e.g. 640x480, 384x288, 1280x720 (default: 640x480)')
     parser.add_argument('--enable-voice', action='store_true', default=True, help='Enable USB mic capture & I2S speaker playback')
     parser.add_argument('--no-voice', dest='enable_voice', action='store_false', help='Disable voice subsystem')
     parser.add_argument('--mic-device', type=str, default=None, help='Microphone device name or index in sounddevice (default: auto-detect USB mic)')
@@ -889,8 +894,20 @@ def main():
     parser.add_argument('--silence-timeout', type=float, default=0.8, help='VAD silence timeout in seconds (default: 0.8)')
     args = parser.parse_args()
 
+    out_w, out_h = 640, 480
+    if args.resolution and 'x' in args.resolution.lower():
+        try:
+            parts = args.resolution.lower().split('x')
+            out_w, out_h = int(parts[0]), int(parts[1])
+        except ValueError:
+            pass
+
     agent = JetsonEdgeAgent(
         server_url=args.server,
+        capture_width=max(1280, out_w),
+        capture_height=max(720, out_h),
+        output_width=out_w,
+        output_height=out_h,
         serial_port=args.serial,
         baudrate=args.baud,
         target_fps=args.fps,
