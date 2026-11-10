@@ -65,7 +65,7 @@ def resample_audio(audio: np.ndarray, orig_sr: int, target_sr: int = 16000) -> n
 class JetsonEdgeAgent:
     def __init__(
         self,
-        server_url: str = 'http://127.0.0.1:5000',
+        server_url: str = 'http://100.86.76.95:5000',
         serial_port: str = '/dev/ttyUSB0',
         baudrate: int = 115200,
         camera_sensor_id: int = 0,
@@ -879,7 +879,7 @@ class JetsonEdgeAgent:
 
 def main():
     parser = argparse.ArgumentParser(description='Hafibot Low-Latency Edge Streamer & Voice Gateway')
-    parser.add_argument('--server', type=str, default='http://127.0.0.1:5000', help='Laptop Server URL (e.g. http://100.86.76.95:5000)')
+    parser.add_argument('--server', type=str, default='http://100.86.76.95:5000', help='Laptop Server URL (e.g. http://100.86.76.95:5000)')
     parser.add_argument('--serial', type=str, default='/dev/ttyUSB0', help='Arduino serial port (default: /dev/ttyUSB0)')
     parser.add_argument('--baud', type=int, default=115200, help='Serial baudrate (default: 115200)')
     parser.add_argument('--fps', type=float, default=15.0, help='Target streaming FPS (default: 15.0)')

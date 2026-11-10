@@ -8,6 +8,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$SCRIPT_DIR"
 
 SERVER_URL="${1:-http://100.86.76.95:5000}"
+RESOLUTION="${2:-640x480}"
 SERVER_HOST="$(echo "$SERVER_URL" | sed -E 's|https?://([^:/]+).*|\1|')"
 
 echo "============================================================"
@@ -48,5 +49,6 @@ done
 echo "[3/3] Starting Jetson Edge Agent (Server: $SERVER_URL)..."
 exec python3 scripts/jetson_edge_agent.py \
     --server "$SERVER_URL" \
+    --resolution "$RESOLUTION" \
     --enable-voice \
     --speaker-volume 1.3

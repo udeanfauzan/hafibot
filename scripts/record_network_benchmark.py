@@ -18,7 +18,7 @@ import requests
 
 def main():
     parser = argparse.ArgumentParser(description="Perekam Telemetri Prioritas 2 Hafibot")
-    parser.add_argument("--server", type=str, default="http://127.0.0.1:5000", help="URL Server (default: http://127.0.0.1:5000)")
+    parser.add_argument("--server", type=str, default="http://100.86.76.95:5000", help="URL Server (default: http://127.0.0.1:5000)")
     parser.add_argument("--duration", type=int, default=60, help="Durasi perekaman dalam detik (default: 60)")
     parser.add_argument("--session", type=str, default="wifi_640x480", help="Nama sesi (contoh: wifi_640x480, tailscale_640x480)")
     parser.add_argument("--network", type=str, default="Wi-Fi Lokal", help="Jalur jaringan (Wi-Fi Lokal / Tailscale VPN)")
