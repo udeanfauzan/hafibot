@@ -286,11 +286,51 @@ def save_and_display_summary(results, output_path):
         "WebPush_Status", "Snapshot_Path"
     ]
 
+    existing_rows = {}
+    if os.path.exists(output_path) and os.path.getsize(output_path) > 0:
+        try:
+            with open(output_path, "r", encoding="utf-8-sig") as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    if row.get("Test_ID"):
+                        # Convert numeric fields
+                        row["Percobaan_Ke"] = int(row.get("Percobaan_Ke", 1))
+                        row["Probabilitas_Jatuh_Pct"] = float(row.get("Probabilitas_Jatuh_Pct", 0.0))
+                        row["Sudut_Torso_deg"] = float(row.get("Sudut_Torso_deg", 0.0))
+                        row["Waktu_Deteksi_AI_ms"] = float(row.get("Waktu_Deteksi_AI_ms", 0.0))
+                        row["Waktu_Pengereman_ms"] = float(row.get("Waktu_Pengereman_ms", 159.6))
+                        row["Total_Waktu_Henti_ms"] = float(row.get("Total_Waktu_Henti_ms", 0.0))
+                        existing_rows[row["Test_ID"]] = row
+        except Exception as e:
+            print(f"[WARNING] Gagal membaca data lama: {e}")
+
+    # Overwrite matching rows with new results
+    for r in results:
+        existing_rows[r["Test_ID"]] = r
+
+    # Sort rows by orientation and trial index
+    order_prefix = ["FALL_FWD", "FALL_BWD", "FALL_RIGHT", "FALL_LEFT", "FALL_SIT"]
+    def sort_key(item):
+        tid = item[0]
+        for idx, pref in enumerate(order_prefix):
+            if tid.startswith(pref):
+                try:
+                    num = int(tid.split("_")[-1])
+                except ValueError:
+                    num = 0
+                return (idx, num)
+        return (99, tid)
+
+    sorted_results = [v for k, v in sorted(existing_rows.items(), key=sort_key)]
+
     with open(output_path, "w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
-        for r in results:
+        for r in sorted_results:
             writer.writerow(r)
+
+    # Use all rows for rekapitulasi summary
+    results = sorted_results
 
     print("\n\n" + "=" * 105)
     print("  REKAPITULASI PENGUJIAN PRIORITAS 5: DETEKSI JATUH 5 ORIENTASI & SNAPSHOT BUKTI (Tabel 5.12)")
@@ -332,6 +372,7 @@ def main():
                         choices=["fwd", "bwd", "right", "left", "sit", "all"],
                         help="Pilih orientasi uji: fwd, bwd, right, left, sit, atau all (default: all)")
     parser.add_argument("--trials", type=int, default=3, help="Jumlah percobaan per orientasi (default: 3)")
+    parser.add_argument("--trial", type=int, default=None, help="Uji ulang percobaan spesifik (misal: 2 untuk mengulang percobaan ke-2)")
     parser.add_argument("--braking-ms", type=float, default=159.6, help="Waktu pengereman mikrokontroler dalam ms (default: 159.6 ms)")
     parser.add_argument("--username", type=str, default="caregiver", help="Username login")
     parser.add_argument("--password", type=str, default="hafibot123", help="Password login")
@@ -371,8 +412,10 @@ def main():
 
     try:
         for key, name, prefix in selected_orientations:
-            print(f"\n\n>>> MEMULAI KELOMPOK ORIENTASI: {name.upper()} ({args.trials} PERCOBAAN) <<<")
-            for t_idx in range(1, args.trials + 1):
+            trials_list = [args.trial] if args.trial is not None else list(range(1, args.trials + 1))
+            total_desc = f"PERCOBAAN KE-{args.trial}" if args.trial is not None else f"{args.trials} PERCOBAAN"
+            print(f"\n\n>>> MEMULAI KELOMPOK ORIENTASI: {name.upper()} ({total_desc}) <<<")
+            for t_idx in trials_list:
                 res = record_single_trial(
                     session, server_url, dash_csrf, key, name, prefix, t_idx, args.braking_ms, args.snapshots_dir, mock=args.mock
                 )
