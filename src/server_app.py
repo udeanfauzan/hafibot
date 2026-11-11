@@ -455,6 +455,9 @@ def _status_payload():
     return {
         'state': state,
         'is_fall': latest_status is True,
+        'fall_prob': round(float(globals().get('latest_fall_prob', 0.0)), 3),
+        'confidence': round(float(globals().get('latest_fall_confidence', 0.0)), 3),
+        'torso_angle_deg': round(float(globals().get('latest_torso_angle_deg', 0.0)), 1),
         'active_incident': attention_incident,
         'camera': {
             'connected': camera_connected,
@@ -484,6 +487,7 @@ def _status_payload():
         },
         'notifications': {
             'configured': bool(HAS_WEBPUSH and VAPID_PRIVATE_KEY and VAPID_PUBLIC_KEY),
+            'last_push_delivered': bool(globals().get('_last_push_delivered', False)),
         },
         'voice': {
             'status': 'ACTIVE' if chatbot_service.is_enabled() else 'DISABLED',
@@ -709,6 +713,8 @@ def _send_push_notifications(incident):
             ]
             _save_subscriptions()
 
+    global _last_push_delivered
+    _last_push_delivered = (sent_count > 0)
     if sent_count > 0:
         rospy.loginfo(f"&#128276; Push notification + snapshot terkirim ke {sent_count}/{len(subs)} subscriber")
 
@@ -3568,6 +3574,12 @@ def _process_robot_frame():
     # 2. Fall detection (1D CNN-LSTM + Kinematic Gating)
     fall_res = fall_detector.process_frame(landmarks, frame_size=(frame.shape[1], frame.shape[0]))
     is_fall = bool(fall_res.get('is_fall', False))
+
+    global latest_fall_prob, latest_fall_confidence, latest_torso_angle_deg
+    latest_fall_prob = float(fall_res.get('fall_prob', 0.0))
+    latest_fall_confidence = float(fall_res.get('confidence', 0.0))
+    posture_data = fall_res.get('posture') or {}
+    latest_torso_angle_deg = float(posture_data.get('torso_angle_deg', 0.0))
 
     # 3. Following target calculation
 
