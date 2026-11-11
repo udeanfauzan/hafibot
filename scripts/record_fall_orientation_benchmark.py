@@ -4,7 +4,7 @@
 record_fall_orientation_benchmark.py - Perekam Uji Deteksi Jatuh 5 Orientasi (Prioritas 5).
 
 Merekam 5 orientasi jatuh (Depan, Belakang, Samping Kanan, Samping Kiri, Terduduk)
-masing-masing 5 kali pengulangan (total 25 pengujian) dengan BUKTI SNAPSHOT OTOMATIS:
+masing-masing 3 kali pengulangan (total 15 pengujian) dengan BUKTI SNAPSHOT OTOMATIS:
   - Tabel 5.12 (Tingkat Keberhasilan Deteksi Jatuh Multi-Orientasi)
   - Gambar 5.7 (Grafik Waktu Respon Pengereman dan Waktu Total Henti Roda)
   - Lampiran E (Galeri Snapshot Pembuktian Visual Kejadian Jatuh di Matras)
@@ -27,7 +27,7 @@ Foto snapshot disimpan ke data/monitoring/snapshots/prioritas5_*.jpg
 
 Usage:
   python scripts/record_fall_orientation_benchmark.py
-  python scripts/record_fall_orientation_benchmark.py --orientation fwd --trials 5
+  python scripts/record_fall_orientation_benchmark.py --orientation fwd --trials 3
   python scripts/record_fall_orientation_benchmark.py --mock
 """
 
@@ -331,7 +331,7 @@ def main():
     parser.add_argument("--orientation", type=str, default="all",
                         choices=["fwd", "bwd", "right", "left", "sit", "all"],
                         help="Pilih orientasi uji: fwd, bwd, right, left, sit, atau all (default: all)")
-    parser.add_argument("--trials", type=int, default=5, help="Jumlah percobaan per orientasi (default: 5)")
+    parser.add_argument("--trials", type=int, default=3, help="Jumlah percobaan per orientasi (default: 3)")
     parser.add_argument("--braking-ms", type=float, default=159.6, help="Waktu pengereman mikrokontroler dalam ms (default: 159.6 ms)")
     parser.add_argument("--username", type=str, default="caregiver", help="Username login")
     parser.add_argument("--password", type=str, default="hafibot123", help="Password login")
